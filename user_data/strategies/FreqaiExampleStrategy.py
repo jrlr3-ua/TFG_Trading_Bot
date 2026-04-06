@@ -72,8 +72,8 @@ class FreqaiExampleStrategy(IStrategy):
     # Umbrales de confianza IA (adaptados al target de regresión)
     # Ahora la IA predice % de cambio, así que los umbrales representan
     # el % mínimo de movimiento predicho para entrar en una operación.
-    ai_threshold_long = DecimalParameter(0.001, 0.02, default=0.005, space="buy", optimize=True, load=True)
-    ai_threshold_short = DecimalParameter(-0.02, -0.001, default=-0.005, space="buy", optimize=True, load=True)
+    ai_threshold_long = DecimalParameter(0.002, 0.05, default=0.01, space="buy", optimize=True, load=True)
+    ai_threshold_short = DecimalParameter(-0.05, -0.002, default=-0.01, space="buy", optimize=True, load=True)
 
     # ─── GESTIÓN DE RIESGO ──────────────────────────────────────────────
     # minimal_roi y stoploss se delegan al config.json
@@ -81,10 +81,10 @@ class FreqaiExampleStrategy(IStrategy):
     # minimal_roi = { "0": 0.02, "10": 0.01, "20": 0.005, "40": 0 }
     # stoploss = -0.01
 
-    # Trailing Stop: asegura beneficios a partir de +1%
+    # Trailing Stop: deja correr los ganadores
     trailing_stop = True
-    trailing_stop_positive = 0.01
-    trailing_stop_positive_offset = 0.011
+    trailing_stop_positive = 0.015
+    trailing_stop_positive_offset = 0.025
     trailing_only_offset_is_reached = True
 
     # ─── TIMEFRAMES INFORMATIVOS ────────────────────────────────────────
@@ -170,10 +170,14 @@ class FreqaiExampleStrategy(IStrategy):
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         """
         Señales de entrada LONG y SHORT.
-        Requiere confluencia de: tendencia macro + IA + sentimiento.
+        Requiere confluencia de 5 factores:
+        1. Tendencia macro (H1 SMA200)
+        2. Zona de valor (cerca EMA50)
+        3. IA predice movimiento fuerte
+        4. Sentimiento de mercado OK
+        5. Volumen superior a la media (confirma interés)
 
-        v2.0: La IA ahora predice el % de cambio del precio, no un binario.
-        Entramos solo cuando la predicción supera un umbral mínimo de movimiento.
+        v2.1: Añadido filtro de volumen para evitar operar en mercados muertos.
         """
         # Filtros técnicos (H1)
         trend_bullish = (dataframe['close_1h'] > dataframe['sma_200_1h'])
@@ -181,7 +185,6 @@ class FreqaiExampleStrategy(IStrategy):
         in_value_zone = (dataframe['dist_ema50_1h'] < 0.015)
 
         # Señales IA (v2.0: target de regresión)
-        # La IA predice el % de cambio → entramos cuando predice movimiento suficiente
         ai_signal_long = (
             (dataframe["do_predict"] == 1) &
             (dataframe["&s-price_change"] > self.ai_threshold_long.value)
@@ -195,15 +198,19 @@ class FreqaiExampleStrategy(IStrategy):
         sentiment_safe_long = (dataframe['sentiment_score'] > -0.2)
         sentiment_safe_short = (dataframe['sentiment_score'] < 0.2)
 
-        # LONG: Tendencia alcista + Zona de valor + IA predice subida + Sentimiento OK
+        # Filtro de volumen: solo operar cuando hay interés real
+        vol_sma = dataframe['volume'].rolling(window=50).mean()
+        volume_ok = (dataframe['volume'] > vol_sma * 1.5)
+
+        # LONG: 5 factores de confluencia
         dataframe.loc[
-            trend_bullish & in_value_zone & ai_signal_long & sentiment_safe_long,
+            trend_bullish & in_value_zone & ai_signal_long & sentiment_safe_long & volume_ok,
             "enter_long"
         ] = 1
 
-        # SHORT: Tendencia bajista + Zona de valor + IA predice bajada + Sentimiento OK
+        # SHORT: 5 factores de confluencia
         dataframe.loc[
-            trend_bearish & in_value_zone & ai_signal_short & sentiment_safe_short,
+            trend_bearish & in_value_zone & ai_signal_short & sentiment_safe_short & volume_ok,
             "enter_short"
         ] = 1
 
@@ -214,17 +221,19 @@ class FreqaiExampleStrategy(IStrategy):
     # ═══════════════════════════════════════════════════════════════════
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         """
-        Salida cuando la IA invierte su predicción.
-        v2.0: Usa el signo del % predicho en vez de umbrales fijos.
+        Salida cuando la IA invierte su predicción con fuerza.
+        v2.1: Umbral de salida proporcional al de entrada (50%).
         """
-        # Salir de LONG si la IA predice caída
+        exit_threshold = abs(self.ai_threshold_long.value) * 0.5
+
+        # Salir de LONG si la IA predice caída significativa
         dataframe.loc[
-            (dataframe["do_predict"] == 1) & (dataframe["&s-price_change"] < -0.002),
+            (dataframe["do_predict"] == 1) & (dataframe["&s-price_change"] < -exit_threshold),
             "exit_long"
         ] = 1
-        # Salir de SHORT si la IA predice subida
+        # Salir de SHORT si la IA predice subida significativa
         dataframe.loc[
-            (dataframe["do_predict"] == 1) & (dataframe["&s-price_change"] > 0.002),
+            (dataframe["do_predict"] == 1) & (dataframe["&s-price_change"] > exit_threshold),
             "exit_short"
         ] = 1
         return dataframe

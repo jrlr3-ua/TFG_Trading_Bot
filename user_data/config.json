@@ -1,7 +1,7 @@
 {
     "bot_name": "freqtrade_tfg_AGGRESSIVE",
     "initial_state": "running",
-    "max_open_trades": 10,
+    "max_open_trades": 5,
     "stake_currency": "USDT",
     "stake_amount": "unlimited",
     "tradable_balance_ratio": 0.99,
@@ -15,13 +15,13 @@
     "margin_mode": "isolated",
 
     "minimal_roi": {
-        "0": 0.02,
-        "10": 0.01,
-        "20": 0.005,
-        "40": 0
+        "0": 0.05,
+        "30": 0.03,
+        "60": 0.02,
+        "120": 0.01
     },
 
-    "stoploss": -0.01,
+    "stoploss": -0.03,
 
     "unfilledtimeout": {
         "entry": 10,
@@ -63,7 +63,7 @@
             "XRP/USDT:USDT",
             "DOT/USDT:USDT",
             "LINK/USDT:USDT",
-            "MATIC/USDT:USDT",
+
             "AVAX/USDT:USDT",
             "DOGE/USDT:USDT",
             "NEAR/USDT:USDT"

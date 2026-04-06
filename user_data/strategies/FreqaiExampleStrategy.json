@@ -1,6 +1,15 @@
 {
   "strategy_name": "FreqaiExampleStrategy",
   "params": {
+    "roi": {
+      "0": 0.05,
+      "30": 0.03,
+      "60": 0.02,
+      "120": 0.01
+    },
+    "stoploss": {
+      "stoploss": -0.03
+    },
     "trailing": {
       "trailing_stop": true,
       "trailing_stop_positive": 0.268,
@@ -8,27 +17,15 @@
       "trailing_only_offset_is_reached": true
     },
     "max_open_trades": {
-      "max_open_trades": 3
+      "max_open_trades": 5
     },
     "buy": {
-      "ai_confidence_long": 0.864,
-      "ai_confidence_short": 0.125,
-      "buy_ema_period": 79,
-      "buy_sma_period": 160
-    },
-    "sell": {
-      "stoploss_opt": -0.05
-    },
-    "roi": {
-      "0": 0.1,
-      "33": 0.061,
-      "76": 0.023,
-      "145": 0
-    },
-    "stoploss": {
-      "stoploss": -0.215
+      "ai_threshold_long": 0.016,
+      "ai_threshold_short": -0.028,
+      "buy_ema_period": 69,
+      "buy_sma_period": 279
     }
   },
   "ft_stratparam_v": 1,
-  "export_time": "2026-02-12 13:23:36.690898+00:00"
+  "export_time": "2026-04-06 14:38:37.431094+00:00"
 }
