@@ -1,4 +1,4 @@
-FROM freqtradeorg/freqtrade:develop
+FROM freqtradeorg/freqtrade:stable_freqai
 
 # Cambiar a usuario root para instalar paquetes del sistema
 USER root
@@ -12,16 +12,26 @@ RUN apt-get update && apt-get install -y \
 # Volver al usuario ftuser para instalar paquetes de Python
 USER ftuser
 
-# --- INSTALACIÓN DE DEPENDENCIAS ÉLITE ---
-# Añadimos xgboost y torch para satisfacer al motor de logs de FreqAI
-# Mantenemos torch actualizado por seguridad (CVE-2025-32434)
+# --- INSTALACIÓN DE DEPENDENCIAS ---
+# PyTorch se instala aparte con CPU-only (sin CUDA/NVIDIA)
+# Mac Apple Silicon no necesita las librerías NVIDIA (~1.5GB menos)
 RUN pip install --no-cache-dir \
     sqlalchemy \
     psycopg2-binary \
-    datasieve \
     lightgbm \
     scikit-learn \
     pandas \
     xgboost \
-    "torch>=2.6.0" \
     tensorboard
+
+# Torch CPU separado para evitar arrastrar CUDA
+RUN pip install --no-cache-dir "torch>=2.6.0" --index-url https://download.pytorch.org/whl/cpu 2>/dev/null || \
+    pip install --no-cache-dir "torch>=2.6.0"
+
+# Parche para bug datasieve 0.1.9 (features_in → feature_list)
+USER root
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+USER ftuser
+
+ENTRYPOINT ["/entrypoint.sh"]
