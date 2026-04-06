@@ -47,7 +47,7 @@ Parámetros optimizados mediante algoritmo genético (Hyperopt).
 
 ---
 
-## Versión 1.2 — Production (Config-Driven) ← ACTUAL
+## Versión 1.2 — Production (Config-Driven)
 
 **Archivo:** `FreqaiExampleStrategy.py`
 
@@ -61,3 +61,40 @@ Versión limpia, optimizada y preparada para producción.
 - Método NLP renombrado a `_merge_sentiment_data` (convención privada)
 - Docstrings completos en todos los métodos
 - Código reducido de 745 a ~200 líneas
+
+---
+
+## Versión 2.0 — Matrícula de Honor ← ACTUAL
+
+**Archivo:** `FreqaiExampleStrategy.py`
+
+Salto cualitativo en la inteligencia del bot.
+
+**Mejora 1: Feature Engineering ampliado (5 → 12 features)**
+
+| Feature | Categoría | Justificación |
+|---|---|---|
+| RSI | Momentum | Sobrecompra/venta |
+| Stochastic RSI | Momentum | RSI del RSI (más sensible) |
+| MFI | Momentum | RSI ponderado por volumen |
+| MACD Histograma | Momentum | Cruces de tendencia |
+| BB Width | Volatilidad | Amplitud de bandas normalizada |
+| ATR normalizado | Volatilidad | Volatilidad relativa al precio |
+| OBV normalizado | Volumen | Presión compradora/vendedora |
+| Log Returns | Estadístico | Mejor distribución para ML |
+| Return Std | Estadístico | Régimen de mercado |
+| Candle Direction | Precio | Ratio close/open |
+| Sentimiento NLP | Fundamental | FinBERT via TimescaleDB |
+| Pct Change | Precio | Cambio porcentual |
+
+**Mejora 2: Target de regresión**
+- Antes: binario (1=sube, 0=baja) → no distinguía magnitud
+- Ahora: `&s-price_change` = % de cambio real del precio en N velas
+- Permite ajustar entradas por magnitud del movimiento predicho
+
+**Mejora 3: Stop Loss dinámico (ATR)**
+- Antes: stop fijo -1%
+- Ahora: `custom_stoploss` calcula stop = 2×ATR / precio
+- Mercado volátil → stop más amplio (evita salidas por ruido)
+- Mercado tranquilo → stop más estrecho (protege capital)
+- Limitado entre -0.5% y -3% por seguridad
