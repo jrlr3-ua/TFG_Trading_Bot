@@ -283,6 +283,41 @@ class FreqaiExampleStrategy(IStrategy):
         return True
 
     # ═══════════════════════════════════════════════════════════════════
+    # DIMENSIONAMIENTO DE POSICIÓN (Kelly Criterion Adaptado)
+    # ═══════════════════════════════════════════════════════════════════
+    def custom_stake_amount(self, pair: str, current_time: datetime, current_rate: float,
+                            proposed_stake: float, min_stake: float, max_stake: float,
+                            entry_tag: Optional[str], side: str, **kwargs) -> float:
+        """
+        Dimensionamiento de posición basado en la confianza de la IA.
+
+        La IA predice el % de cambio del precio. Usamos la magnitud de esa
+        predicción como proxy de confianza:
+        - Predicción grande (ej: +1.5%) → posición más grande (hasta 8% wallet)
+        - Predicción pequeña (ej: +0.3%) → posición mínima
+
+        Esto implementa una versión simplificada del Criterio de Kelly,
+        que maximiza el crecimiento esperado del capital a largo plazo.
+        """
+        dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
+        if dataframe.empty:
+            return proposed_stake
+
+        last_candle = dataframe.iloc[-1]
+        predicted_change = abs(last_candle.get("&s-price_change", 0))
+
+        # Factor de riesgo: 0 (sin confianza) a 1 (máxima confianza)
+        # Se normaliza sobre el rango esperado de predicciones (0% a 2%)
+        risk_factor = min(predicted_change / 0.02, 1.0)
+
+        # Stake proporcional a la confianza
+        total_wallet = self.wallets.get_total_stake_amount()
+        max_risk_per_trade = total_wallet * 0.08  # Máximo 8% por trade
+        adjusted_stake = min_stake + (max_risk_per_trade - min_stake) * risk_factor
+
+        return min(max(adjusted_stake, min_stake), max_stake)
+
+    # ═══════════════════════════════════════════════════════════════════
     # FREQAI: INGENIERÍA DE CARACTERÍSTICAS (12 Features)
     # ═══════════════════════════════════════════════════════════════════
     def feature_engineering_expand_all(self, dataframe: DataFrame, period: int,
