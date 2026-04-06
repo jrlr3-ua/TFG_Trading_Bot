@@ -75,30 +75,7 @@
             "method": "StaticPairList"
         }
     ],
-    "api_server": {
-        "enabled": true,
-        "listen_ip_address": "0.0.0.0",
-        "listen_port": 8080,
-        "verbosity": "info",
-        "jwt_secret_key": "supersecretkey",
-        "username": "freqtrader",
-        "password": "superpassword"
-    },
-
-    "telegram": {
-        "enabled": true,
-        "token": "8582599620:AAF_wZv2LGt34ipxt4kouBQVgT0KNzArbDI",
-        "chat_id": "-5151144872",
-        "notification_settings": {
-            "status": "on",
-            "warning": "off",
-            "startup": "on",
-            "entry": "on",
-            "entry_fill": "on",
-            "exit": "on",
-            "exit_fill": "on"
-        }
-    },
+    "_comment_credentials": "Las credenciales de api_server y telegram se cargan desde config_secrets.json",
 
     "freqai": {
         "enabled": true,
@@ -120,8 +97,6 @@
             "random_state": 42
         }
     },
-    "bot_name": "freqtrade_tfg",
-    "initial_state": "running",
     "internals": {
         "process_throttle_secs": 5
     }

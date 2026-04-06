@@ -1,6 +1,7 @@
 # === CREDENCIALES Y ENTORNO ===
 .env
 *.env.local
+user_data/config_secrets.json
 
 # === MODELOS FREQAI (muy pesados) ===
 user_data/models/
