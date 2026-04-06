@@ -1,0 +1,20 @@
+# Usamos Python 3.10 que tiene mejor soporte para las últimas versiones de PyTorch
+FROM python:3.10-slim
+
+# Instalar dependencias del sistema necesarias para compilar
+RUN apt-get update && apt-get install -y     gcc     libpq-dev     && rm -rf /var/lib/apt/lists/*
+
+# Crear directorio de trabajo
+WORKDIR /app
+
+# --- CORRECCIÓN DE SEGURIDAD CVE-2025-32434 ---
+# Forzamos la instalación de torch >= 2.6.0 para permitir la carga segura de modelos
+# Eliminamos la restricción de CPU específica para que pip encuentre la mejor versión compatible con ARM64 (M1)
+RUN pip install --no-cache-dir "torch>=2.6.0" 
+RUN pip install --no-cache-dir transformers pandas sqlalchemy psycopg2-binary beautifulsoup4 requests feedparser
+
+# Copiar el script
+COPY data_engineering/sentiment_ingestor.py .
+
+# Ejecutar el script al iniciar
+CMD ["python", "sentiment_ingestor.py"]

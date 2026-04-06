@@ -1,0 +1,9 @@
+{
+  "strategy": "FreqaiExampleStrategy",
+  "spaces": [
+    "roi",
+    "stoploss",
+    "trailing"
+  ],
+  "hyperopt_min_trades": 10
+}

@@ -1,0 +1,39 @@
+# === CREDENCIALES Y ENTORNO ===
+.env
+*.env.local
+
+# === MODELOS FREQAI (muy pesados) ===
+user_data/models/
+
+# === LOGS ===
+user_data/logs/
+
+# === BASES DE DATOS LOCALES ===
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# === RESULTADOS DE BACKTEST (pesados) ===
+user_data/backtest_results/*.zip
+
+# === DATOS DE MERCADO ===
+user_data/data/
+
+# === HYPEROPT ===
+user_data/hyperopt_results/
+user_data/hyperopt.lock
+
+# === FREQAI MODELS CACHE ===
+user_data/freqaimodels/
+
+# === SISTEMA ===
+.DS_Store
+__pycache__/
+*.pyc
+*.pyo
+
+# === DOCKER ===
+docker-compose.override.yml
+
+# === PLOTS ===
+user_data/plot/

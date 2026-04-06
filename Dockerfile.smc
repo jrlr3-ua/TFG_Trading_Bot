@@ -1,0 +1,17 @@
+# Usamos la imagen oficial de desarrollo
+FROM freqtradeorg/freqtrade:develop
+
+# Cambiamos al usuario root para poder instalar cosas
+USER root
+
+# Instalamos TODAS las librerías necesarias para la IA y SMC
+RUN pip install --no-cache-dir \
+    datasieve \
+    scikit-learn \
+    lightgbm \
+    pandas_ta \
+    finta \
+    technical
+
+# Volvemos al usuario normal
+USER ftuser
