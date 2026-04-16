@@ -1,0 +1,56 @@
+═══════════════════════════════════════════════════════════
+🚀 TFG v3.0 — BACKTESTING EXHAUSTIVO (5 MERCADOS)
+═══════════════════════════════════════════════════════════
+
+📥 Descargando datos Ene 2025 - Jun 2025...
+time="2026-04-15T13:14:24+02:00" level=warning msg="/Users/joanroma/TFG_Trading_Bot/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+unable to get image 'timescale/timescaledb:latest-pg14': Cannot connect to the Docker daemon at unix:///Users/joanroma/.docker/run/docker.sock. Is the docker daemon running?
+
+
+═══ BACKTEST #1/5: 🟢 BULL FUERTE (Abr-May 2025) ═══
+time="2026-04-15T13:14:24+02:00" level=warning msg="/Users/joanroma/TFG_Trading_Bot/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+unable to get image 'timescale/timescaledb:latest-pg14': Cannot connect to the Docker daemon at unix:///Users/joanroma/.docker/run/docker.sock. Is the docker daemon running?
+✅ Backtest #1 completado
+
+═══ BACKTEST #2/5: 🔴 BEAR SEVERO (Feb-Abr 2025) ═══
+time="2026-04-15T13:14:25+02:00" level=warning msg="/Users/joanroma/TFG_Trading_Bot/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+unable to get image 'timescale/timescaledb:latest-pg14': Cannot connect to the Docker daemon at unix:///Users/joanroma/.docker/run/docker.sock. Is the docker daemon running?
+✅ Backtest #2 completado
+
+📥 Descargando datos Jun 2025 - Abr 2026...
+time="2026-04-15T13:14:25+02:00" level=warning msg="/Users/joanroma/TFG_Trading_Bot/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+unable to get image 'timescale/timescaledb:latest-pg14': Cannot connect to the Docker daemon at unix:///Users/joanroma/.docker/run/docker.sock. Is the docker daemon running?
+
+═══ BACKTEST #3/5: 🟡 LATERAL/MIXTO (Ago-Oct 2025) ═══
+time="2026-04-15T13:14:25+02:00" level=warning msg="/Users/joanroma/TFG_Trading_Bot/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+unable to get image 'timescale/timescaledb:latest-pg14': Cannot connect to the Docker daemon at unix:///Users/joanroma/.docker/run/docker.sock. Is the docker daemon running?
+✅ Backtest #3 completado
+
+═══ BACKTEST #4/5: ⚫ CRASH (Oct-Dic 2025) ═══
+time="2026-04-15T13:14:25+02:00" level=warning msg="/Users/joanroma/TFG_Trading_Bot/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+unable to get image 'timescale/timescaledb:latest-pg14': Cannot connect to the Docker daemon at unix:///Users/joanroma/.docker/run/docker.sock. Is the docker daemon running?
+✅ Backtest #4 completado
+
+═══ BACKTEST #5/5: 🔵 BEAR MODERADO (Feb-Mar 2026) ═══
+time="2026-04-15T13:14:26+02:00" level=warning msg="/Users/joanroma/TFG_Trading_Bot/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+unable to get image 'timescale/timescaledb:latest-pg14': Cannot connect to the Docker daemon at unix:///Users/joanroma/.docker/run/docker.sock. Is the docker daemon running?
+✅ Backtest #5 completado
+
+═══════════════════════════════════════════════════════════
+🏆 RESUMEN DE TODOS LOS BACKTESTS v3.0
+═══════════════════════════════════════════════════════════
+
+─── bt1_bull_fuerte.txt ───
+
+─── bt2_bear_severo.txt ───
+
+─── bt3_lateral_mixto.txt ───
+
+─── bt4_crash.txt ───
+
+─── bt5_bear_moderado.txt ───
+
+═══════════════════════════════════════════════════════════
+✅ Todos los backtests v3.0 completados.
+📁 Resultados guardados en: /Users/joanroma/TFG_Trading_Bot/backtest_results_v30/
+═══════════════════════════════════════════════════════════

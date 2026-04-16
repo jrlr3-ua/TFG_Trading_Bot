@@ -98,3 +98,66 @@ Salto cualitativo en la inteligencia del bot.
 - Mercado volátil → stop más amplio (evita salidas por ruido)
 - Mercado tranquilo → stop más estrecho (protege capital)
 - Limitado entre -0.5% y -3% por seguridad
+
+---
+
+## Versión 2.1 — ADX Regime Filter
+
+**Archivo:** `FreqaiExampleStrategy.py`
+
+Corrección de pérdidas en mercados laterales.
+
+**Cambios respecto a v2.0:**
+- **ADX Filter (Capa 6):** No opera cuando ADX < 20 (mercado lateral sin tendencia)
+- Mantiene TODA la configuración rentable de v2.0
+
+---
+
+## Versión 3.0 — Institutional Multi-Timeframe ← ACTUAL
+
+**Archivo:** `FreqaiExampleStrategy.py`
+
+Salto institucional: 5 mejoras estratégicas profundas.
+
+**Mejora 1: Multi-Timeframe Features (MTF)**
+
+| Feature MTF | Descripción | Justificación |
+|---|---|---|
+| price_ratio_5m_1h | Ratio precio 5m vs cierre H1 | Divergencia micro/macro |
+| dist_sma200_1h | Distancia al SMA200 en H1 | Posición relativa a tendencia |
+| dist_ema50_1h | Distancia al EMA50 en H1 | Zona de valor macro |
+| adx_1h_norm | ADX H1 normalizado (0-1) | Fuerza de tendencia macro |
+| volume_ratio | Volumen relativo a media 50p | Confirma interés real |
+| hour_sin/cos | Codificación cíclica horaria | Preserva circularidad temporal |
+| day_sin/cos | Codificación cíclica diaria | Preserva circularidad semanal |
+
+La IA ahora ve el "bosque" (H1) además de los "árboles" (5m).
+
+**Mejora 2: NLP per-coin (NER - Named Entity Recognition)**
+
+- Antes: Sentimiento global (1 score para todo el mercado)
+- Ahora: Detecta qué moneda menciona cada titular
+- Ejemplo: "Ethereum sube, Ripple cae" → ETH: +0.9, XRP: -0.8
+- Nueva tabla `coin_sentiment` en TimescaleDB
+- Fallback a sentimiento global si no hay datos per-coin
+
+**Mejora 3: On-Chain & Macroeconómicos**
+
+- Nuevo microservicio `onchain_data` (6º contenedor Docker)
+- Descarga Fear & Greed Index cada 15 min
+- Descarga BTC Dominance y Market Cap total
+- `confirm_trade_entry` consulta F&G: bloquea LONGs en Extreme Greed (>85) y SHORTs en Extreme Fear (<15)
+
+**Mejora 4: MLOps (Trazabilidad de la IA)**
+
+- `_log_prediction_metrics()`: Log de cada predicción (par, señal, confianza, sentimiento, ADX)
+- Log de señales de entrada en `populate_entry_trend`
+- Log de trades confirmados en `confirm_trade_entry`
+- Pipeline NLP logging: distribución pos/neg/neutral, latencia
+
+**Mejora 5: Maker Pricing (Optimización de Comisiones)**
+
+- `price_side: "other"` en entry_pricing y exit_pricing
+- Al comprar: orden limit al precio del bid (lado opuesto)
+- Al vender: orden limit al precio del ask (lado opuesto)
+- Comisión Maker: 0.02% vs Taker: 0.05% (ahorro del 60%)

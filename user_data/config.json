@@ -1,5 +1,5 @@
 {
-    "bot_name": "freqtrade_tfg_AGGRESSIVE",
+    "bot_name": "freqtrade_tfg_v3.0",
     "initial_state": "running",
     "max_open_trades": 5,
     "stake_currency": "USDT",
@@ -10,18 +10,25 @@
     "dry_run_wallet": 1000,
     "leverage": 10,
     "cancel_open_orders_on_exit": false,
+    "use_exit_signal": true,
+    "exit_profit_only": false,
+    "ignore_roi_if_entry_signal": false,
     "timeframe": "5m",
     "trading_mode": "futures",
     "margin_mode": "isolated",
 
     "minimal_roi": {
-        "0": 0.05,
-        "30": 0.03,
-        "60": 0.02,
-        "120": 0.01
+        "0": 0.15,
+        "40": 0.08,
+        "90": 0.03,
+        "180": 0.01
     },
 
-    "stoploss": -0.03,
+    "stoploss": -0.025,
+    "trailing_stop": true,
+    "trailing_stop_positive": 0.015,
+    "trailing_stop_positive_offset": 0.025,
+    "trailing_only_offset_is_reached": true,
 
     "unfilledtimeout": {
         "entry": 10,
@@ -30,7 +37,7 @@
         "unit": "minutes"
     },
     "entry_pricing": {
-        "price_side": "same",
+        "price_side": "other",
         "use_order_book": true,
         "order_book_top": 1,
         "price_last_balance": 0.0,
@@ -40,7 +47,7 @@
         }
     },
     "exit_pricing": {
-        "price_side": "same",
+        "price_side": "other",
         "use_order_book": true,
         "order_book_top": 1
     },
@@ -80,13 +87,13 @@
     "freqai": {
         "enabled": true,
         "purge_old_models": true,
-        "train_period_days": 15,
+        "train_period_days": 30,
         "backtest_period_days": 7,
-        "live_retrain_hours": 0,
-        "expiration_hours": 1.5,
-        "identifier": "tfg-bot-v4",
+        "live_retrain_hours": 2,
+        "expiration_hours": 2,
+        "identifier": "tfg-bot-v30-institutional",
         "feature_parameters": {
-            "include_timeframes": ["5m", "15m"],
+            "include_timeframes": ["5m", "15m", "1h"],
             "include_corr_pairlist": ["BTC/USDT:USDT", "ETH/USDT:USDT"],
             "label_period_candles": 20,
             "include_shifted_candles": 2,

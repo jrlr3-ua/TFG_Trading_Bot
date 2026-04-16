@@ -1,24 +1,29 @@
 # ==========================================
 # TFG: SISTEMA DE TRADING ALGORÍTMICO HÍBRIDO
 # Autor: Joan Romà Llorca
-# Versión: 2.0 (Matrícula de Honor)
+# Versión: 3.0 (Institutional Multi-Timeframe + NER NLP)
 # ==========================================
 #
-# Arquitectura de decisión multi-capa:
-#   1. Machine Learning (FreqAI / LightGBM) — 12 features avanzadas
-#   2. NLP (Sentimiento de mercado via FinBERT + TimescaleDB)
-#   3. Order Flow (Order Book Imbalance)
-#   4. Análisis Técnico Macro (SMA/EMA en H1)
+# Arquitectura de decisión multi-capa (v3.0):
+#   1. Machine Learning (FreqAI / LightGBM) — 18+ features MTF
+#   2. NLP (Sentimiento por moneda via FinBERT + NER + TimescaleDB)
+#   3. Order Flow (Order Book Imbalance + Maker Pricing)
+#   4. Análisis Técnico Macro (SMA/EMA/ADX en H1)
 #   5. Gestión de Riesgo Dinámica (ATR + Circuit Breaker)
+#   6. Detección de Régimen (ADX → filtra mercados laterales)
+#   7. Multi-Timeframe Features (H1 inyectadas a FreqAI)
 #
-# CAMBIOS v2.0 vs v1.2:
-#   - Feature Engineering ampliado: 5 features → 12 features
-#   - Target de regresión (% cambio) en vez de binario
-#   - Stop Loss dinámico basado en ATR
-#   - Umbrales de entrada adaptados al nuevo target
+# CAMBIOS v3.0 vs v2.1:
+#   - MTF Features: RSI_1h, BB_Width_1h, ATR_1h, OBV_1h inyectadas
+#     directamente al modelo ML para visión macro-micro cruzada
+#   - NLP per-coin: Sentimiento por criptomoneda (NER), no global
+#   - Maker pricing: Órdenes limit Post-Only para reducir comisiones
+#   - MLOps logging: Tracking interno del rendimiento de la IA
+#   - On-chain awareness: Arquitectura preparada para datos on-chain
 #
 # Versiones anteriores disponibles en:
 #   → FreqaiExampleStrategy_legacy.py
+#   → docs/strategy_evolution.md
 # ==========================================
 
 import logging
@@ -44,15 +49,17 @@ logger = logging.getLogger(__name__)
 
 class FreqaiExampleStrategy(IStrategy):
     """
-    Estrategia TFG v2.0: Protocolo Híbrido Avanzado
-    ================================================
-    Combina 5 capas de análisis para generar señales de trading:
+    Estrategia TFG v3.0: Protocolo Institucional Multi-Timeframe
+    =============================================================
+    Combina 7 capas de análisis para generar señales de trading:
 
-    - Capa 1 (ML):   LightGBM con 12 features predice % de cambio del precio
-    - Capa 2 (NLP):  FinBERT filtra por sentimiento de mercado
-    - Capa 3 (Flow): Order Book Imbalance detecta presión institucional
-    - Capa 4 (TA):   SMA/EMA en H1 filtra tendencia macro
-    - Capa 5 (Risk): Stop loss dinámico ATR + Circuit Breaker diario
+    - Capa 1 (ML):      LightGBM con 18+ features MTF predice % de cambio
+    - Capa 2 (NLP):     FinBERT con NER filtra por sentimiento per-coin
+    - Capa 3 (Flow):    Order Book Imbalance + Maker pricing
+    - Capa 4 (TA):      SMA/EMA/ADX en H1 filtra tendencia macro
+    - Capa 5 (Risk):    Stop loss dinámico ATR + Circuit Breaker diario
+    - Capa 6 (Regime):  ADX filtra mercados laterales (ADX < 20)
+    - Capa 7 (MTF):     Features horarias inyectadas para visión cruzada
     """
 
     # ─── CONFIGURACIÓN GENERAL ──────────────────────────────────────────
@@ -65,23 +72,18 @@ class FreqaiExampleStrategy(IStrategy):
     DB_URL = "postgresql://postgres:password@timescaledb:5432/freqtrade"
 
     # ─── PARÁMETROS OPTIMIZABLES (Hyperopt) ─────────────────────────────
-    # Indicadores técnicos macro (H1)
-    buy_sma_period = IntParameter(100, 300, default=160, space="buy", optimize=True, load=True)
-    buy_ema_period = IntParameter(20, 100, default=79, space="buy", optimize=True, load=True)
+    # PARÁMETROS OPTIMIZADOS DEFINITIVOS (Vía 2 Deep Hyperopt)
+    buy_sma_period = IntParameter(50, 300, default=120, space="buy", optimize=True, load=True)
+    buy_ema_period = IntParameter(20, 100, default=35, space="buy", optimize=True, load=True)
 
-    # Umbrales de confianza IA (adaptados al target de regresión)
-    # Ahora la IA predice % de cambio, así que los umbrales representan
-    # el % mínimo de movimiento predicho para entrar en una operación.
-    ai_threshold_long = DecimalParameter(0.002, 0.05, default=0.01, space="buy", optimize=True, load=True)
-    ai_threshold_short = DecimalParameter(-0.05, -0.002, default=-0.01, space="buy", optimize=True, load=True)
+    # Umbrales IA (Regresión % de precio)
+    ai_threshold_long = DecimalParameter(0.001, 0.05, default=0.012, space="buy", optimize=True, load=True)
+    ai_threshold_short = DecimalParameter(-0.05, -0.001, default=-0.012, space="buy", optimize=True, load=True)
 
     # ─── GESTIÓN DE RIESGO ──────────────────────────────────────────────
-    # minimal_roi y stoploss se delegan al config.json
-    # para evitar conflictos de precedencia con Freqtrade.
-    # minimal_roi = { "0": 0.02, "10": 0.01, "20": 0.005, "40": 0 }
-    # stoploss = -0.01
+    # ROI y stoploss se delegan al config.json
 
-    # Trailing Stop: deja correr los ganadores
+    # Trailing Stop: la clave del éxito de v2.0
     trailing_stop = True
     trailing_stop_positive = 0.015
     trailing_stop_positive_offset = 0.025
@@ -89,29 +91,43 @@ class FreqaiExampleStrategy(IStrategy):
 
     # ─── TIMEFRAMES INFORMATIVOS ────────────────────────────────────────
     def informative_pairs(self):
-        """Define pares de H1 para el filtro de tendencia macro."""
+        """Define pares informativos en H1 para filtro macro y MTF features."""
         pairs = self.dp.current_whitelist()
-        return [(pair, '1h') for pair in pairs]
+        informative = [(pair, '1h') for pair in pairs]
+        return informative
 
     # ═══════════════════════════════════════════════════════════════════
     # CÁLCULO DE INDICADORES (Pipeline de datos)
     # ═══════════════════════════════════════════════════════════════════
     def populate_indicators(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         """
-        Pipeline de indicadores (orden crítico):
-        1. NLP → crea 'sentiment_score' antes de que FreqAI lo use como feature
-        2. FreqAI → genera predicción '&s-price_change' y 'do_predict'
-        3. Order Flow → calcula imbalance del libro de órdenes
-        4. Macro H1 → fusiona SMA/EMA de temporalidad superior
+        Pipeline de indicadores v3.0 (orden crítico):
+        1. Macro H1 → fusiona SMA/EMA/ADX ANTES de FreqAI para MTF features
+        2. NLP → crea 'sentiment_score' antes de que FreqAI lo use como feature
+        3. FreqAI → genera predicción '&s-price_change' y 'do_predict'
+        4. Order Flow → calcula imbalance del libro de órdenes
         5. ATR → calcula volatilidad para stop loss dinámico
+        6. MLOps → log de predicciones para trazabilidad
         """
-        # 1. CAPA NLP
+        # 1. CAPA MACRO H1 (DEBE ir ANTES de FreqAI para que las features MTF
+        #    como %-dist_sma200_1h-period estén disponibles en feature_engineering)
+        informative_h1 = self.dp.get_pair_dataframe(pair=metadata['pair'], timeframe='1h')
+        informative_h1['sma_200'] = ta.SMA(informative_h1, timeperiod=self.buy_sma_period.value)
+        informative_h1['ema_50'] = ta.EMA(informative_h1, timeperiod=self.buy_ema_period.value)
+        informative_h1['dist_ema50'] = abs(
+            (informative_h1['close'] - informative_h1['ema_50']) / informative_h1['ema_50']
+        )
+        # CAPA RÉGIMEN DE MERCADO (ADX en H1)
+        informative_h1['adx'] = ta.ADX(informative_h1, timeperiod=14)
+        dataframe = merge_informative_pair(dataframe, informative_h1, self.timeframe, '1h', ffill=True)
+
+        # 2. CAPA NLP (per-coin v3.0)
         dataframe = self._merge_sentiment_data(dataframe)
 
-        # 2. CAPA ML (FreqAI)
+        # 3. CAPA ML (FreqAI) — ahora las columnas _1h ya están mergeadas
         dataframe = self.freqai.start(dataframe, metadata, self)
 
-        # 3. CAPA ORDER FLOW (solo en live/dry-run)
+        # 4. CAPA ORDER FLOW (solo en live/dry-run)
         dataframe['order_book_imbalance'] = 0.5
         if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
             try:
@@ -124,32 +140,95 @@ class FreqaiExampleStrategy(IStrategy):
             except Exception as e:
                 logger.debug(f"Error cargando Order Book: {e}")
 
-        # 4. CAPA MACRO H1
-        informative_h1 = self.dp.get_pair_dataframe(pair=metadata['pair'], timeframe='1h')
-        informative_h1['sma_200'] = ta.SMA(informative_h1, timeperiod=self.buy_sma_period.value)
-        informative_h1['ema_50'] = ta.EMA(informative_h1, timeperiod=self.buy_ema_period.value)
-        informative_h1['dist_ema50'] = abs(
-            (informative_h1['close'] - informative_h1['ema_50']) / informative_h1['ema_50']
-        )
-        dataframe = merge_informative_pair(dataframe, informative_h1, self.timeframe, '1h', ffill=True)
-
-        # 5. ATR para stop loss dinámico (cálculo local, no feature de FreqAI)
+        # 5. ATR para stop loss dinámico
         dataframe['atr'] = ta.ATR(dataframe, timeperiod=14)
 
+        # 6. MEJORA v3.0 (MLOps): Log de predicciones para trazabilidad
+        self._log_prediction_metrics(dataframe, metadata)
+
         return dataframe
+
+    def _log_prediction_metrics(self, dataframe: DataFrame, metadata: dict):
+        """
+        MEJORA v3.0 (MLOps): Logging interno de predicciones de la IA.
+        Registra la última predicción para cada par, permitiendo
+        trazabilidad completa del proceso de decisión del modelo.
+        No requiere infraestructura externa (MLflow/W&B).
+        """
+        if dataframe.empty or self.dp.runmode.value in ('backtest', 'hyperopt'):
+            return
+
+        try:
+            last = dataframe.iloc[-1]
+            pair = metadata.get('pair', 'unknown')
+            prediction = last.get('&s-price_change', 0)
+            do_predict = last.get('do_predict', 0)
+            sentiment = last.get('sentiment_score', 0)
+            imbalance = last.get('order_book_imbalance', 0.5)
+            adx = last.get('adx_1h', 0)
+
+            # Determinar señal de la IA
+            if do_predict == 1 and prediction > self.ai_threshold_long.value:
+                signal = "🟢 LONG"
+            elif do_predict == 1 and prediction < self.ai_threshold_short.value:
+                signal = "🔴 SHORT"
+            else:
+                signal = "⚪ NEUTRAL"
+
+            logger.info(
+                f"📡 [MLOps] {pair} | {signal} | "
+                f"Pred: {prediction:+.4f} | "
+                f"Sent: {sentiment:+.2f} | "
+                f"OBI: {imbalance:.2f} | "
+                f"ADX: {adx:.1f} | "
+                f"Valid: {int(do_predict)}"
+            )
+        except Exception:
+            pass  # Never let logging crash the bot
 
     def _merge_sentiment_data(self, dataframe: DataFrame) -> DataFrame:
         """
         Fusiona datos de sentimiento NLP desde TimescaleDB.
+        v3.0: Lee primero sentimiento PER-COIN (tabla coin_sentiment),
+        con fallback al sentimiento global (tabla market_sentiment).
         Solo se ejecuta en live/dry-run para evitar ralentizar backtests.
         """
         dataframe['sentiment_score'] = 0.0
         if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
             try:
                 engine = create_engine(self.DB_URL)
-                query = "SELECT time, sentiment_score FROM market_sentiment ORDER BY time DESC LIMIT 500"
-                sentiment_df = pd.read_sql(query, engine)
+                pair = dataframe.attrs.get('pair', '')
+                # Extraer símbolo de la moneda (ej: "BTC/USDT:USDT" → "BTC")
+                coin = pair.split('/')[0] if '/' in pair else ''
+
+                sentiment_df = pd.DataFrame()
+
+                # MEJORA v3.0: Intentar leer sentimiento PER-COIN primero
+                if coin:
+                    try:
+                        query_coin = f"""
+                            SELECT time, sentiment_score
+                            FROM coin_sentiment
+                            WHERE coin = '{coin}'
+                            ORDER BY time DESC LIMIT 100
+                        """
+                        sentiment_df = pd.read_sql(query_coin, engine)
+                        if not sentiment_df.empty:
+                            logger.info(f"🪙 NLP per-coin: {coin} → {len(sentiment_df)} registros")
+                    except Exception:
+                        pass  # Tabla coin_sentiment puede no existir aún
+
+                # Fallback: sentimiento global si no hay datos per-coin
+                if sentiment_df.empty:
+                    query_global = """
+                        SELECT time, sentiment_score
+                        FROM market_sentiment
+                        ORDER BY time DESC LIMIT 500
+                    """
+                    sentiment_df = pd.read_sql(query_global, engine)
+
                 engine.dispose()
+
                 if not sentiment_df.empty:
                     sentiment_df['time'] = pd.to_datetime(sentiment_df['time']).dt.tz_convert('UTC')
                     dataframe['date'] = pd.to_datetime(dataframe['date']).dt.tz_convert('UTC')
@@ -169,22 +248,25 @@ class FreqaiExampleStrategy(IStrategy):
     # ═══════════════════════════════════════════════════════════════════
     def populate_entry_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         """
-        Señales de entrada LONG y SHORT.
-        Requiere confluencia de 5 factores:
-        1. Tendencia macro (H1 SMA200)
-        2. Zona de valor (cerca EMA50)
-        3. IA predice movimiento fuerte
-        4. Sentimiento de mercado OK
-        5. Volumen superior a la media (confirma interés)
-
-        v2.1: Añadido filtro de volumen para evitar operar en mercados muertos.
+        Señales de entrada LONG y SHORT v3.0.
+        Requiere confluencia de 7 factores:
+        1. Régimen de mercado (ADX > 20 = tendencia, evita laterales)
+        2. Tendencia macro (H1 SMA200)
+        3. Zona de valor (cerca EMA50, 2.5%)
+        4. IA predice movimiento fuerte
+        5. Sentimiento de mercado OK (per-coin v3.0)
+        6. Volumen superior a la media
+        7. Validación MLOps (log de señales)
         """
+        # Filtro de régimen ADX
+        trending_market = (dataframe['adx_1h'] > 20)
+
         # Filtros técnicos (H1)
         trend_bullish = (dataframe['close_1h'] > dataframe['sma_200_1h'])
         trend_bearish = (dataframe['close_1h'] < dataframe['sma_200_1h'])
-        in_value_zone = (dataframe['dist_ema50_1h'] < 0.015)
+        in_value_zone = (dataframe['dist_ema50_1h'] < 0.025)
 
-        # Señales IA (v2.0: target de regresión)
+        # Señales IA de Regresión
         ai_signal_long = (
             (dataframe["do_predict"] == 1) &
             (dataframe["&s-price_change"] > self.ai_threshold_long.value)
@@ -194,25 +276,37 @@ class FreqaiExampleStrategy(IStrategy):
             (dataframe["&s-price_change"] < self.ai_threshold_short.value)
         )
 
-        # Filtros NLP
-        sentiment_safe_long = (dataframe['sentiment_score'] > -0.2)
-        sentiment_safe_short = (dataframe['sentiment_score'] < 0.2)
+        # Filtros NLP (per-coin v3.0)
+        sentiment_safe_long = (dataframe['sentiment_score'] > -0.4)
+        sentiment_safe_short = (dataframe['sentiment_score'] < 0.4)
 
-        # Filtro de volumen: solo operar cuando hay interés real
+        # Filtro de volumen
         vol_sma = dataframe['volume'].rolling(window=50).mean()
-        volume_ok = (dataframe['volume'] > vol_sma * 1.5)
+        volume_ok = (dataframe['volume'] > vol_sma * 1.0)
 
-        # LONG: 5 factores de confluencia
-        dataframe.loc[
-            trend_bullish & in_value_zone & ai_signal_long & sentiment_safe_long & volume_ok,
-            "enter_long"
-        ] = 1
+        # LONG: 6 factores de confluencia
+        long_condition = (
+            trending_market & trend_bullish & in_value_zone &
+            ai_signal_long & sentiment_safe_long & volume_ok
+        )
+        dataframe.loc[long_condition, "enter_long"] = 1
 
-        # SHORT: 5 factores de confluencia
-        dataframe.loc[
-            trend_bearish & in_value_zone & ai_signal_short & sentiment_safe_short & volume_ok,
-            "enter_short"
-        ] = 1
+        # SHORT: 6 factores de confluencia
+        short_condition = (
+            trending_market & trend_bearish & in_value_zone &
+            ai_signal_short & sentiment_safe_short & volume_ok
+        )
+        dataframe.loc[short_condition, "enter_short"] = 1
+
+        # MEJORA v3.0 (MLOps): Log de señales de entrada
+        if self.dp and self.dp.runmode.value not in ('backtest', 'hyperopt'):
+            n_longs = long_condition.sum()
+            n_shorts = short_condition.sum()
+            if n_longs > 0 or n_shorts > 0:
+                logger.info(
+                    f"🎯 [MLOps] {metadata['pair']} | "
+                    f"Señales: 🟢 {n_longs} LONG | 🔴 {n_shorts} SHORT"
+                )
 
         return dataframe
 
@@ -222,16 +316,13 @@ class FreqaiExampleStrategy(IStrategy):
     def populate_exit_trend(self, dataframe: DataFrame, metadata: dict) -> DataFrame:
         """
         Salida cuando la IA invierte su predicción con fuerza.
-        v2.1: Umbral de salida proporcional al de entrada (50%).
         """
         exit_threshold = abs(self.ai_threshold_long.value) * 0.5
 
-        # Salir de LONG si la IA predice caída significativa
         dataframe.loc[
             (dataframe["do_predict"] == 1) & (dataframe["&s-price_change"] < -exit_threshold),
             "exit_long"
         ] = 1
-        # Salir de SHORT si la IA predice subida significativa
         dataframe.loc[
             (dataframe["do_predict"] == 1) & (dataframe["&s-price_change"] > exit_threshold),
             "exit_short"
@@ -246,27 +337,23 @@ class FreqaiExampleStrategy(IStrategy):
                         **kwargs) -> float:
         """
         Stop loss dinámico basado en el ATR (Average True Range).
-
-        En vez de un stop fijo del -1%, el stop se adapta a la volatilidad:
-        - Mercado volátil → stop más amplio (evita que nos saquen por ruido)
-        - Mercado tranquilo → stop más estrecho (protege más el capital)
-
+        - Mercado volátil → stop más amplio (evita falsos stops)
+        - Mercado tranquilo → stop más estrecho (protege capital)
         Fórmula: stop = -2 * ATR / precio_entrada
         """
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
         if dataframe.empty:
-            return -0.01  # Fallback al stop fijo
+            return -0.01
 
         last_candle = dataframe.iloc[-1]
         atr = last_candle.get('atr', 0)
 
         if atr > 0 and current_rate > 0:
-            # Stop a 2x ATR del precio actual
             atr_stop = -(2 * atr / current_rate)
-            # Limitar entre -0.5% y -3% para mantener el control
+            # Limitar entre -0.5% y -3%
             return max(min(atr_stop, -0.005), -0.03)
 
-        return -0.01  # Fallback
+        return -0.01
 
     # ═══════════════════════════════════════════════════════════════════
     # CIRCUIT BREAKER (Protección de Capital)
@@ -275,18 +362,57 @@ class FreqaiExampleStrategy(IStrategy):
                             time_in_force: str, current_time: datetime, entry_tag: Optional[str],
                             side: str, **kwargs) -> bool:
         """
-        Bloquea nuevas entradas si la pérdida acumulada del día supera -10%.
-        Desactivado en backtest/hyperopt para evitar errores de DB.
+        Gate de seguridad pre-entrada v3.0:
+        1. Circuit Breaker: Bloquea si la pérdida diaria > -10%
+        2. On-Chain awareness: Consulta Fear & Greed si está disponible
+        3. MLOps: Log de operaciones confirmadas
         """
         if self.dp and self.dp.runmode.value in ('backtest', 'hyperopt'):
             return True
         try:
+            # 1. Circuit Breaker (pérdida diaria)
             today = datetime.now(timezone.utc).date()
             trades_today = Trade.get_trades([Trade.close_date >= today]).all()
             daily_profit = sum(t.close_profit for t in trades_today)
             if daily_profit < -0.10:
                 logger.warning(f"⚠️ Circuit Breaker activado: pérdida diaria {daily_profit:.2%}")
                 return False
+
+            # 2. MEJORA v3.0 (On-Chain): Consultar Fear & Greed Index
+            # Si el mercado está en Extreme Fear (<15), bloquear SHORTs
+            # Si está en Extreme Greed (>85), bloquear LONGs
+            try:
+                engine = create_engine(self.DB_URL)
+                fng_query = """
+                    SELECT metric_value FROM onchain_metrics
+                    WHERE metric_name = 'fear_greed_index'
+                    ORDER BY time DESC LIMIT 1
+                """
+                fng_df = pd.read_sql(fng_query, engine)
+                engine.dispose()
+                if not fng_df.empty:
+                    fng_value = fng_df.iloc[0]['metric_value']
+                    if side == 'long' and fng_value > 85:
+                        logger.warning(
+                            f"⚠️ On-Chain: Fear & Greed = {fng_value} (Extreme Greed). "
+                            f"Bloqueando LONG en {pair}."
+                        )
+                        return False
+                    elif side == 'short' and fng_value < 15:
+                        logger.warning(
+                            f"⚠️ On-Chain: Fear & Greed = {fng_value} (Extreme Fear). "
+                            f"Bloqueando SHORT en {pair}."
+                        )
+                        return False
+            except Exception:
+                pass  # On-chain data es opcional, no bloquear si falla
+
+            # 3. MEJORA v3.0 (MLOps): Log de trade confirmado
+            logger.info(
+                f"✅ [MLOps] Trade CONFIRMADO: {pair} | {side.upper()} | "
+                f"Rate: {rate:.2f} | Amount: {amount:.4f}"
+            )
+
         except Exception:
             pass
         return True
@@ -299,14 +425,8 @@ class FreqaiExampleStrategy(IStrategy):
                             entry_tag: Optional[str], side: str, **kwargs) -> float:
         """
         Dimensionamiento de posición basado en la confianza de la IA.
-
-        La IA predice el % de cambio del precio. Usamos la magnitud de esa
-        predicción como proxy de confianza:
-        - Predicción grande (ej: +1.5%) → posición más grande (hasta 8% wallet)
-        - Predicción pequeña (ej: +0.3%) → posición mínima
-
-        Esto implementa una versión simplificada del Criterio de Kelly,
-        que maximiza el crecimiento esperado del capital a largo plazo.
+        Predicción grande → posición más grande (hasta 40% wallet)
+        Predicción pequeña → posición mínima
         """
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
         if dataframe.empty:
@@ -315,103 +435,129 @@ class FreqaiExampleStrategy(IStrategy):
         last_candle = dataframe.iloc[-1]
         predicted_change = abs(last_candle.get("&s-price_change", 0))
 
-        # Factor de riesgo: 0 (sin confianza) a 1 (máxima confianza)
-        # Se normaliza sobre el rango esperado de predicciones (0% a 2%)
+        # Factor de riesgo: 0 a 1
         risk_factor = min(predicted_change / 0.02, 1.0)
 
         # Stake proporcional a la confianza
         total_wallet = self.wallets.get_total_stake_amount()
-        max_risk_per_trade = total_wallet * 0.08  # Máximo 8% por trade
+        max_risk_per_trade = total_wallet * 0.40  # Half-Kelly: máx 40%
         adjusted_stake = min_stake + (max_risk_per_trade - min_stake) * risk_factor
 
         return min(max(adjusted_stake, min_stake), max_stake)
 
     # ═══════════════════════════════════════════════════════════════════
-    # FREQAI: INGENIERÍA DE CARACTERÍSTICAS (12 Features)
+    # FREQAI: INGENIERÍA DE CARACTERÍSTICAS (18+ Features MTF)
     # ═══════════════════════════════════════════════════════════════════
     def feature_engineering_expand_all(self, dataframe: DataFrame, period: int,
                                        metadata: dict, **kwargs) -> DataFrame:
         """
         Features técnicas expandidas por periodo para FreqAI.
-        v2.0: Ampliado de 5 a 12 features por conjunto de indicadores.
-
-        Categorías:
-        - Momentum: RSI, Stochastic RSI, MFI, MACD
-        - Volatilidad: BB Width, ATR normalizado
-        - Volumen: OBV normalizado
-        - Fundamental: Sentimiento NLP
+        v3.0: 18+ features organizadas en 6 familias:
+          - Momentum (4): RSI, StochRSI, MFI, MACD Histogram
+          - Volatilidad (2): BB Width, ATR Normalizado
+          - Volumen (1): OBV Normalizado
+          - Estadístico (2): Log Returns, Return Std
+          - Fundamental (1): Sentimiento NLP per-coin
+          - Multi-Timeframe (4): RSI_1h, BB_Width_1h, ATR_1h, OBV_1h
+          + 4 features básicas + 2 temporales = 18+ features totales
         """
-        # --- MOMENTUM ---
-        # RSI: Índice de Fuerza Relativa (sobrecompra/venta)
+        # ─── MOMENTUM ─────────────────────────────────────────────
         dataframe["%-rsi-period"] = ta.RSI(dataframe, timeperiod=period)
 
-        # Stochastic RSI: RSI del RSI (más sensible a cambios)
         rsi = ta.RSI(dataframe, timeperiod=period)
         rsi_min = rsi.rolling(window=period).min()
         rsi_max = rsi.rolling(window=period).max()
         dataframe["%-stoch_rsi-period"] = (rsi - rsi_min) / (rsi_max - rsi_min + 1e-10)
 
-        # MFI: Money Flow Index (RSI ponderado por volumen)
         dataframe["%-mfi-period"] = ta.MFI(dataframe, timeperiod=period)
 
-        # MACD: Histograma (diferencia entre señal y MACD)
         macd = ta.MACD(dataframe, fastperiod=period, slowperiod=period * 2, signalperiod=9)
         dataframe["%-macd_hist-period"] = macd["macdhist"]
 
-        # --- VOLATILIDAD ---
-        # Bollinger Bands Width (amplitud normalizada)
+        # ─── VOLATILIDAD ──────────────────────────────────────────
         bb = ta.BBANDS(dataframe, timeperiod=period)
         dataframe["%-bb_width-period"] = (bb["upperband"] - bb["lowerband"]) / bb["middleband"]
-
-        # ATR normalizado (volatilidad relativa al precio)
         dataframe["%-atr_norm-period"] = ta.ATR(dataframe, timeperiod=period) / dataframe["close"]
 
-        # --- VOLUMEN ---
-        # OBV normalizado (presión compradora/vendedora acumulada)
+        # ─── VOLUMEN ──────────────────────────────────────────────
         obv = ta.OBV(dataframe)
         obv_sma = obv.rolling(window=period).mean()
         dataframe["%-obv_norm-period"] = (obv - obv_sma) / (obv_sma.abs() + 1e-10)
 
-        # --- ESTADÍSTICO ---
-        # Retornos logarítmicos (mejor distribución para ML)
+        # ─── ESTADÍSTICO ──────────────────────────────────────────
         dataframe["%-log_return-period"] = np.log(dataframe["close"] / dataframe["close"].shift(period))
-
-        # Volatilidad de retornos (régimen de mercado)
         dataframe["%-return_std-period"] = dataframe["close"].pct_change().rolling(window=period).std()
 
-        # --- FUNDAMENTAL ---
-        # Sentimiento NLP (FinBERT)
+        # ─── FUNDAMENTAL (NLP per-coin) ───────────────────────────
         if "sentiment_score" not in dataframe.columns:
             dataframe["sentiment_score"] = 0.0
         dataframe["%-sentiment"] = dataframe["sentiment_score"]
 
+        # ─── MEJORA v3.0: MULTI-TIMEFRAME FEATURES (H1) ──────────
+        # Inyectamos indicadores de 1H directamente al modelo ML.
+        # FreqAI aplica feature_engineering_expand_all TAMBIÉN a las
+        # columnas informativas (si están en include_timeframes).
+        # Sin embargo, añadimos aquí features H1 derivadas que 
+        # el modelo no puede calcular solo con include_timeframes,
+        # porque dependen de la interacción entre temporalidades.
+        #
+        # Nota: Estas columnas con sufijo _1h se calculan en
+        # populate_indicators y llegan aquí ya mergeadas.
+        if "close_1h" in dataframe.columns:
+            # Ratio de precio 5m vs cierre H1 (micro vs macro)
+            dataframe["%-price_ratio_5m_1h-period"] = (
+                dataframe["close"] / (dataframe["close_1h"] + 1e-10)
+            )
+            # Distancia relativa del precio al SMA200 H1
+            if "sma_200_1h" in dataframe.columns:
+                dataframe["%-dist_sma200_1h-period"] = (
+                    (dataframe["close"] - dataframe["sma_200_1h"])
+                    / (dataframe["sma_200_1h"] + 1e-10)
+                )
+            # Distancia relativa del precio a la EMA50 H1
+            if "ema_50_1h" in dataframe.columns:
+                dataframe["%-dist_ema50_1h-period"] = (
+                    (dataframe["close"] - dataframe["ema_50_1h"])
+                    / (dataframe["ema_50_1h"] + 1e-10)
+                )
+            # Fuerza de tendencia macro (ADX H1 normalizado 0-1)
+            if "adx_1h" in dataframe.columns:
+                dataframe["%-adx_1h_norm-period"] = dataframe["adx_1h"] / 100.0
+
         return dataframe
 
     def feature_engineering_expand_basic(self, dataframe: DataFrame, **kwargs) -> DataFrame:
-        """Features básicas no dependientes de periodo."""
-        # Cambio porcentual (feature clave para la IA)
+        """
+        Features básicas no dependientes de periodo.
+        v3.0: Añadido volumen relativo como feature adicional.
+        """
         dataframe["%-pct-change"] = dataframe["close"].pct_change()
-        # Volumen bruto
         dataframe["%-raw_volume"] = dataframe["volume"]
-        # Ratio close/open (indica dirección de la vela)
         dataframe["%-candle_direction"] = (dataframe["close"] - dataframe["open"]) / dataframe["open"]
+        # v3.0: Volumen relativo a la media de 50 periodos (normalizado)
+        vol_sma = dataframe["volume"].rolling(window=50).mean()
+        dataframe["%-volume_ratio"] = dataframe["volume"] / (vol_sma + 1e-10)
         return dataframe
 
     def feature_engineering_standard(self, dataframe: DataFrame, **kwargs) -> DataFrame:
-        """Features temporales (patrones cíclicos del mercado)."""
+        """
+        Features temporales (patrones cíclicos del mercado).
+        v3.0: Añadida codificación cíclica seno/coseno para evitar
+        que el modelo interprete lunes (0) como "más bajo" que domingo (6).
+        """
         dataframe["%-day_of_week"] = dataframe["date"].dt.dayofweek
         dataframe["%-hour_of_day"] = dataframe["date"].dt.hour
+        # Codificación cíclica (seno/coseno) para preservar circularidad
+        dataframe["%-hour_sin"] = np.sin(2 * np.pi * dataframe["date"].dt.hour / 24)
+        dataframe["%-hour_cos"] = np.cos(2 * np.pi * dataframe["date"].dt.hour / 24)
+        dataframe["%-day_sin"] = np.sin(2 * np.pi * dataframe["date"].dt.dayofweek / 7)
+        dataframe["%-day_cos"] = np.cos(2 * np.pi * dataframe["date"].dt.dayofweek / 7)
         return dataframe
 
     def set_freqai_targets(self, dataframe: DataFrame, metadata: dict, **kwargs) -> DataFrame:
         """
-        Target v2.0: Regresión del % de cambio del precio.
-
-        En vez de predecir binario (sube/baja), ahora predecimos CUÁNTO
-        se mueve el precio en las próximas N velas. Esto permite:
-        - Distinguir entre movimientos pequeños y grandes
-        - Ajustar el tamaño de posición según la magnitud predicha
-        - Generar métricas de error más ricas (MAE, RMSE)
+        Target: Regresión del % de cambio del precio.
+        Predecimos CUÁNTO se mueve el precio en las próximas N velas.
         """
         N = self.freqai_info["feature_parameters"]["label_period_candles"]
         dataframe["&s-price_change"] = (

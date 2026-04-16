@@ -1,0 +1,186 @@
+time="2026-04-08T12:45:23+02:00" level=warning msg="/Users/joanroma/TFG_Trading_Bot/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ Container freqtrade_db Running 
+ Container tfg_trading_bot-freqtrade-run-82400ad1579a Creating 
+ Container tfg_trading_bot-freqtrade-run-82400ad1579a Created 
+✅ datasieve parcheado: features_in → feature_list
+2026-04-08 10:45:24,686 - freqtrade - INFO - freqtrade 2026.3
+2026-04-08 10:45:24,927 - numexpr.utils - INFO - NumExpr defaulting to 5 threads.
+2026-04-08 10:45:26,184 - freqtrade.configuration.load_config - INFO - Using config: user_data/config.json ...
+2026-04-08 10:45:26,187 - freqtrade.loggers - INFO - Enabling colorized output.
+2026-04-08 10:45:26,188 - freqtrade.loggers - INFO - Logfile configured
+2026-04-08 10:45:26,188 - freqtrade.loggers - INFO - Verbosity set to 0
+2026-04-08 10:45:26,188 - freqtrade.configuration.configuration - INFO - Using max_open_trades: 5 ...
+2026-04-08 10:45:26,188 - freqtrade.configuration.configuration - INFO - Parameter --timerange detected: 20260201-20260401 ...
+2026-04-08 10:45:26,482 - freqtrade.configuration.configuration - INFO - Using user-data directory: /freqtrade/user_data ...
+2026-04-08 10:45:26,483 - freqtrade.configuration.configuration - INFO - Using data directory: /freqtrade/user_data/data/binance ...
+2026-04-08 10:45:26,483 - freqtrade.configuration.configuration - INFO - Parameter --cache=day detected ...
+2026-04-08 10:45:26,483 - freqtrade.configuration.configuration - INFO - Filter trades by timerange: 20260201-20260401
+2026-04-08 10:45:26,484 - freqtrade.configuration.configuration - INFO - Using freqaimodel class name: LightGBMRegressor
+2026-04-08 10:45:26,484 - freqtrade.exchange.check_exchange - INFO - Checking exchange...
+2026-04-08 10:45:26,491 - freqtrade.exchange.check_exchange - INFO - Exchange "binance" is officially supported by the Freqtrade development team.
+2026-04-08 10:45:26,492 - freqtrade.configuration.configuration - INFO - Using pairlist from configuration.
+2026-04-08 10:45:26,492 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-04-08 10:45:26,494 - freqtrade.commands.optimize_commands - INFO - Starting freqtrade in Backtesting mode
+2026-04-08 10:45:26,495 - freqtrade.exchange.exchange - INFO - Instance is running with dry_run enabled
+2026-04-08 10:45:26,495 - freqtrade.exchange.exchange - INFO - Using CCXT 4.5.44
+2026-04-08 10:45:26,495 - freqtrade.exchange.exchange - INFO - Applying additional ccxt config: {'options': {'defaultType': 'swap'}}
+2026-04-08 10:45:26,500 - freqtrade.exchange.exchange - INFO - Applying additional ccxt config: {'options': {'defaultType': 'swap'}}
+2026-04-08 10:45:26,505 - freqtrade.exchange.exchange - INFO - Using Exchange "Binance"
+2026-04-08 10:45:28,069 - freqtrade.resolvers.exchange_resolver - INFO - Using resolved exchange 'Binance'...
+2026-04-08 10:45:28,085 - freqtrade.resolvers.iresolver - INFO - Using resolved strategy FreqaiExampleStrategy from '/freqtrade/user_data/strategies/FreqaiExampleStrategy.py'...
+2026-04-08 10:45:28,085 - freqtrade.strategy.hyper - INFO - Loading parameters from file /freqtrade/user_data/strategies/FreqaiExampleStrategy.json
+2026-04-08 10:45:28,086 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'minimal_roi' with value from the configuration: {'0': 0.05, '30': 0.03, '60': 0.02, '120': 0.01}.
+2026-04-08 10:45:28,087 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'timeframe' with value from the configuration: 5m.
+2026-04-08 10:45:28,087 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stoploss' with value from the configuration: -0.03.
+2026-04-08 10:45:28,087 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_currency' with value from the configuration: USDT.
+2026-04-08 10:45:28,087 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'stake_amount' with value from the configuration: unlimited.
+2026-04-08 10:45:28,087 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'unfilledtimeout' with value from the configuration: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 
+'unit': 'minutes'}.
+2026-04-08 10:45:28,088 - freqtrade.resolvers.strategy_resolver - INFO - Override strategy 'max_open_trades' with value from the configuration: 5.
+2026-04-08 10:45:28,088 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using minimal_roi: {'0': 0.05, '30': 0.03, '60': 0.02, '120': 0.01}
+2026-04-08 10:45:28,088 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using timeframe: 5m
+2026-04-08 10:45:28,088 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stoploss: -0.03
+2026-04-08 10:45:28,089 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop: True
+2026-04-08 10:45:28,089 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive: 0.268
+2026-04-08 10:45:28,089 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_stop_positive_offset: 0.326
+2026-04-08 10:45:28,089 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using trailing_only_offset_is_reached: True
+2026-04-08 10:45:28,089 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_custom_stoploss: False
+2026-04-08 10:45:28,089 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using process_only_new_candles: True
+2026-04-08 10:45:28,090 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_types: {'entry': 'limit', 'exit': 'limit', 'stoploss': 'limit', 'stoploss_on_exchange': False, 
+'stoploss_on_exchange_interval': 60}
+2026-04-08 10:45:28,090 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using order_time_in_force: {'entry': 'GTC', 'exit': 'GTC'}
+2026-04-08 10:45:28,090 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_currency: USDT
+2026-04-08 10:45:28,090 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using stake_amount: unlimited
+2026-04-08 10:45:28,090 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using startup_candle_count: 200
+2026-04-08 10:45:28,091 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using unfilledtimeout: {'entry': 10, 'exit': 10, 'exit_timeout_count': 0, 'unit': 'minutes'}
+2026-04-08 10:45:28,091 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using use_exit_signal: True
+2026-04-08 10:45:28,091 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_only: False
+2026-04-08 10:45:28,091 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_roi_if_entry_signal: False
+2026-04-08 10:45:28,091 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using exit_profit_offset: 0.0
+2026-04-08 10:45:28,092 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using disable_dataframe_checks: False
+2026-04-08 10:45:28,092 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using ignore_buying_expired_candle_after: 0
+2026-04-08 10:45:28,092 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using position_adjustment_enable: False
+2026-04-08 10:45:28,092 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_entry_position_adjustment: -1
+2026-04-08 10:45:28,092 - freqtrade.resolvers.strategy_resolver - INFO - Strategy using max_open_trades: 5
+2026-04-08 10:45:28,093 - freqtrade.configuration.config_validation - INFO - Validating configuration ...
+2026-04-08 10:45:28,097 - freqtrade.resolvers.iresolver - INFO - Using resolved pairlist StaticPairList from '/freqtrade/freqtrade/plugins/pairlist/StaticPairList.py'...
+2026-04-08 10:45:28,106 - freqtrade.optimize.backtesting - INFO - Using fee 0.0500% - worst case fee from exchange (lowest tier).
+2026-04-08 10:45:28,107 - freqtrade.data.dataprovider - INFO - Increasing startup_candle_count for freqai on 5m to 8840
+2026-04-08 10:45:28,149 - freqtrade.data.history.datahandlers.idatahandler - WARNING - BTC/USDT:USDT, futures, 5m, data starts at 2026-02-07 20:35:00
+2026-04-08 10:45:28,365 - freqtrade.data.history.datahandlers.idatahandler - WARNING - XRP/USDT:USDT, futures, 5m, data starts at 2026-01-31 19:10:00
+2026-04-08 10:45:28,383 - freqtrade.data.history.datahandlers.idatahandler - WARNING - DOT/USDT:USDT, futures, 5m, data starts at 2026-01-31 19:10:00
+2026-04-08 10:45:28,403 - freqtrade.data.history.datahandlers.idatahandler - WARNING - LINK/USDT:USDT, futures, 5m, data starts at 2026-01-31 19:10:00
+2026-04-08 10:45:28,420 - freqtrade.data.history.datahandlers.idatahandler - WARNING - AVAX/USDT:USDT, futures, 5m, data starts at 2026-01-31 19:10:00
+2026-04-08 10:45:28,438 - freqtrade.data.history.datahandlers.idatahandler - WARNING - DOGE/USDT:USDT, futures, 5m, data starts at 2026-01-31 19:10:00
+2026-04-08 10:45:28,456 - freqtrade.data.history.datahandlers.idatahandler - WARNING - NEAR/USDT:USDT, futures, 5m, data starts at 2026-01-31 19:10:00
+2026-04-08 10:45:28,469 - freqtrade.optimize.backtesting - INFO - Loading data from 2026-01-01 07:20:00 up to 2026-04-01 00:00:00 (89 days).
+2026-04-08 10:45:30,089 - freqtrade.optimize.backtesting - INFO - Dataload complete. Calculating indicators
+2026-04-08 10:45:30,095 - freqtrade.optimize.backtesting - INFO - Running backtesting for Strategy FreqaiExampleStrategy
+2026-04-08 10:45:30,849 - freqtrade.resolvers.iresolver - INFO - Using resolved freqaimodel LightGBMRegressor from '/freqtrade/freqtrade/freqai/prediction_models/LightGBMRegressor.py'...
+2026-04-08 10:45:30,850 - freqtrade.freqai.data_drawer - INFO - Could not find existing datadrawer, starting from scratch
+2026-04-08 10:45:30,850 - freqtrade.freqai.data_drawer - INFO - Could not find existing historic_predictions, starting from scratch
+2026-04-08 10:45:30,850 - freqtrade.freqai.freqai_interface - INFO - Set fresh train queue from whitelist. Queue: ['BTC/USDT:USDT', 'ETH/USDT:USDT', 'SOL/USDT:USDT', 'BNB/USDT:USDT', 'ADA/USDT:USDT', 
+'XRP/USDT:USDT', 'DOT/USDT:USDT', 'LINK/USDT:USDT', 'AVAX/USDT:USDT', 'DOGE/USDT:USDT', 'NEAR/USDT:USDT']
+2026-04-08 10:45:30,852 - freqtrade.strategy.hyper - INFO - Strategy Parameter: ai_threshold_long = 0.016
+2026-04-08 10:45:30,852 - freqtrade.strategy.hyper - INFO - Strategy Parameter: ai_threshold_short = -0.028
+2026-04-08 10:45:30,852 - freqtrade.strategy.hyper - INFO - Strategy Parameter: buy_ema_period = 69
+2026-04-08 10:45:30,852 - freqtrade.strategy.hyper - INFO - Strategy Parameter: buy_sma_period = 279
+2026-04-08 10:45:30,858 - freqtrade.freqai.freqai_interface - INFO - Training 9 timeranges
+2026-04-08 10:45:30,860 - freqtrade.freqai.freqai_interface - INFO - Training BTC/USDT:USDT, 1/11 pairs from 2026-01-02 00:00:00 to 2026-02-01 00:00:00, 1/9 trains
+2026-04-08 10:45:30,860 - freqtrade.freqai.data_kitchen - INFO - Could not find backtesting prediction file at 
+/freqtrade/user_data/models/tfg-bot-v6-hedgefund/backtesting_predictions/cb_btc_1769904000_prediction.feather
+2026-04-08 10:45:31,098 - freqtrade.data.dataprovider - INFO - Increasing startup_candle_count for freqai on 15m to 3080
+2026-04-08 10:45:31,099 - freqtrade.data.dataprovider - INFO - Loading data for BTC/USDT:USDT 15m from 2025-12-30 22:00:00 to 2026-04-01 00:00:00
+2026-04-08 10:45:31,394 - freqtrade.data.dataprovider - INFO - Increasing startup_candle_count for freqai on 5m to 8840
+2026-04-08 10:45:31,395 - freqtrade.data.dataprovider - INFO - Loading data for ETH/USDT:USDT 5m from 2026-01-01 07:20:00 to 2026-04-01 00:00:00
+2026-04-08 10:45:31,775 - freqtrade.data.dataprovider - INFO - Increasing startup_candle_count for freqai on 15m to 3080
+2026-04-08 10:45:31,776 - freqtrade.data.dataprovider - INFO - Loading data for ETH/USDT:USDT 15m from 2025-12-30 22:00:00 to 2026-04-01 00:00:00
+2026-04-08 10:45:32,151 - freqtrade.freqai.freqai_interface - INFO - Could not find model at /freqtrade/user_data/models/tfg-bot-v6-hedgefund/sub-train-BTC_1769904000/cb_btc_1769904000
+2026-04-08 10:45:33,145 - freqtrade.freqai.base_models.BaseRegressionModel - INFO - -------------------- Starting training BTC/USDT:USDT --------------------
+2026-04-08 10:45:33,148 - freqtrade.freqai.data_kitchen - INFO - BTC/USDT:USDT: dropped 0 training points due to NaNs in populated dataset 0.
+2026-04-08 10:45:33,149 - freqtrade.freqai.freqai_interface - WARNING - Training BTC/USDT:USDT raised exception OperationalException. Message: BTC/USDT:USDT: all training data dropped due to NaNs. You
+likely did not download enough training data prior to your backtest timerange. Hint:
+https://www.freqtrade.io/en/stable/freqai-running/#downloading-data-to-cover-the-full-backtest-period, skipping.
+Traceback (most recent call last):
+  File "/freqtrade/freqtrade/freqai/freqai_interface.py", line 374, in start_backtesting
+    self.model = self.train(dataframe_train, pair, dk)
+                 ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/freqtrade/freqtrade/freqai/base_models/BaseRegressionModel.py", line 39, in train
+    features_filtered, labels_filtered = dk.filter_features(
+                                         ~~~~~~~~~~~~~~~~~~^
+        unfiltered_df,
+        ^^^^^^^^^^^^^^
+    ...<2 lines>...
+        training_filter=True,
+        ^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/freqtrade/freqtrade/freqai/data_kitchen.py", line 265, in filter_features
+    raise OperationalException(
+    ...<5 lines>...
+    )
+freqtrade.exceptions.OperationalException: BTC/USDT:USDT: all training data dropped due to NaNs. You likely did not download enough training data prior to your backtest timerange. Hint:
+https://www.freqtrade.io/en/stable/freqai-running/#downloading-data-to-cover-the-full-backtest-period
+2026-04-08 10:45:33,150 - freqtrade.freqai.freqai_interface - INFO - Saving metadata to disk.
+2026-04-08 10:45:33,155 - freqtrade.freqai.data_kitchen - INFO - dropped 41 of 41 prediction data points due to NaNs.
+2026-04-08 10:45:33,155 - freqtrade - ERROR - Fatal exception!
+Traceback (most recent call last):
+  File "/freqtrade/freqtrade/main.py", line 52, in main
+    return_code = args["func"](args)
+  File "/freqtrade/freqtrade/commands/optimize_commands.py", line 61, in start_backtesting
+    backtesting.start()
+    ~~~~~~~~~~~~~~~~~^^
+  File "/freqtrade/freqtrade/optimize/backtesting.py", line 1844, in start
+    min_date, max_date = self.backtest_one_strategy(strat, data, timerange)
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/freqtrade/freqtrade/optimize/backtesting.py", line 1754, in backtest_one_strategy
+    preprocessed = self.strategy.advise_all_indicators(data)
+  File "/freqtrade/freqtrade/strategy/interface.py", line 1749, in advise_all_indicators
+    res[pair] = self.advise_indicators(pair_data.copy(), {"pair": pair}).copy()
+                ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/freqtrade/freqtrade/strategy/interface.py", line 1811, in advise_indicators
+    dataframe = self.populate_indicators(dataframe, metadata)
+  File "/freqtrade/user_data/strategies/FreqaiExampleStrategy.py", line 111, in populate_indicators
+    dataframe = self.freqai.start(dataframe, metadata, self)
+  File "/freqtrade/freqtrade/freqai/freqai_interface.py", line 161, in start
+    dk = self.start_backtesting(dataframe, metadata, self.dk, strategy)
+  File "/freqtrade/freqtrade/freqai/freqai_interface.py", line 396, in start_backtesting
+    pred_df, do_preds = self.predict(dataframe_backtest, dk)
+                        ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/freqtrade/freqtrade/freqai/base_models/BaseRegressionModel.py", line 114, in predict
+    dk.data_dictionary["prediction_features"], outliers, _ = dk.feature_pipeline.transform(
+                                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        dk.data_dictionary["prediction_features"], outlier_check=True
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/ftuser/.local/lib/python3.13/site-packages/datasieve/pipeline.py", line 92, in transform
+    X, y, sample_weight = self._validate_arguments(
+                          ~~~~~~~~~~~~~~~~~~~~~~~~^
+        X, y, sample_weight, outlier_check=outlier_check)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ftuser/.local/lib/python3.13/site-packages/datasieve/pipeline.py", line 168, in _validate_arguments
+    raise Exception(f"Pipeline expected {self.feature_list} but got {X.columns}.")
+Exception: Pipeline expected [] but got Index(['%-rsi-period_5_BTC/USDTUSDT_5m',
+       '%-stoch_rsi-period_5_BTC/USDTUSDT_5m',
+       '%-mfi-period_5_BTC/USDTUSDT_5m',
+       '%-macd_hist-period_5_BTC/USDTUSDT_5m',
+       '%-bb_width-period_5_BTC/USDTUSDT_5m',
+       '%-atr_norm-period_5_BTC/USDTUSDT_5m',
+       '%-obv_norm-period_5_BTC/USDTUSDT_5m',
+       '%-log_return-period_5_BTC/USDTUSDT_5m',
+       '%-return_std-period_5_BTC/USDTUSDT_5m',
+       '%-sentiment_5_BTC/USDTUSDT_5m',
+       ...
+       '%-macd_hist-period_50_shift-2_ETH/USDTUSDT_15m',
+       '%-bb_width-period_50_shift-2_ETH/USDTUSDT_15m',
+       '%-atr_norm-period_50_shift-2_ETH/USDTUSDT_15m',
+       '%-obv_norm-period_50_shift-2_ETH/USDTUSDT_15m',
+       '%-log_return-period_50_shift-2_ETH/USDTUSDT_15m',
+       '%-return_std-period_50_shift-2_ETH/USDTUSDT_15m',
+       '%-sentiment_50_shift-2_ETH/USDTUSDT_15m',
+       '%-pct-change_gen_shift-2_ETH/USDTUSDT_15m',
+       '%-raw_volume_gen_shift-2_ETH/USDTUSDT_15m',
+       '%-candle_direction_gen_shift-2_ETH/USDTUSDT_15m'],
+      dtype='object', length=518).
+

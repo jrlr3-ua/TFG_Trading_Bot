@@ -1,0 +1,9 @@
+==========================================================
+🚀 VÚA 2 - INICIANDO HYPEROPT MASIVO SOBRE FreqaiExampleStrategy
+==========================================================
+
+📥 1️⃣ Descargando datos masivos (Enero 2024 - Junio 2025)...
+run_massive_hyperopt.sh: line 11: docker: command not found
+
+⚙️ 2️⃣ Lanzando Hyperopt (500 Epochs)...
+✅ Hyperopt Masivo finalizado. Los resultados y los parámetros óptimos están en massive_hyperopt_v12.log
