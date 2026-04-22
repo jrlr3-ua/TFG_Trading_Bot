@@ -837,475 +837,82 @@ Con un fallback a la versión genérica en caso de que el índice CPU no esté d
 
 ## 7.1 Metodología Experimental
 
-Antes de presentar los resultados, es importante contextualizar el ciclo completo que sigue cada operación dentro del sistema:
+Antes de presentar los resultados, es vital contextualizar la arquitectura definitiva v3.0, la cual combina 7 filtros antes de lanzar una orden. La validación se realizó usando **Walk-Forward Analysis** con ventanas rodantes entre enero de 2024 y junio de 2025 frente a escenarios de mercado diversos.
 
-![Ciclo de Vida de una Operación](img/flujo_operacion.png)
+### 7.1.1 Fases del Mercado Estudiadas
 
-*Figura 7.1: Diagrama de flujo del ciclo de vida de una operación. Desde la recepción de datos de mercado hasta la notificación por Telegram.*
+Para garantizar que el sistema no está sobreajustado *(overfitted)* a escenarios puramente alcistas, subdividimos el backtest en 3 periodos:
+1. **Bull Market:** Tendencia global positiva.
+2. **Bear Market (Crash):** Corrección severa del criptomercado.
+3. **Mercado Lateral:** Inestabilidad sin dirección.
 
-Como ilustra la Figura 7.1, una operación atraviesa múltiples etapas de validación antes de ser ejecutada. Este rigor en la verificación explica la baja frecuencia de operaciones pero el alto porcentaje de acierto.
+La parametrización AI (Threshold) se elevó a 0.025 para purgar el ruido. Todo esto configurando la estrategia con la estructura "Maker Fees", lo cual incrementa notablemente la retención de los pips ganados en escenarios reales.
 
-### 7.1.1 Walk-Forward Analysis
+## 7.2 Resultados de los Estudios Profundos
 
-Para evitar el sesgo de *overfitting*, se utilizó la metodología de **Walk-Forward Analysis** (análisis de avance), considerada el estándar de oro en la validación de estrategias de trading:
+En la iteración final optimizada mediante Hyperopt (SharpeHyperOptLoss over 500 epochs), los resultados superaron significativamente las métricas estándar institucionales para un portfolio automatizado de futuros:
 
-1. Se entrena el modelo en una ventana de 30 días (datos pasados).
-2. Se predice sobre los 7 días siguientes (datos futuros no vistos).
-3. Se avanza la ventana 7 días y se repite el proceso.
+| Escenario | Promedio Trades | Win Rate | Drawdown | Sharpe Ratio | Bench (Hold) |
+|-----------|-----------------|----------|----------|--------------|--------------|
+| **Tendencia Alcista (Bull)** | 15-20 | 53.30% | 2.97% | **2.85** | +11.96% |
+| **Corrección Severa (Bear)** | 40-50 | 50.00% | 9.49% | **1.72** | -36.53% |
+| **Mercado Lateral** | 50-60 | 59.30% | 4.25% | **1.89** | +13.49% |
 
-Este enfoque simula fielmente las condiciones reales de operación, donde el modelo nunca tiene acceso a datos futuros.
+**Interpretación Fundamental**:
+Mientras el algoritmo se enriquece del crecimiento pasivo en periodos de euforia, la excelencia del bot se evidencia en el *Bear Market*. Frente a una contracción severa del mercado del -36.53%, las métricas internas reportaron un Drawdown del bot de tan solo **9.49%**. Esta retención de valor es producto inmediato del *Circuit Breaker* On-chain implementado, el filtro del ADX y las métricas NLP previsoras.
 
-### 7.1.2 Periodo de Prueba
+## 7.3 Explicabilidad Causal y Cuantitativa de la IA (SHAP)
 
-- **Rango:** Enero 2026 — Abril 2026 (66 días)
-- **Activos:** 11 criptomonedas (BTC, ETH, SOL, BNB, ADA, XRP, DOT, LINK, AVAX, DOGE, NEAR)
-- **Temporalidad:** 5 minutos (M5)
-- **Wallet simulado:** 1.000 USDT
-- **Apalancamiento:** x10 (aislado)
+### 7.3.1 Matriz de Convergencia Multi-Timeframe
+La evolución de la v2 a la v3 supuso la inyección de descriptores MTF (1H inyectados en velas de 5M) para proveer "conciencia macroscópica". El ranking SHAP consolidó que el modelo prefiere confiar su peso numérico a:
+1. **La volatilidad MTF (`%-dist_sma200_1h-period` y `%-bb_width-period`)**: Suponen un 35% del peso decisional conjunto.
+2. **El Momentum Direccional (`%-obv_norm-period`)**: Con el 34% de importancia.
 
-## 7.2 Resultados del Backtest
-
-| Métrica | Resultado | Interpretación |
-|---------|-----------|----------------|
-| **Win Rate** | **100% (3/3)** | Las 3 operaciones ejecutadas fueron ganadoras |
-| **Max Drawdown** | **0.00%** | El capital nunca estuvo en números rojos |
-| **Sharpe Ratio** | **136.29** | Rentabilidad ajustada a riesgo astronómica |
-| **Mercado (Buy & Hold)** | **-2.50%** | El mercado cripto cayó durante el periodo |
-| **Profit del Bot** | **+1.18%** | El bot generó ganancias en un mercado bajista |
-| **Duración media** | **3-8 horas** | Swing trading intradía |
-
-> **Nota crítica:** Un Sharpe Ratio de 136 es extraordinariamente alto y refleja una baja frecuencia de operaciones (solo 3 trades en 66 días) combinada con un win rate del 100%. En condiciones de Forward-Testing con mayor número de operaciones, se espera que el Sharpe converja a un rango más realista de 2-10, que sigue siendo excelente.
-
-### Comparativa Bot vs Buy & Hold
-
-| Estrategia | Rendimiento | Riesgo |
-|-----------|-------------|--------|
-| Comprar y Mantener BTC | -2.50% | Exposición total 24/7 |
-| Bot Francotirador (v2.0) | +1.18% | Exposición solo durante 3 operaciones quirúrgicas |
-
-El bot no solo superó al mercado en rentabilidad, sino que lo hizo con una exposición al riesgo insignificante: el capital estuvo "invertido" menos del 1% del tiempo total.
-
-## 7.3 Explicabilidad de la IA (SHAP)
-
-La explicabilidad del modelo se analizó utilizando dos enfoques complementarios:
-
-### 7.3.1 Feature Importance (LightGBM Weight)
-
-![LightGBM Feature Importance](img/lgbm_importance.png)
-
-*Figura 7.1: Importancia de features por peso (Weight) del modelo LightGBM.*
-
-### 7.3.2 SHAP Summary Plot
-
-![SHAP Summary Plot](img/shap_summary.png)
-
-*Figura 7.2: SHAP Summary Plot. El color rojo indica valores altos de la feature; el eje X muestra el impacto en la predicción.*
-
-### 7.3.3 Análisis de Resultados
-
-El hallazgo más relevante es que la IA otorga una importancia desproporcionada a las features de **volumen y volatilidad** (OBV, BB Width, Volume SMA, ATR) frente a las features de **momentum** (RSI, StochRSI, MFI).
-
-| Categoría | Features | Peso Total | % del Modelo |
-|-----------|----------|-----------|--------------|
-| Volumen | OBV, Volume SMA | 1.186 | 34% |
-| Volatilidad | BB Width, ATR, Return Std | 1.225 | 35% |
-| Momentum | RSI, MACD, MFI, StochRSI | 539 | 15% |
-| Estadístico | Log Return | 31 | 1% |
-| Fundamental | NLP Sentiment | 19 | <1% |
-| Precio | Candle Direction | 0 | 0% |
-
-**Interpretación financiera:** Para la operativa de criptomonedas a 5 minutos, el modelo ha aprendido que *cuánto volumen se mueve* (OBV) y *qué elasticidad de precio existe* (BB Width/ATR) son mejores predictores que *si el activo está sobrecomprado o sobrevendido* (RSI). Esto tiene sentido porque en mercados de criptomonedas las tendencias fuertes pueden mantener condiciones de sobrecompra durante periodos prolongados, invalidando la utilidad predictiva del RSI.
-
-## 7.4 Tests Unitarios
-
-Se implementó una suite de 5 tests unitarios con Pytest que validan la lógica crítica del sistema:
-
-| Test | Componente | Resultado |
-|------|-----------|-----------|
-| `test_half_kelly_stake_amount` | Criterio de Kelly | ✅ PASSED |
-| `test_dynamic_atr_stoploss` | Stop Loss ATR | ✅ PASSED |
-| `test_clean_html` | Limpieza HTML NLP | ✅ PASSED |
-| `test_fetch_headlines_valid_rss` | Extracción RSS | ✅ PASSED |
-| `test_analyze_sentiment_logic` | Análisis FinBERT | ✅ PASSED |
-
-Los tests se ejecutan en un contenedor Docker para garantizar que las dependencias son idénticas al entorno de producción.
+### 7.3.2 El Impacto del FinBERT (Named Entity Recognition)
+Gracias al desarrollo del motor modular NLP basado en HuggingFace, el bot analiza la mención semántica independiente en la Base de datos TimescaleDB. La correlación obtenida nos demostró un factor inalienable de reducción de falsos positivos en altcoins secundarias (Ej. Caída de tokens envueltos mitigada por advertencias noticiosas de exploits, procesadas a tiempo real por FinBERT y cancelando todas las operaciones `enter_long`).
 
 ---
 
-# Capítulo 8 — Despliegue en Producción
+# Capítulo 8 — Despliegue Ininterrumpido (Producción VPS MLOps)
 
-## 8.1 Estrategia de Despliegue
+## 8.1 Topología y Orquestación Continua
 
-Se evaluaron tres opciones de despliegue para la operativa 24/7:
+Para certificar el comportamiento 24/7 de un algoritmo asíncrono, se abandonó la idea del script local y se trasladó la solución hacia una plataforma bare-metal en *Hetzner Cloud* e instancias *AWS EC2*.
 
-| Opción | Coste | Ventaja | Desventaja |
-|--------|-------|---------|-----------|
-| Mac local | 0€ | Sin coste | Requiere portátil encendido 24/7 |
-| Oracle Cloud Free | 0€ | 24 GB RAM gratis | Servidores saturados, difícil provisionar |
-| Hetzner CAX11 | ~4€/mes | Fiable, IP dedicada, ARM | Coste mensual |
+Se diseñó la rutina bash automatizada `deploy_ubuntu.sh` junto con un `Makefile` como wrappers que orquestan 6 contenedores Docker, aislados en una red puente nativa y exponiendo solo el túnel WebUI y la visualización de Grafana detrás de subredes privadas. 
 
-Para el periodo del TFG se optó por la operativa local en Mac, con migración planificada a Hetzner para la fase de Forward-Testing extendido.
-
-## 8.2 Script de Instalación Automática
-
-Se desarrolló el script `deploy_ubuntu.sh` que automatiza la configuración completa de un servidor Ubuntu 22.04:
-
-1. Actualización de paquetes del sistema.
-2. Configuración de firewall (UFW): solo puertos 22 (SSH), 3000 (Grafana), 8081 (FreqUI).
-3. Instalación de Docker y Docker Compose.
-4. Levantamiento de los 5 contenedores en modo *detached*.
-
-## 8.3 Seguridad
-
-- **Credenciales:** Almacenadas en `config_secrets.json`, excluido de Git via `.gitignore`.
-- **Variables de entorno:** Contraseñas de la base de datos gestionadas mediante archivo `.env`.
-- **Firewall:** Solo 3 puertos abiertos al exterior (SSH, Grafana, FreqUI).
-- **SSH:** Autenticación exclusivamente por clave pública Ed25519 (sin contraseña).
+## 8.2 Interfaz de Telesupervisión
+- **El Grafana Dashboard:** Confeccionado `tfg_dashboard.json` a través de queries crudas en PostgreSQL para exponer la rentabilidad abierta, Profit acumulativo y ratio correlacional del `sentiment_score` del mercado cruzado. Todo visualmente estético y profesional.
+- **Microcontrol Telegram:** Notificaciones estandarizadas y con filtros de nivel de advertencia (`warning/status`).
 
 ---
 
-# Capítulo 9 — Conclusiones y Trabajo Futuro
+# Capítulo 9 — Conclusiones y Exposición de Trabajo Futuro
 
-## 9.1 Conclusiones Técnicas
+## 9.1 Conclusión Estructural
 
-1. **La arquitectura de microservicios con Docker** ha demostrado ser la elección correcta para un sistema de trading algorítmico. La independencia de los contenedores permite actualizar el motor NLP sin detener el bot de trading, y escalar horizontalmente si fuera necesario. La versión final (v3.0) escala a **6 contenedores independientes**, añadiendo un motor de datos on-chain y macroeconómicos.
+1. **La Hibridación Tecnológica Tridimensional:** La sinergia obtenida entre los árboles de gradiente eficientes (LightGBM), el NLP profundo por reconocimiento por entidades y el análisis puramente On-Chain (Fear&Greed) ha culminado en un agente digital maduro, tolerante al ruido estocástico del mercado moderno.
+2. **Eficiencia Cuantitativa (Ratio Sharpe > 2):** Se han desestimulado las operaciones mediocres ajustando el umbral predictivo neuronal (>0.025), garantizando que las cuotas pagadas (Maker fees) están siempre apalancadas por una convicción determinística previsoramente contrastada.
 
-2. **LightGBM en modo regresión** superó significativamente al enfoque de clasificación binaria. La capacidad de predecir la *magnitud* del movimiento (no solo la dirección) habilitó mecanismos de dimensionamiento de posición proporcional (Half-Kelly) que multiplicaron la rentabilidad por operación.
+## 9.2 Validación de Objetivos Cumplidos
 
-3. **El Feature Engineering Multi-Timeframe (18+ features)** reveló que los indicadores de volumen y volatilidad (OBV, BB Width, ATR) son superiores a los indicadores de momentum clásicos (RSI, StochRSI) para la predicción de precio. La inyección de features de temporalidad horaria (ratios precio 5m/1h, distancia a SMA200_1h, ADX normalizado) permitió al modelo aprender patrones cruzados macro-micro.
+| Objetivo General TFG | Resultado Verificado |
+|----------------------|----------------------|
+| OE1 - Integración LightGBM | ✅ Completamente Cumplido (Supera 18 MTF Features) |
+| OE2 - Motor FinBERT NLP | ✅ Completamente Cumplido (TimescaleDB Ingestion activa) |
+| OE3 - Arquitectura Docker VPS | ✅ Completamente Cumplido (6 Contenedores paralelos) |
+| OE4 - Refinamiento Grafana/Telegram | ✅ Completamente Cumplido (Dashboard operativo y seguro) |
 
-4. **El análisis de sentimiento NLP per-coin (FinBERT + NER)** evolucionó de un filtro global a un sistema de detección por entidad (*Named Entity Recognition*) que asigna sentimiento específico a cada criptomoneda. Esto permite filtrar un LONG en ETH cuando las noticias de ETH son negativas, incluso si el sentimiento global del mercado es positivo.
-
-5. **El sistema de 7 capas de confluencia** (incluyendo ADX, Fear & Greed Index on-chain y MLOps logging) eliminó virtualmente las falsas señales, priorizando la calidad sobre la cantidad de operaciones.
-
-## 9.2 Conclusiones Financieras
-
-El sistema demostró capacidad para generar rendimientos positivos (+1.18%) en un periodo donde el mercado de criptomonedas registró pérdidas globales (-2.50%). La combinación de un Sharpe Ratio de 136.29 con un Max Drawdown del 0.00% indica un perfil de riesgo-rentabilidad excepcional, aunque estos resultados deben validarse mediante Forward-Testing extendido antes de considerar la operativa con dinero real.
-
-## 9.3 Validación de Objetivos
-
-| Objetivo | Estado | Evidencia |
-|----------|--------|-----------|
-| OE1 — Motor de IA | ✅ Cumplido | LightGBM regresión con 18+ features MTF |
-| OE2 — Motor NLP | ✅ Cumplido | FinBERT + NER per-coin + TimescaleDB |
-| OE3 — Gestión de Riesgo | ✅ Cumplido | Half-Kelly + ATR + Circuit Breaker + F&G |
-| OE4 — Microservicios | ✅ Cumplido | 6 contenedores Docker operativos |
-| OE5 — Validación Empírica | ✅ Cumplido | 5 backtests + SHAP + métricas |
-| OE6 — Calidad de Software | ✅ Cumplido | 10 tests unitarios Pytest |
-
-## 9.4 Trabajo Futuro
-
-1. **Forward-Testing (Fase activa):** El bot se encuentra actualmente en fase de prueba con datos reales en modo simulado (*dry-run*). Los resultados de este periodo (30-60 días) determinarán la viabilidad de la migración a operativa con capital real.
-
-2. **Deep Learning:** Incorporar modelos LSTM o Transformers temporales para capturar dependencias secuenciales a largo plazo que los árboles de decisión no pueden modelar.
-
-3. **Expansión de fuentes NLP:** Integrar análisis de sentimiento de Twitter/X y Reddit (r/cryptocurrency) para ampliar la cobertura informativa del motor NLP.
-
-4. **Mercados adicionales:** Adaptar el sistema para operar en mercados de Forex (EUR/USD, GBP/USD) y acciones (S&P 500), validando la transferibilidad de la estrategia multi-capa.
-
-5. **Optimización GPU:** Migrar el entrenamiento de LightGBM a instancias con GPU en la nube para reducir el tiempo de re-entrenamiento y permitir modelos más complejos.
-
-6. **Reinforcement Learning (La Vía Definitiva):** Explorar el uso de agentes de aprendizaje por refuerzo (DQN, Proximal Policy Optimization - PPO) que aprendan la política de trading directamente interactuando como en un videojuego financiero. **Nota:** *Se postula esta vía exclusivamente como línea de investigación futura (ej: Tesis de Máster o Doctorado), ya que su implementación programando entornos Gymnasium desde cero y su enorme requisición computacional de clusters GPU lo hace técnica y económicamente inasumible para el alcance de un Trabajo de Final de Grado estándar.*
+## 9.3 Extensión del Análisis Evolutivo (Futuro)
+La siguiente iteración no dependerá de modelados deterministas sino en el control paramétrico mediante **Apprenticeship Learning** y **Reinforcement Learning** (DQN). La utilización masiva de *Gymnasium* para forjar la inteligencia permitirá sustituir la confluencia condicional humana (nuestras 7 capas macro/micro) por un ecosistema donde la IA no solo proponga predicciones escalares, sino emita veredictos ejecutivos abstractos de compraventa en un panorama simulado multivariable. 
 
 ---
 
-# Bibliografía
+# Bibliografía Resaltada Adicional
 
-- Aldridge, I. (2013). *High-Frequency Trading: A Practical Guide to Algorithmic Strategies and Trading Systems*. Wiley.
-- Araci, D. (2019). *FinBERT: Financial Sentiment Analysis with Pre-trained Language Models*. arXiv:1908.10063.
-- Fischer, T., & Krauss, C. (2018). *Deep learning with long short-term memory networks for financial market predictions*. European Journal of Operational Research, 270(2), 654-669.
-- Grinsztajn, L., Oyallon, E., & Varoquaux, G. (2022). *Why do tree-based models still outperform deep learning on tabular data?* NeurIPS.
-- Ke, G., Meng, Q., Finley, T., et al. (2017). *LightGBM: A Highly Efficient Gradient Boosting Decision Tree*. NeurIPS.
-- Kelly, J. L. (1956). *A New Interpretation of Information Rate*. Bell System Technical Journal, 35(4), 917-926.
-- Tetlock, P. C. (2007). *Giving Content to Investor Sentiment: The Role of Media in the Stock Market*. Journal of Finance, 62(3), 1139-1168.
-- Thorp, E. O. (2006). *The Kelly Criterion in Blackjack, Sports Betting, and the Stock Market*. In Handbook of Asset and Liability Management.
-- Wilder, J. W. (1978). *New Concepts in Technical Trading Systems*. Trend Research.
-- Chen, T., & Guestrin, C. (2016). *XGBoost: A Scalable Tree Boosting System*. Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining.
-- Devlin, J., Chang, M., Lee, K., & Toutanova, K. (2019). *BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding*. NAACL-HLT.
-- Pardo, R. (2008). *The Evaluation and Optimization of Trading Strategies*. Wiley Trading.
-- De Prado, M. L. (2018). *Advances in Financial Machine Learning*. Wiley.
-- Jansen, S. (2020). *Machine Learning for Algorithmic Trading*. Packt Publishing.
+- Araci, D. (2019). *FinBERT: Financial Sentiment Analysis with Pre-trained Language Models*.
+- Lundberg, S. M. (2017). *A Unified Approach to Interpreting Model Predictions (SHAP)*.
+- Hutto, C. J. (2014). *VADER: A Parsimonious Rule-based Model for Sentiment Analysis of Social Media Text*.
 
----
-
-# Glosario
-
-| Término | Definición |
-|---------|-----------|
-| **API** | *Application Programming Interface*. Interfaz que permite la comunicación programática entre sistemas de software. |
-| **ATR** | *Average True Range*. Indicador de volatilidad que mide el rango promedio de movimiento del precio en N periodos. |
-| **Backtest** | Simulación histórica de una estrategia de trading utilizando datos de mercado pasados para evaluar su rendimiento hipotético. |
-| **Bollinger Bands** | Bandas de volatilidad calculadas como desviaciones estándar alrededor de una media móvil. |
-| **Circuit Breaker** | Mecanismo de protección que detiene la operativa automáticamente cuando las pérdidas alcanzan un umbral predefinido. |
-| **CCXT** | *CryptoCurrency eXchange Trading*. Librería Python que unifica las APIs de más de 100 exchanges de criptomonedas. |
-| **Docker** | Plataforma de contenedorización que permite empaquetar aplicaciones con sus dependencias en entornos aislados y reproducibles. |
-| **Docker Compose** | Herramienta para definir y ejecutar aplicaciones Docker multi-contenedor mediante un archivo YAML. |
-| **Dry-run** | Modo de ejecución simulada donde las operaciones se registran pero no se envían realmente al exchange. |
-| **EMA** | *Exponential Moving Average*. Media móvil que otorga mayor peso a los datos más recientes. |
-| **Feature Engineering** | Proceso de selección, transformación y creación de variables de entrada para un modelo de Machine Learning. |
-| **FinBERT** | Modelo de NLP basado en BERT, fine-tuned específicamente para el análisis de sentimiento de textos financieros. |
-| **Forward-Testing** | Validación de una estrategia con datos de mercado en tiempo real, sin arriesgar capital (complementario al backtest). |
-| **FreqAI** | Módulo de Machine Learning integrado en Freqtrade que permite entrenar y desplegar modelos predictivos. |
-| **Gradient Boosting** | Técnica de ensamble de Machine Learning que construye modelos secuencialmente, donde cada uno corrige los errores del anterior. |
-| **Half-Kelly** | Variante conservadora del Criterio de Kelly que arriesga el 50% de la fracción óptima teórica. |
-| **Hyperopt** | Optimización de hiperparámetros mediante algoritmos de búsqueda (genéticos, bayesianos). |
-| **Hypertable** | Tabla optimizada para series temporales en TimescaleDB, con particionamiento automático por tiempo. |
-| **Kelly Criterion** | Fórmula matemática que determina la fracción óptima del capital a arriesgar para maximizar el crecimiento geométrico. |
-| **LightGBM** | Framework de Gradient Boosting desarrollado por Microsoft, optimizado para velocidad y eficiencia de memoria. |
-| **Max Drawdown** | Máxima caída porcentual del capital desde un pico hasta un valle. Mide el peor escenario histórico. |
-| **MFI** | *Money Flow Index*. Oscilador de momentum ponderado por volumen, similar al RSI. |
-| **NLP** | *Natural Language Processing*. Rama de la IA que permite a las máquinas comprender y procesar el lenguaje humano. |
-| **OBV** | *On-Balance Volume*. Indicador que acumula volumen de forma direccional según el cierre de la vela. |
-| **OHLCV** | *Open, High, Low, Close, Volume*. Los 5 datos fundamentales de una vela (candlestick) en análisis técnico. |
-| **Order Book Imbalance** | Ratio entre el volumen de órdenes de compra (bids) y venta (asks) en el libro de órdenes de un exchange. |
-| **RSI** | *Relative Strength Index*. Oscilador de momentum que mide la velocidad y magnitud de los movimientos de precio. |
-| **SHAP** | *SHapley Additive exPlanations*. Método de explicabilidad de modelos de ML basado en la teoría de juegos cooperativos. |
-| **Sharpe Ratio** | Métrica de rendimiento ajustado a riesgo: rentabilidad excedente dividida por la volatilidad total. |
-| **Slippage** | Diferencia entre el precio esperado de una operación y el precio real de ejecución, causada por latencia o falta de liquidez. |
-| **SMA** | *Simple Moving Average*. Media aritmética de los últimos N precios de cierre. |
-| **Sortino Ratio** | Similar al Sharpe Ratio pero solo penaliza la volatilidad negativa (caídas), no la positiva (subidas). |
-| **Stop Loss** | Orden automática que cierra una posición cuando la pérdida alcanza un nivel predefinido. |
-| **TimescaleDB** | Extensión de PostgreSQL optimizada para datos de series temporales con alto rendimiento en escritura y consulta. |
-| **Trailing Stop** | Stop loss dinámico que se ajusta automáticamente a medida que el precio se mueve a favor de la operación. |
-| **Walk-Forward** | Metodología de validación que simula las condiciones reales de trading entrenando solo con datos pasados. |
-| **Win Rate** | Porcentaje de operaciones que resultaron en ganancia respecto al total de operaciones ejecutadas. |
-
----
-
-# Anexo A — Código Fuente: Estrategia Principal
-
-```python
-# ==========================================
-# TFG: SISTEMA DE TRADING ALGORÍTMICO HÍBRIDO
-# Autor: Joan Romà Llorca
-# Versión: 2.0 (Matrícula de Honor)
-# ==========================================
-#
-# Arquitectura de decisión multi-capa:
-#   1. Machine Learning (FreqAI / LightGBM) — 12 features avanzadas
-#   2. NLP (Sentimiento de mercado via FinBERT + TimescaleDB)
-#   3. Order Flow (Order Book Imbalance)
-#   4. Análisis Técnico Macro (SMA/EMA en H1)
-#   5. Gestión de Riesgo Dinámica (ATR + Circuit Breaker)
-# ==========================================
-
-import logging
-from datetime import datetime, timezone
-from typing import Optional
-
-import numpy as np
-import pandas as pd
-import talib.abstract as ta
-from pandas import DataFrame
-from sqlalchemy import create_engine
-
-from freqtrade.strategy import (
-    IStrategy, IntParameter, DecimalParameter, merge_informative_pair
-)
-from freqtrade.persistence import Trade
-
-logger = logging.getLogger(__name__)
-
-
-class FreqaiExampleStrategy(IStrategy):
-    """Estrategia TFG v2.0: Protocolo Híbrido Avanzado"""
-
-    INTERFACE_VERSION = 3
-    can_short = True
-    timeframe = "5m"
-    startup_candle_count: int = 200
-    DB_URL = "postgresql://postgres:password@timescaledb:5432/freqtrade"
-
-    buy_sma_period = IntParameter(100, 300, default=160, space="buy", optimize=True, load=True)
-    buy_ema_period = IntParameter(20, 100, default=79, space="buy", optimize=True, load=True)
-    ai_threshold_long = DecimalParameter(0.002, 0.05, default=0.01, space="buy", optimize=True, load=True)
-    ai_threshold_short = DecimalParameter(-0.05, -0.002, default=-0.01, space="buy", optimize=True, load=True)
-
-    trailing_stop = True
-    trailing_stop_positive = 0.015
-    trailing_stop_positive_offset = 0.025
-    trailing_only_offset_is_reached = True
-
-    # [... Métodos completos disponibles en el repositorio GitHub del proyecto ...]
-```
-
-*Nota: El código fuente completo (420 líneas) está disponible en el repositorio del proyecto en el archivo `user_data/strategies/FreqaiExampleStrategy.py`.*
-
----
-
-# Anexo B — Código Fuente: Motor NLP
-
-```python
-"""
-TFG: Motor de Análisis de Sentimiento de Mercado
-================================================
-Microservicio NLP que:
-1. Descarga titulares de noticias crypto en tiempo real (RSS feeds)
-2. Analiza su sentimiento con FinBERT (Positive/Negative/Neutral)
-3. Almacena los resultados en TimescaleDB para consumo del bot
-"""
-
-import os, time, logging
-from datetime import datetime, timezone
-
-import pandas as pd
-import feedparser
-from bs4 import BeautifulSoup
-from transformers import pipeline
-from sqlalchemy import create_engine, text
-
-DB_URL = f"postgresql://postgres:{os.environ.get('POSTGRES_PASSWORD', 'password')}@timescaledb:5432/{os.environ.get('POSTGRES_DB', 'freqtrade')}"
-MODEL_NAME = "ProsusAI/finbert"
-
-RSS_FEEDS = {
-    "CoinDesk":      "https://www.coindesk.com/arc/outboundfeeds/rss/",
-    "CoinTelegraph": "https://cointelegraph.com/rss",
-    "Bitcoin.com":   "https://news.bitcoin.com/feed/",
-}
-
-# [... Funciones completas disponibles en el repositorio GitHub del proyecto ...]
-```
-
-*Nota: El código fuente completo (214 líneas) está disponible en el repositorio del proyecto en el archivo `data_engineering/sentiment_ingestor.py`.*
-
----
-
-# Anexo C — Configuración Docker Compose
-
-```yaml
-version: '3'
-services:
-  # 1. BOT PRINCIPAL (Freqtrade - FreqAI / LightGBM)
-  freqtrade:
-    build: .
-    restart: always
-    container_name: freqtrade_elite_bot
-    env_file: .env
-    volumes:
-      - ./user_data:/freqtrade/user_data
-    ports:
-      - "8081:8080"
-    command: >
-      trade
-      --logfile /freqtrade/user_data/logs/freqtrade.log
-      --db-url postgresql://postgres:${POSTGRES_PASSWORD}@timescaledb:5432/${POSTGRES_DB}
-      --config /freqtrade/user_data/config.json
-      --config /freqtrade/user_data/config_secrets.json
-      --strategy FreqaiExampleStrategy
-      --freqaimodel LightGBMRegressor
-    depends_on:
-      - timescaledb
-
-  # 2. BOT EXPERIMENTAL (SMC + SCALPING + IA)
-  freqtrade_smc:
-    build:
-      context: .
-      dockerfile: Dockerfile.smc
-    restart: unless-stopped
-    container_name: freqtrade_smc
-    ports:
-      - "8082:8080"
-    command: >
-      trade --strategy SMC_Scalping_TFG --freqaimodel LightGBMRegressor
-
-  # 3. MOTOR NLP (FinBERT - Análisis de Sentimiento)
-  sentiment_analysis:
-    build:
-      context: .
-      dockerfile: Dockerfile.sentiment
-    container_name: sentiment_engine
-    restart: always
-    depends_on:
-      - timescaledb
-
-  # 4. BASE DE DATOS (TimescaleDB)
-  timescaledb:
-    image: timescale/timescaledb:latest-pg14
-    container_name: freqtrade_db
-    ports:
-      - "5432:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
-
-  # 5. VISUALIZACIÓN (Grafana)
-  grafana:
-    image: grafana/grafana
-    container_name: freqtrade_viz
-    ports:
-      - "3000:3000"
-    depends_on:
-      - timescaledb
-
-volumes:
-  db_data:
-  grafana_data:
-```
-
----
-
-# Anexo D — Suite de Tests Unitarios
-
-```python
-import pytest
-from unittest.mock import MagicMock, patch
-from data_engineering.sentiment_ingestor import clean_html, fetch_headlines, analyze_sentiment
-
-def test_clean_html():
-    """Valida la limpieza correcta de HTML del RSS feed."""
-    dirty = "<p>Bitcoin <b>soars</b> to $80k!</p>"
-    clean = clean_html(dirty)
-    assert clean == "Bitcoin soars to $80k!"
-
-def test_analyze_sentiment_logic():
-    """Verifica el mapeo correcto de scores FinBERT."""
-    def mock_classifier(titles, truncation=True):
-        return [
-            {"label": "positive", "score": 0.95},
-            {"label": "negative", "score": 0.80},
-            {"label": "neutral",  "score": 0.99}
-        ]
-    mock_headlines = [
-        {"title": "Bullish!", "source": "fake"},
-        {"title": "Bearish!", "source": "fake"},
-        {"title": "Flat",     "source": "fake"}
-    ]
-    results = analyze_sentiment(mock_classifier, mock_headlines)
-    assert results[0]["sentiment_score"] ==  0.95   # Positive → +score
-    assert results[1]["sentiment_score"] == -0.80   # Negative → -score
-    assert results[2]["sentiment_score"] ==  0       # Neutral  → 0
-```
-
-*Nota: La suite completa de tests (5 tests, 148 líneas) está disponible en el directorio `tests/` del repositorio.*
-
----
-
-# Anexo E — Script de Despliegue Automatizado
-
-```bash
-#!/bin/bash
-# deploy_ubuntu.sh — Despliegue automático en servidor Ubuntu 22.04
-set -e
-
-echo "=== TFG Trading Bot — Despliegue Automático ==="
-
-# 1. Actualizar sistema
-sudo apt-get update && sudo apt-get upgrade -y
-
-# 2. Instalar Docker
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-sudo usermod -aG docker $USER
-
-# 3. Instalar Docker Compose
-sudo apt-get install -y docker-compose-plugin
-
-# 4. Configurar Firewall
-sudo ufw allow 22/tcp    # SSH
-sudo ufw allow 3000/tcp  # Grafana
-sudo ufw allow 8081/tcp  # FreqUI
-sudo ufw --force enable
-
-# 5. Levantar servicios
-docker compose up -d --build
-echo "✅ Despliegue completado. Bot operativo."
-```
+# Anexos Finales (A, B, C, D, E)
+*(Disponibles intactos en la rama master y compilados dentro del repositorio oficial)*

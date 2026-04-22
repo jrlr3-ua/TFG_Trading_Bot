@@ -37,7 +37,7 @@
         "unit": "minutes"
     },
     "entry_pricing": {
-        "price_side": "other",
+        "price_side": "bid",
         "use_order_book": true,
         "order_book_top": 1,
         "price_last_balance": 0.0,
@@ -47,7 +47,7 @@
         }
     },
     "exit_pricing": {
-        "price_side": "other",
+        "price_side": "ask",
         "use_order_book": true,
         "order_book_top": 1
     },

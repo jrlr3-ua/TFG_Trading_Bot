@@ -76,17 +76,17 @@ class FreqaiExampleStrategy(IStrategy):
     buy_sma_period = IntParameter(50, 300, default=120, space="buy", optimize=True, load=True)
     buy_ema_period = IntParameter(20, 100, default=35, space="buy", optimize=True, load=True)
 
-    # Umbrales IA (Regresión % de precio)
-    ai_threshold_long = DecimalParameter(0.001, 0.05, default=0.012, space="buy", optimize=True, load=True)
-    ai_threshold_short = DecimalParameter(-0.05, -0.001, default=-0.012, space="buy", optimize=True, load=True)
+    # Umbrales IA (Regresión % de precio) aumentados para exigir mayor convicción
+    ai_threshold_long = DecimalParameter(0.01, 0.05, default=0.025, space="buy", optimize=True, load=True)
+    ai_threshold_short = DecimalParameter(-0.05, -0.01, default=-0.025, space="buy", optimize=True, load=True)
 
     # ─── GESTIÓN DE RIESGO ──────────────────────────────────────────────
     # ROI y stoploss se delegan al config.json
 
-    # Trailing Stop: la clave del éxito de v2.0
+    # Trailing Stop: la clave del éxito para dejar correr ganancias
     trailing_stop = True
-    trailing_stop_positive = 0.015
-    trailing_stop_positive_offset = 0.025
+    trailing_stop_positive = 0.01
+    trailing_stop_positive_offset = 0.03
     trailing_only_offset_is_reached = True
 
     # ─── TIMEFRAMES INFORMATIVOS ────────────────────────────────────────
