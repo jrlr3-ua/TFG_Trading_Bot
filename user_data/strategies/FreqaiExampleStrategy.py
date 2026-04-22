@@ -123,6 +123,10 @@ class FreqaiExampleStrategy(IStrategy):
 
         # 2. CAPA NLP (per-coin v3.0)
         dataframe = self._merge_sentiment_data(dataframe)
+        if 'sentiment_score' in dataframe.columns:
+            dataframe['sentiment_momentum'] = dataframe['sentiment_score'] - dataframe['sentiment_score'].shift(12)
+        else:
+            dataframe['sentiment_momentum'] = 0.0
 
         # 3. CAPA ML (FreqAI) — ahora las columnas _1h ya están mergeadas
         dataframe = self.freqai.start(dataframe, metadata, self)
@@ -140,8 +144,9 @@ class FreqaiExampleStrategy(IStrategy):
             except Exception as e:
                 logger.debug(f"Error cargando Order Book: {e}")
 
-        # 5. ATR para stop loss dinámico
+        # 5. ATR y SAR para stop loss dinámico e institucional
         dataframe['atr'] = ta.ATR(dataframe, timeperiod=14)
+        dataframe['sar'] = ta.SAR(dataframe)
 
         # 6. MEJORA v3.0 (MLOps): Log de predicciones para trazabilidad
         self._log_prediction_metrics(dataframe, metadata)
@@ -336,10 +341,9 @@ class FreqaiExampleStrategy(IStrategy):
                         current_rate: float, current_profit: float, after_fill: bool,
                         **kwargs) -> float:
         """
-        Stop loss dinámico basado en el ATR (Average True Range).
-        - Mercado volátil → stop más amplio (evita falsos stops)
-        - Mercado tranquilo → stop más estrecho (protege capital)
-        Fórmula: stop = -2 * ATR / precio_entrada
+        Stop loss dinámico Institucional (Parabolic SAR + ATR).
+        - Beneficio > 2%: trailing ultra ceñido con SAR.
+        - Mercado volátil/Inicial: stop con ATR extendido.
         """
         dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
         if dataframe.empty:
@@ -347,10 +351,20 @@ class FreqaiExampleStrategy(IStrategy):
 
         last_candle = dataframe.iloc[-1]
         atr = last_candle.get('atr', 0)
+        sar = last_candle.get('sar', 0)
 
+        # Trailing Institucional Seguro (SAR)
+        if current_profit > 0.02 and sar > 0:
+            if trade.is_short:
+                sar_dist = (current_rate - sar) / current_rate
+                return max(min(sar_dist, -0.005), -0.05)
+            else:
+                sar_dist = (sar - current_rate) / current_rate
+                return max(min(sar_dist, -0.005), -0.05)
+
+        # Riesgo Inicial (ATR)
         if atr > 0 and current_rate > 0:
             atr_stop = -(2 * atr / current_rate)
-            # Limitar entre -0.5% y -3%
             return max(min(atr_stop, -0.005), -0.03)
 
         return -0.01
@@ -407,13 +421,32 @@ class FreqaiExampleStrategy(IStrategy):
             except Exception:
                 pass  # On-chain data es opcional, no bloquear si falla
 
-            # 3. MEJORA v3.0 (MLOps): Log de trade confirmado
+            # 3. Portfolio Heat (Control de Sobreexposición Institucional)
+            open_trades = Trade.get_open_trades()
+            if len(open_trades) >= 3:
+                logger.warning(f"🌡️ Portfolio Heat alert: {len(open_trades)} trades abiertos simultáneamente. Denegando {pair}.")
+                return False
+
+            # 4. Order Book Imbalance (Sniper Limits)
+            dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
+            if not dataframe.empty:
+                last_candle = dataframe.iloc[-1]
+                obi = last_candle.get('order_book_imbalance', 0.5)
+                if side == 'long' and obi < 0.35:
+                    logger.warning(f"🧱 Order Book Wall: Fuerte presión institucional de VENTA (OBI={obi:.2f}). Cancelando LONG en {pair}.")
+                    return False
+                elif side == 'short' and obi > 0.65:
+                    logger.warning(f"🧱 Order Book Wall: Fuerte presión institucional de COMPRA (OBI={obi:.2f}). Cancelando SHORT en {pair}.")
+                    return False
+
+            # 5. MEJORA v3.0 (MLOps): Log de trade confirmado
             logger.info(
                 f"✅ [MLOps] Trade CONFIRMADO: {pair} | {side.upper()} | "
                 f"Rate: {rate:.2f} | Amount: {amount:.4f}"
             )
 
-        except Exception:
+        except Exception as e:
+            logger.warning(f"⚠️ Error confirmando entrada {pair}: {e}")
             pass
         return True
 
@@ -436,9 +469,18 @@ class FreqaiExampleStrategy(IStrategy):
         predicted_change = abs(last_candle.get("&s-price_change", 0))
 
         # Factor de riesgo: 0 a 1
-        risk_factor = min(predicted_change / 0.02, 1.0)
+        atr = last_candle.get('atr', 0)
+        
+        # Volatility Targeting (VaR / Protección Patrimonial)
+        atr_pct = (atr / current_rate) if current_rate > 0 else 0
+        vol_discount = 1.0
+        # Tolerancia institucional: si la volatilidad de la vela de 5m supera el 1.5%, reducimos dramáticamente
+        if atr_pct > 0.015:
+             vol_discount = max(0.1, 0.015 / atr_pct)
 
-        # Stake proporcional a la confianza
+        risk_factor = min(predicted_change / 0.02, 1.0) * vol_discount
+
+        # Stake proporcional a la confianza reducida por la volatilidad
         total_wallet = self.wallets.get_total_stake_amount()
         max_risk_per_trade = total_wallet * 0.40  # Half-Kelly: máx 40%
         adjusted_stake = min_stake + (max_risk_per_trade - min_stake) * risk_factor
@@ -489,9 +531,12 @@ class FreqaiExampleStrategy(IStrategy):
         dataframe["%-return_std-period"] = dataframe["close"].pct_change().rolling(window=period).std()
 
         # ─── FUNDAMENTAL (NLP per-coin) ───────────────────────────
-        if "sentiment_score" not in dataframe.columns:
-            dataframe["sentiment_score"] = 0.0
-        dataframe["%-sentiment"] = dataframe["sentiment_score"]
+        # NOTA: Las features de sentiment se eliminan del espacio de
+        # features de FreqAI porque en backtest tienen varianza 0
+        # (no hay datos NLP offline). VarianceThreshold las eliminaba
+        # de todas formas, pero contaminaban PCA y añadían overhead.
+        # El sentiment_score se sigue usando como FILTRO en la lógica
+        # de entrada (populate_entry_trend), pero NO como feature ML.
 
         # ─── MEJORA v3.0: MULTI-TIMEFRAME FEATURES (H1) ──────────
         # Inyectamos indicadores de 1H directamente al modelo ML.

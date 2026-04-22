@@ -13,8 +13,6 @@ RUN apt-get update && apt-get install -y \
 USER ftuser
 
 # --- INSTALACIÓN DE DEPENDENCIAS ---
-# PyTorch se instala aparte con CPU-only (sin CUDA/NVIDIA)
-# Mac Apple Silicon no necesita las librerías NVIDIA (~1.5GB menos)
 RUN pip install --no-cache-dir \
     sqlalchemy \
     psycopg2-binary \
@@ -28,10 +26,10 @@ RUN pip install --no-cache-dir \
 RUN pip install --no-cache-dir "torch>=2.6.0" --index-url https://download.pytorch.org/whl/cpu 2>/dev/null || \
     pip install --no-cache-dir "torch>=2.6.0"
 
-# Parche para bug datasieve 0.1.9 (features_in → feature_list)
+# Parche para bug datasieve 0.1.9: features_in no existe, debe ser feature_list
 USER root
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+RUN sed -i 's/self\.features_in/self.feature_list/g' /home/ftuser/.local/lib/python3.13/site-packages/datasieve/pipeline.py && \
+    echo "datasieve parcheado en buildtime"
 USER ftuser
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["freqtrade"]

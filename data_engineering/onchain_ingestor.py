@@ -40,6 +40,7 @@ DB_URL = f"postgresql://postgres:{DB_PASSWORD}@timescaledb:5432/{DB_NAME}"
 # APIs Públicas Gratuitas (sin key)
 FEAR_GREED_URL = "https://api.alternative.me/fng/?limit=1"
 COINGECKO_GLOBAL_URL = "https://api.coingecko.com/api/v3/global"
+DEFILLAMA_TVL_URL = "https://api.llama.fi/charts"
 
 # ─── LOGGING ─────────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -125,6 +126,24 @@ def fetch_market_globals() -> dict | None:
     return None
 
 
+def fetch_defillama_tvl() -> float | None:
+    """
+    Descarga el Total Value Locked (TVL) global desde DeFiLlama.
+    Permite al bot evaluar la entrada o salida de capital real de los ecosistemas (Liquidity flows).
+    """
+    try:
+        response = requests.get(DEFILLAMA_TVL_URL, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        if isinstance(data, list) and len(data) > 0:
+            # data is a list of dicts: [{'date': str, 'totalLiquidityUSD': float}, ...]
+            latest = data[-1]
+            return float(latest.get("totalLiquidityUSD", 0))
+    except Exception as e:
+        logger.error(f"❌ Error obteniendo TVL de DeFiLlama: {e}")
+    return None
+
+
 def save_metric(engine, metric_name: str, metric_value: float, metadata: str = ""):
     """Guarda una métrica on-chain en TimescaleDB."""
     record = {
@@ -167,6 +186,12 @@ def main():
                 save_metric(engine, "total_volume_24h", market["total_volume_24h"])
                 logger.info(f"📊 BTC Dominance: {market['btc_dominance']}%")
                 logger.info(f"💰 Market Cap Total: ${market['total_market_cap_usd']:,.0f}")
+
+            # 3. DeFiLlama Global TVL
+            tvl = fetch_defillama_tvl()
+            if tvl:
+                save_metric(engine, "defillama_global_tvl", tvl)
+                logger.info(f"🏦 Global DeFi TVL: ${tvl:,.0f}")
 
             # Esperar 15 minutos (APIs públicas tienen rate limits)
             logger.info("⏳ Esperando 15 minutos para el siguiente ciclo...")

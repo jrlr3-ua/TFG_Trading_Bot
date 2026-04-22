@@ -1,0 +1,600 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 581B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.14kB 0.0s done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/freqtradeorg/freqtrade:stable_freqai
+#3 DONE 1.5s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 747B 0.0s done
+#5 DONE 0.0s
+
+#6 [1/6] FROM docker.io/freqtradeorg/freqtrade:stable_freqai@sha256:e4c7d501d9bb03cb885b4b5ee4b2a15c8e15da0b8c602a7f8c0aded7e1f77fe1
+#6 resolve docker.io/freqtradeorg/freqtrade:stable_freqai@sha256:e4c7d501d9bb03cb885b4b5ee4b2a15c8e15da0b8c602a7f8c0aded7e1f77fe1 0.0s done
+#6 DONE 0.2s
+
+#6 [1/6] FROM docker.io/freqtradeorg/freqtrade:stable_freqai@sha256:e4c7d501d9bb03cb885b4b5ee4b2a15c8e15da0b8c602a7f8c0aded7e1f77fe1
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 0B / 475.41MB 0.2s
+#6 sha256:c6b9493b47d8b3102f2b240a07b319e6306f982ca4ba1e5cc0912c2619f8aff5 0B / 292B 0.2s
+#6 sha256:b58b4ed05c37a23aae00b0c2d9a3a1072a0e460eae7f8b71be99554db9a991c1 0B / 2.29MB 0.2s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 0.2s
+#6 sha256:c6b9493b47d8b3102f2b240a07b319e6306f982ca4ba1e5cc0912c2619f8aff5 292B / 292B 0.7s done
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 0B / 212.29MB 0.2s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 24.12MB / 475.41MB 4.4s
+#6 sha256:b58b4ed05c37a23aae00b0c2d9a3a1072a0e460eae7f8b71be99554db9a991c1 0B / 2.29MB 5.3s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 5.3s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 0B / 212.29MB 5.3s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 48.23MB / 475.41MB 8.0s
+#6 sha256:b58b4ed05c37a23aae00b0c2d9a3a1072a0e460eae7f8b71be99554db9a991c1 0B / 2.29MB 10.4s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 10.4s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 0B / 212.29MB 10.4s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 72.35MB / 475.41MB 12.8s
+#6 sha256:b58b4ed05c37a23aae00b0c2d9a3a1072a0e460eae7f8b71be99554db9a991c1 0B / 2.29MB 15.5s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 15.5s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 0B / 212.29MB 15.5s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 96.47MB / 475.41MB 16.4s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 120.59MB / 475.41MB 20.6s
+#6 sha256:b58b4ed05c37a23aae00b0c2d9a3a1072a0e460eae7f8b71be99554db9a991c1 0B / 2.29MB 20.6s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 20.6s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 0B / 212.29MB 20.6s
+#6 sha256:b58b4ed05c37a23aae00b0c2d9a3a1072a0e460eae7f8b71be99554db9a991c1 1.05MB / 2.29MB 24.0s
+#6 sha256:b58b4ed05c37a23aae00b0c2d9a3a1072a0e460eae7f8b71be99554db9a991c1 2.29MB / 2.29MB 24.2s done
+#6 sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 0B / 32B 0.2s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 144.70MB / 475.41MB 24.9s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 25.7s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 6.29MB / 212.29MB 25.7s
+#6 sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 0B / 32B 5.2s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 17.83MB / 212.29MB 29.1s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 156.24MB / 475.41MB 30.0s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 30.7s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 29.36MB / 212.29MB 31.3s
+#6 34.35 error: failed to copy: httpReadSeeker: failed open: failed to do request: Get "https://registry-1.docker.io/v2/freqtradeorg/freqtrade/blobs/sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1": net/http: TLS handshake timeout
+#6 34.35 retrying in 1s
+#6 sha256:38465355445bd98caebbf048eca5a3c0ef65ea8beed48dede8349af01c7fa9fa 0B / 3.92MB 0.2s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 40.89MB / 212.29MB 34.2s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 165.68MB / 475.41MB 35.1s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 35.8s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 52.43MB / 212.29MB 37.5s
+#6 sha256:38465355445bd98caebbf048eca5a3c0ef65ea8beed48dede8349af01c7fa9fa 0B / 3.92MB 5.3s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 182.45MB / 475.41MB 40.2s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 40.9s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 63.96MB / 212.29MB 40.6s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 75.50MB / 212.29MB 44.1s
+#6 sha256:38465355445bd98caebbf048eca5a3c0ef65ea8beed48dede8349af01c7fa9fa 0B / 3.92MB 10.4s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 195.04MB / 475.41MB 45.3s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 46.0s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 87.03MB / 212.29MB 46.8s
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 0B / 23.82MB 0.2s
+#6 49.62 error: failed to copy: httpReadSeeker: failed open: failed to do request: Get "https://registry-1.docker.io/v2/freqtradeorg/freqtrade/blobs/sha256:38465355445bd98caebbf048eca5a3c0ef65ea8beed48dede8349af01c7fa9fa": net/http: TLS handshake timeout
+#6 49.62 retrying in 1s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 206.57MB / 475.41MB 50.4s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 98.57MB / 212.29MB 49.9s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 51.1s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 110.10MB / 212.29MB 52.5s
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 0B / 23.82MB 5.3s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 219.15MB / 475.41MB 55.5s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 121.63MB / 212.29MB 55.3s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 56.2s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 133.17MB / 212.29MB 58.3s
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 0B / 23.82MB 10.3s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 233.83MB / 475.41MB 60.6s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 61.3s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 144.70MB / 212.29MB 61.5s
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 0B / 23.82MB 15.4s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 248.51MB / 475.41MB 65.7s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 156.24MB / 212.29MB 65.2s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 66.4s
+#6 67.84 error: failed to copy: httpReadSeeker: failed open: failed to do request: Get "https://registry-1.docker.io/v2/freqtradeorg/freqtrade/blobs/sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c": net/http: TLS handshake timeout
+#6 67.84 retrying in 1s
+#6 sha256:eecee41f47a6f5c27e0e7c4d3a5cafbd0f315a13f5cb629d634a201838354fb0 0B / 250B 0.2s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 167.77MB / 212.29MB 68.8s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 263.19MB / 475.41MB 70.8s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 71.5s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 179.31MB / 212.29MB 72.1s
+#6 sha256:eecee41f47a6f5c27e0e7c4d3a5cafbd0f315a13f5cb629d634a201838354fb0 0B / 250B 5.3s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 281.02MB / 475.41MB 75.9s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 76.6s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 190.84MB / 212.29MB 76.0s
+#6 sha256:eecee41f47a6f5c27e0e7c4d3a5cafbd0f315a13f5cb629d634a201838354fb0 0B / 250B 10.4s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 301.99MB / 475.41MB 81.0s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 202.38MB / 212.29MB 80.4s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 81.7s
+#6 sha256:eecee41f47a6f5c27e0e7c4d3a5cafbd0f315a13f5cb629d634a201838354fb0 0B / 250B 15.5s
+#6 sha256:eecee41f47a6f5c27e0e7c4d3a5cafbd0f315a13f5cb629d634a201838354fb0 250B / 250B 16.3s done
+#6 sha256:e2a2a5e6ffbfa80c6c3514c20e60c20aa47c15f593833bca16a5a3a15b78ad9e 0B / 11.80MB 0.2s
+#6 sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 212.29MB / 212.29MB 84.4s done
+#6 sha256:b186029d0aef40dfeb3824ddf540da2ecc123b7412a1f540be8b261d570ef46f 0B / 1.29MB 0.2s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 321.91MB / 475.41MB 86.1s
+#6 sha256:e2a2a5e6ffbfa80c6c3514c20e60c20aa47c15f593833bca16a5a3a15b78ad9e 1.05MB / 11.80MB 2.0s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 86.8s
+#6 sha256:e2a2a5e6ffbfa80c6c3514c20e60c20aa47c15f593833bca16a5a3a15b78ad9e 2.10MB / 11.80MB 2.7s
+#6 sha256:e2a2a5e6ffbfa80c6c3514c20e60c20aa47c15f593833bca16a5a3a15b78ad9e 3.15MB / 11.80MB 3.6s
+#6 sha256:e2a2a5e6ffbfa80c6c3514c20e60c20aa47c15f593833bca16a5a3a15b78ad9e 4.19MB / 11.80MB 4.3s
+#6 sha256:e2a2a5e6ffbfa80c6c3514c20e60c20aa47c15f593833bca16a5a3a15b78ad9e 5.24MB / 11.80MB 4.9s
+#6 sha256:b186029d0aef40dfeb3824ddf540da2ecc123b7412a1f540be8b261d570ef46f 1.05MB / 1.29MB 4.0s
+#6 sha256:b186029d0aef40dfeb3824ddf540da2ecc123b7412a1f540be8b261d570ef46f 1.29MB / 1.29MB 4.1s done
+#6 sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 0B / 29.78MB 0.2s
+#6 sha256:e2a2a5e6ffbfa80c6c3514c20e60c20aa47c15f593833bca16a5a3a15b78ad9e 6.29MB / 11.80MB 5.5s
+#6 sha256:e2a2a5e6ffbfa80c6c3514c20e60c20aa47c15f593833bca16a5a3a15b78ad9e 7.34MB / 11.80MB 5.8s
+#6 sha256:e2a2a5e6ffbfa80c6c3514c20e60c20aa47c15f593833bca16a5a3a15b78ad9e 8.39MB / 11.80MB 6.3s
+#6 sha256:e2a2a5e6ffbfa80c6c3514c20e60c20aa47c15f593833bca16a5a3a15b78ad9e 9.44MB / 11.80MB 6.6s
+#6 sha256:e2a2a5e6ffbfa80c6c3514c20e60c20aa47c15f593833bca16a5a3a15b78ad9e 10.49MB / 11.80MB 7.0s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 337.64MB / 475.41MB 91.2s
+#6 sha256:e2a2a5e6ffbfa80c6c3514c20e60c20aa47c15f593833bca16a5a3a15b78ad9e 11.53MB / 11.80MB 7.3s
+#6 sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 0B / 32B 0.2s
+#6 sha256:e2a2a5e6ffbfa80c6c3514c20e60c20aa47c15f593833bca16a5a3a15b78ad9e 11.80MB / 11.80MB 7.4s done
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 91.9s
+#6 sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 2.10MB / 29.78MB 3.2s
+#6 sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 4.19MB / 29.78MB 3.9s
+#6 sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 6.29MB / 29.78MB 4.7s
+#6 sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 8.39MB / 29.78MB 5.4s
+#6 sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 32B / 32B 4.0s done
+#6 sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 10.49MB / 29.78MB 6.2s
+#6 sha256:38465355445bd98caebbf048eca5a3c0ef65ea8beed48dede8349af01c7fa9fa 0B / 3.92MB 0.2s
+#6 sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 12.58MB / 29.78MB 6.6s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 355.47MB / 475.41MB 96.3s
+#6 sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 14.68MB / 29.78MB 7.4s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 97.0s
+#6 sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 16.78MB / 29.78MB 8.0s
+#6 sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 18.87MB / 29.78MB 8.7s
+#6 sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 20.97MB / 29.78MB 9.6s
+#6 sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 23.07MB / 29.78MB 10.5s
+#6 sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 25.17MB / 29.78MB 11.3s
+#6 sha256:38465355445bd98caebbf048eca5a3c0ef65ea8beed48dede8349af01c7fa9fa 0B / 3.92MB 5.3s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 376.44MB / 475.41MB 101.4s
+#6 sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 27.26MB / 29.78MB 12.2s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 102.1s
+#6 sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 29.36MB / 29.78MB 12.9s
+#6 sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 29.78MB / 29.78MB 13.1s done
+#6 extracting sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 0B / 23.82MB 0.2s
+#6 extracting sha256:ec781dee3f4719c2ca0dd9e73cb1d4ed834ed1a406495eb6e44b6dfaad5d1f8f 0.6s done
+#6 extracting sha256:b186029d0aef40dfeb3824ddf540da2ecc123b7412a1f540be8b261d570ef46f
+#6 extracting sha256:b186029d0aef40dfeb3824ddf540da2ecc123b7412a1f540be8b261d570ef46f 0.1s done
+#6 extracting sha256:e2a2a5e6ffbfa80c6c3514c20e60c20aa47c15f593833bca16a5a3a15b78ad9e
+#6 extracting sha256:e2a2a5e6ffbfa80c6c3514c20e60c20aa47c15f593833bca16a5a3a15b78ad9e 0.3s done
+#6 extracting sha256:eecee41f47a6f5c27e0e7c4d3a5cafbd0f315a13f5cb629d634a201838354fb0 0.0s done
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 400.56MB / 475.41MB 105.4s
+#6 sha256:38465355445bd98caebbf048eca5a3c0ef65ea8beed48dede8349af01c7fa9fa 0B / 3.92MB 10.4s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 107.2s
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 0B / 23.82MB 5.3s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 424.67MB / 475.41MB 110.1s
+#6 sha256:38465355445bd98caebbf048eca5a3c0ef65ea8beed48dede8349af01c7fa9fa 0B / 3.92MB 15.5s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 112.3s
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 0B / 23.82MB 10.4s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 448.79MB / 475.41MB 113.8s
+#6 sha256:38465355445bd98caebbf048eca5a3c0ef65ea8beed48dede8349af01c7fa9fa 0B / 3.92MB 20.6s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 472.91MB / 475.41MB 117.4s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 117.4s
+#6 sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 475.41MB / 475.41MB 117.7s done
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 0B / 23.82MB 15.4s
+#6 sha256:38465355445bd98caebbf048eca5a3c0ef65ea8beed48dede8349af01c7fa9fa 1.05MB / 3.92MB 22.6s
+#6 sha256:38465355445bd98caebbf048eca5a3c0ef65ea8beed48dede8349af01c7fa9fa 2.10MB / 3.92MB 22.9s
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 2.10MB / 23.82MB 16.2s
+#6 sha256:38465355445bd98caebbf048eca5a3c0ef65ea8beed48dede8349af01c7fa9fa 3.15MB / 3.92MB 23.2s
+#6 sha256:38465355445bd98caebbf048eca5a3c0ef65ea8beed48dede8349af01c7fa9fa 3.92MB / 3.92MB 23.4s done
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 4.19MB / 23.82MB 16.8s
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 6.29MB / 23.82MB 17.2s
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 8.39MB / 23.82MB 17.5s
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 10.49MB / 23.82MB 17.8s
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 12.58MB / 23.82MB 18.3s
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 14.68MB / 23.82MB 18.6s
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 16.78MB / 23.82MB 18.9s
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 18.87MB / 23.82MB 19.2s
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 20.97MB / 23.82MB 19.5s
+#6 sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 23.82MB / 23.82MB 19.8s done
+#6 extracting sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 122.5s
+#6 extracting sha256:54cacf5e880de34994f071d93a7eddd49be5eb27adee166a111b52c7dcaa7e7c 0.3s done
+#6 extracting sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1 0.0s done
+#6 extracting sha256:38465355445bd98caebbf048eca5a3c0ef65ea8beed48dede8349af01c7fa9fa
+#6 extracting sha256:38465355445bd98caebbf048eca5a3c0ef65ea8beed48dede8349af01c7fa9fa 0.1s done
+#6 extracting sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085
+#6 extracting sha256:befbebe6cb2dcd544e12f0fe5eed199481866006fcfa06596c043297500f8085 4.1s done
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 127.6s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 132.7s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 137.8s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 142.9s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 148.0s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 153.1s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 158.2s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 163.3s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0B / 45.91MB 168.4s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 3.15MB / 45.91MB 169.0s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 6.29MB / 45.91MB 169.6s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 9.44MB / 45.91MB 170.1s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 12.58MB / 45.91MB 170.5s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 15.73MB / 45.91MB 171.0s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 18.87MB / 45.91MB 171.4s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 22.02MB / 45.91MB 171.9s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 25.17MB / 45.91MB 172.3s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 28.31MB / 45.91MB 172.8s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 31.46MB / 45.91MB 173.2s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 34.60MB / 45.91MB 174.1s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 37.75MB / 45.91MB 174.6s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 40.89MB / 45.91MB 175.0s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 44.04MB / 45.91MB 175.5s
+#6 sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 45.91MB / 45.91MB 175.7s done
+#6 extracting sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678
+#6 extracting sha256:3d51ec38829221de70c3a098691ff2b5cc35f1b0b95e6690162173ddc8064678 0.3s done
+#6 DONE 176.2s
+
+#6 [1/6] FROM docker.io/freqtradeorg/freqtrade:stable_freqai@sha256:e4c7d501d9bb03cb885b4b5ee4b2a15c8e15da0b8c602a7f8c0aded7e1f77fe1
+#6 extracting sha256:b58b4ed05c37a23aae00b0c2d9a3a1072a0e460eae7f8b71be99554db9a991c1 0.0s done
+#6 extracting sha256:c6b9493b47d8b3102f2b240a07b319e6306f982ca4ba1e5cc0912c2619f8aff5 0.0s done
+#6 extracting sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494
+#6 extracting sha256:f536db3e0b7f4eaefc6ad808c65c70d8aea41846ae4231d80762cae182c0e494 4.7s done
+#6 DONE 181.0s
+
+#7 [2/6] RUN apt-get update && apt-get install -y     gcc     libpq-dev     && rm -rf /var/lib/apt/lists/*
+#7 0.313 Hit:1 http://deb.debian.org/debian trixie InRelease
+#7 0.318 Get:2 http://deb.debian.org/debian trixie-updates InRelease [47.3 kB]
+#7 0.350 Get:3 http://deb.debian.org/debian-security trixie-security InRelease [43.4 kB]
+#7 0.382 Get:4 http://deb.debian.org/debian-security trixie-security/main amd64 Packages [123 kB]
+#7 0.424 Fetched 213 kB in 0s (1167 kB/s)
+#7 0.424 Reading package lists...
+#7 0.811 Reading package lists...
+#7 1.180 Building dependency tree...
+#7 1.263 Reading state information...
+#7 1.376 The following additional packages will be installed:
+#7 1.376   binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-14
+#7 1.376   cpp-14-x86-64-linux-gnu cpp-x86-64-linux-gnu gcc-14 gcc-14-x86-64-linux-gnu
+#7 1.376   gcc-x86-64-linux-gnu libasan8 libatomic1 libbinutils libc-dev-bin libc6-dev
+#7 1.376   libcc1-0 libcrypt-dev libctf-nobfd0 libctf0 libgcc-14-dev libgprofng0
+#7 1.377   libhwasan0 libisl23 libitm1 libjansson4 liblsan0 libmpc3 libmpfr6 libpq5
+#7 1.378   libquadmath0 libsframe1 libssl-dev libssl3t64 libtsan2 libubsan1
+#7 1.378   linux-libc-dev manpages manpages-dev openssl openssl-provider-legacy
+#7 1.379   rpcsvc-proto
+#7 1.380 Suggested packages:
+#7 1.380   binutils-doc gprofng-gui binutils-gold cpp-doc gcc-14-locales cpp-14-doc
+#7 1.380   gcc-multilib make autoconf automake libtool flex bison gdb gcc-doc
+#7 1.380   gcc-14-multilib gcc-14-doc gdb-x86-64-linux-gnu libc-devtools glibc-doc
+#7 1.380   postgresql-doc-17 libssl-doc man-browser
+#7 1.487 The following NEW packages will be installed:
+#7 1.487   binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-14
+#7 1.487   cpp-14-x86-64-linux-gnu cpp-x86-64-linux-gnu gcc gcc-14
+#7 1.487   gcc-14-x86-64-linux-gnu gcc-x86-64-linux-gnu libasan8 libatomic1 libbinutils
+#7 1.487   libc-dev-bin libc6-dev libcc1-0 libcrypt-dev libctf-nobfd0 libctf0
+#7 1.487   libgcc-14-dev libgprofng0 libhwasan0 libisl23 libitm1 libjansson4 liblsan0
+#7 1.488   libmpc3 libmpfr6 libpq-dev libpq5 libquadmath0 libsframe1 libssl-dev
+#7 1.488   libtsan2 libubsan1 linux-libc-dev manpages manpages-dev rpcsvc-proto
+#7 1.489 The following packages will be upgraded:
+#7 1.490   libssl3t64 openssl openssl-provider-legacy
+#7 1.543 3 upgraded, 40 newly installed, 0 to remove and 0 not upgraded.
+#7 1.543 Need to get 67.9 MB of archives.
+#7 1.543 After this operation, 240 MB of additional disk space will be used.
+#7 1.543 Get:1 http://deb.debian.org/debian-security trixie-security/main amd64 openssl-provider-legacy amd64 3.5.5-1~deb13u2 [311 kB]
+#7 1.632 Get:2 http://deb.debian.org/debian-security trixie-security/main amd64 libssl3t64 amd64 3.5.5-1~deb13u2 [2445 kB]
+#7 2.015 Get:3 http://deb.debian.org/debian trixie/main amd64 manpages all 6.9.1-1 [1393 kB]
+#7 2.218 Get:4 http://deb.debian.org/debian trixie/main amd64 libsframe1 amd64 2.44-3 [78.4 kB]
+#7 2.239 Get:5 http://deb.debian.org/debian trixie/main amd64 binutils-common amd64 2.44-3 [2509 kB]
+#7 2.632 Get:6 http://deb.debian.org/debian trixie/main amd64 libbinutils amd64 2.44-3 [534 kB]
+#7 2.695 Get:7 http://deb.debian.org/debian trixie/main amd64 libgprofng0 amd64 2.44-3 [808 kB]
+#7 2.832 Get:8 http://deb.debian.org/debian trixie/main amd64 libctf-nobfd0 amd64 2.44-3 [156 kB]
+#7 2.869 Get:9 http://deb.debian.org/debian trixie/main amd64 libctf0 amd64 2.44-3 [88.6 kB]
+#7 2.903 Get:10 http://deb.debian.org/debian trixie/main amd64 libjansson4 amd64 2.14-2+b3 [39.8 kB]
+#7 2.908 Get:11 http://deb.debian.org/debian trixie/main amd64 binutils-x86-64-linux-gnu amd64 2.44-3 [1014 kB]
+#7 3.240 Get:12 http://deb.debian.org/debian trixie/main amd64 binutils amd64 2.44-3 [265 kB]
+#7 3.318 Get:13 http://deb.debian.org/debian trixie/main amd64 libisl23 amd64 0.27-1 [659 kB]
+#7 3.454 Get:14 http://deb.debian.org/debian trixie/main amd64 libmpfr6 amd64 4.2.2-1 [729 kB]
+#7 3.596 Get:15 http://deb.debian.org/debian trixie/main amd64 libmpc3 amd64 1.3.1-1+b3 [52.2 kB]
+#7 3.605 Get:16 http://deb.debian.org/debian trixie/main amd64 cpp-14-x86-64-linux-gnu amd64 14.2.0-19 [11.0 MB]
+#7 5.282 Get:17 http://deb.debian.org/debian trixie/main amd64 cpp-14 amd64 14.2.0-19 [1280 B]
+#7 5.282 Get:18 http://deb.debian.org/debian trixie/main amd64 cpp-x86-64-linux-gnu amd64 4:14.2.0-1 [4840 B]
+#7 5.282 Get:19 http://deb.debian.org/debian trixie/main amd64 cpp amd64 4:14.2.0-1 [1568 B]
+#7 5.282 Get:20 http://deb.debian.org/debian trixie/main amd64 libcc1-0 amd64 14.2.0-19 [42.8 kB]
+#7 5.285 Get:21 http://deb.debian.org/debian trixie/main amd64 libitm1 amd64 14.2.0-19 [26.0 kB]
+#7 5.291 Get:22 http://deb.debian.org/debian trixie/main amd64 libatomic1 amd64 14.2.0-19 [9308 B]
+#7 5.292 Get:23 http://deb.debian.org/debian trixie/main amd64 libasan8 amd64 14.2.0-19 [2725 kB]
+#7 5.697 Get:24 http://deb.debian.org/debian trixie/main amd64 liblsan0 amd64 14.2.0-19 [1204 kB]
+#7 5.903 Get:25 http://deb.debian.org/debian trixie/main amd64 libtsan2 amd64 14.2.0-19 [2460 kB]
+#7 6.244 Get:26 http://deb.debian.org/debian trixie/main amd64 libubsan1 amd64 14.2.0-19 [1074 kB]
+#7 6.401 Get:27 http://deb.debian.org/debian trixie/main amd64 libhwasan0 amd64 14.2.0-19 [1488 kB]
+#7 6.606 Get:28 http://deb.debian.org/debian trixie/main amd64 libquadmath0 amd64 14.2.0-19 [145 kB]
+#7 6.628 Get:29 http://deb.debian.org/debian trixie/main amd64 libgcc-14-dev amd64 14.2.0-19 [2672 kB]
+#7 7.001 Get:30 http://deb.debian.org/debian trixie/main amd64 gcc-14-x86-64-linux-gnu amd64 14.2.0-19 [21.4 MB]
+#7 10.10 Get:31 http://deb.debian.org/debian trixie/main amd64 gcc-14 amd64 14.2.0-19 [540 kB]
+#7 10.17 Get:32 http://deb.debian.org/debian trixie/main amd64 gcc-x86-64-linux-gnu amd64 4:14.2.0-1 [1436 B]
+#7 10.17 Get:33 http://deb.debian.org/debian trixie/main amd64 gcc amd64 4:14.2.0-1 [5136 B]
+#7 10.17 Get:34 http://deb.debian.org/debian trixie/main amd64 libc-dev-bin amd64 2.41-12+deb13u2 [59.4 kB]
+#7 10.20 Get:35 http://deb.debian.org/debian-security trixie-security/main amd64 linux-libc-dev all 6.12.74-2 [2746 kB]
+#7 10.60 Get:36 http://deb.debian.org/debian trixie/main amd64 libcrypt-dev amd64 1:4.4.38-1 [119 kB]
+#7 10.61 Get:37 http://deb.debian.org/debian trixie/main amd64 rpcsvc-proto amd64 1.4.3-1 [63.3 kB]
+#7 10.62 Get:38 http://deb.debian.org/debian trixie/main amd64 libc6-dev amd64 2.41-12+deb13u2 [1996 kB]
+#7 10.92 Get:39 http://deb.debian.org/debian trixie/main amd64 libpq5 amd64 17.9-0+deb13u1 [228 kB]
+#7 10.97 Get:40 http://deb.debian.org/debian-security trixie-security/main amd64 libssl-dev amd64 3.5.5-1~deb13u2 [2954 kB]
+#7 11.41 Get:41 http://deb.debian.org/debian trixie/main amd64 libpq-dev amd64 17.9-0+deb13u1 [152 kB]
+#7 11.46 Get:42 http://deb.debian.org/debian trixie/main amd64 manpages-dev all 6.9.1-1 [2122 kB]
+#7 11.79 Get:43 http://deb.debian.org/debian-security trixie-security/main amd64 openssl amd64 3.5.5-1~deb13u2 [1500 kB]
+#7 12.09 debconf: unable to initialize frontend: Dialog
+#7 12.09 debconf: (TERM is not set, so the dialog frontend is not usable.)
+#7 12.09 debconf: falling back to frontend: Readline
+#7 12.09 debconf: unable to initialize frontend: Readline
+#7 12.09 debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.40.1 /usr/local/share/perl/5.40.1 /usr/lib/x86_64-linux-gnu/perl5/5.40 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.40 /usr/share/perl/5.40 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8, <STDIN> line 43.)
+#7 12.09 debconf: falling back to frontend: Teletype
+#7 12.10 debconf: unable to initialize frontend: Teletype
+#7 12.10 debconf: (This frontend requires a controlling tty.)
+#7 12.10 debconf: falling back to frontend: Noninteractive
+#7 12.87 Fetched 67.9 MB in 11s (6461 kB/s)
+#7 12.89 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 7160 files and directories currently installed.)
+#7 12.89 Preparing to unpack .../openssl-provider-legacy_3.5.5-1~deb13u2_amd64.deb ...
+#7 12.90 Unpacking openssl-provider-legacy (3.5.5-1~deb13u2) over (3.5.5-1~deb13u1) ...
+#7 12.92 Setting up openssl-provider-legacy (3.5.5-1~deb13u2) ...
+#7 12.95 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 7160 files and directories currently installed.)
+#7 12.95 Preparing to unpack .../libssl3t64_3.5.5-1~deb13u2_amd64.deb ...
+#7 12.96 Unpacking libssl3t64:amd64 (3.5.5-1~deb13u2) over (3.5.5-1~deb13u1) ...
+#7 13.06 Setting up libssl3t64:amd64 (3.5.5-1~deb13u2) ...
+#7 13.08 Selecting previously unselected package manpages.
+#7 13.08 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 7160 files and directories currently installed.)
+#7 13.09 Preparing to unpack .../00-manpages_6.9.1-1_all.deb ...
+#7 13.09 Unpacking manpages (6.9.1-1) ...
+#7 13.14 Selecting previously unselected package libsframe1:amd64.
+#7 13.14 Preparing to unpack .../01-libsframe1_2.44-3_amd64.deb ...
+#7 13.14 Unpacking libsframe1:amd64 (2.44-3) ...
+#7 13.16 Selecting previously unselected package binutils-common:amd64.
+#7 13.16 Preparing to unpack .../02-binutils-common_2.44-3_amd64.deb ...
+#7 13.17 Unpacking binutils-common:amd64 (2.44-3) ...
+#7 13.27 Selecting previously unselected package libbinutils:amd64.
+#7 13.28 Preparing to unpack .../03-libbinutils_2.44-3_amd64.deb ...
+#7 13.28 Unpacking libbinutils:amd64 (2.44-3) ...
+#7 13.32 Selecting previously unselected package libgprofng0:amd64.
+#7 13.32 Preparing to unpack .../04-libgprofng0_2.44-3_amd64.deb ...
+#7 13.32 Unpacking libgprofng0:amd64 (2.44-3) ...
+#7 13.37 Selecting previously unselected package libctf-nobfd0:amd64.
+#7 13.37 Preparing to unpack .../05-libctf-nobfd0_2.44-3_amd64.deb ...
+#7 13.38 Unpacking libctf-nobfd0:amd64 (2.44-3) ...
+#7 13.40 Selecting previously unselected package libctf0:amd64.
+#7 13.40 Preparing to unpack .../06-libctf0_2.44-3_amd64.deb ...
+#7 13.41 Unpacking libctf0:amd64 (2.44-3) ...
+#7 13.43 Selecting previously unselected package libjansson4:amd64.
+#7 13.43 Preparing to unpack .../07-libjansson4_2.14-2+b3_amd64.deb ...
+#7 13.43 Unpacking libjansson4:amd64 (2.14-2+b3) ...
+#7 13.45 Selecting previously unselected package binutils-x86-64-linux-gnu.
+#7 13.45 Preparing to unpack .../08-binutils-x86-64-linux-gnu_2.44-3_amd64.deb ...
+#7 13.45 Unpacking binutils-x86-64-linux-gnu (2.44-3) ...
+#7 13.52 Selecting previously unselected package binutils.
+#7 13.52 Preparing to unpack .../09-binutils_2.44-3_amd64.deb ...
+#7 13.52 Unpacking binutils (2.44-3) ...
+#7 13.55 Selecting previously unselected package libisl23:amd64.
+#7 13.56 Preparing to unpack .../10-libisl23_0.27-1_amd64.deb ...
+#7 13.56 Unpacking libisl23:amd64 (0.27-1) ...
+#7 13.60 Selecting previously unselected package libmpfr6:amd64.
+#7 13.60 Preparing to unpack .../11-libmpfr6_4.2.2-1_amd64.deb ...
+#7 13.61 Unpacking libmpfr6:amd64 (4.2.2-1) ...
+#7 13.64 Selecting previously unselected package libmpc3:amd64.
+#7 13.64 Preparing to unpack .../12-libmpc3_1.3.1-1+b3_amd64.deb ...
+#7 13.64 Unpacking libmpc3:amd64 (1.3.1-1+b3) ...
+#7 13.66 Selecting previously unselected package cpp-14-x86-64-linux-gnu.
+#7 13.66 Preparing to unpack .../13-cpp-14-x86-64-linux-gnu_14.2.0-19_amd64.deb ...
+#7 13.67 Unpacking cpp-14-x86-64-linux-gnu (14.2.0-19) ...
+#7 14.01 Selecting previously unselected package cpp-14.
+#7 14.01 Preparing to unpack .../14-cpp-14_14.2.0-19_amd64.deb ...
+#7 14.02 Unpacking cpp-14 (14.2.0-19) ...
+#7 14.03 Selecting previously unselected package cpp-x86-64-linux-gnu.
+#7 14.03 Preparing to unpack .../15-cpp-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb ...
+#7 14.04 Unpacking cpp-x86-64-linux-gnu (4:14.2.0-1) ...
+#7 14.06 Selecting previously unselected package cpp.
+#7 14.06 Preparing to unpack .../16-cpp_4%3a14.2.0-1_amd64.deb ...
+#7 14.06 Unpacking cpp (4:14.2.0-1) ...
+#7 14.08 Selecting previously unselected package libcc1-0:amd64.
+#7 14.08 Preparing to unpack .../17-libcc1-0_14.2.0-19_amd64.deb ...
+#7 14.09 Unpacking libcc1-0:amd64 (14.2.0-19) ...
+#7 14.11 Selecting previously unselected package libitm1:amd64.
+#7 14.11 Preparing to unpack .../18-libitm1_14.2.0-19_amd64.deb ...
+#7 14.11 Unpacking libitm1:amd64 (14.2.0-19) ...
+#7 14.13 Selecting previously unselected package libatomic1:amd64.
+#7 14.13 Preparing to unpack .../19-libatomic1_14.2.0-19_amd64.deb ...
+#7 14.14 Unpacking libatomic1:amd64 (14.2.0-19) ...
+#7 14.16 Selecting previously unselected package libasan8:amd64.
+#7 14.16 Preparing to unpack .../20-libasan8_14.2.0-19_amd64.deb ...
+#7 14.16 Unpacking libasan8:amd64 (14.2.0-19) ...
+#7 14.44 Selecting previously unselected package liblsan0:amd64.
+#7 14.44 Preparing to unpack .../21-liblsan0_14.2.0-19_amd64.deb ...
+#7 14.44 Unpacking liblsan0:amd64 (14.2.0-19) ...
+#7 14.50 Selecting previously unselected package libtsan2:amd64.
+#7 14.50 Preparing to unpack .../22-libtsan2_14.2.0-19_amd64.deb ...
+#7 14.51 Unpacking libtsan2:amd64 (14.2.0-19) ...
+#7 14.63 Selecting previously unselected package libubsan1:amd64.
+#7 14.63 Preparing to unpack .../23-libubsan1_14.2.0-19_amd64.deb ...
+#7 14.63 Unpacking libubsan1:amd64 (14.2.0-19) ...
+#7 14.69 Selecting previously unselected package libhwasan0:amd64.
+#7 14.69 Preparing to unpack .../24-libhwasan0_14.2.0-19_amd64.deb ...
+#7 14.69 Unpacking libhwasan0:amd64 (14.2.0-19) ...
+#7 14.77 Selecting previously unselected package libquadmath0:amd64.
+#7 14.77 Preparing to unpack .../25-libquadmath0_14.2.0-19_amd64.deb ...
+#7 14.77 Unpacking libquadmath0:amd64 (14.2.0-19) ...
+#7 14.79 Selecting previously unselected package libgcc-14-dev:amd64.
+#7 14.79 Preparing to unpack .../26-libgcc-14-dev_14.2.0-19_amd64.deb ...
+#7 14.79 Unpacking libgcc-14-dev:amd64 (14.2.0-19) ...
+#7 14.92 Selecting previously unselected package gcc-14-x86-64-linux-gnu.
+#7 14.92 Preparing to unpack .../27-gcc-14-x86-64-linux-gnu_14.2.0-19_amd64.deb ...
+#7 14.92 Unpacking gcc-14-x86-64-linux-gnu (14.2.0-19) ...
+#7 15.37 Selecting previously unselected package gcc-14.
+#7 15.37 Preparing to unpack .../28-gcc-14_14.2.0-19_amd64.deb ...
+#7 15.37 Unpacking gcc-14 (14.2.0-19) ...
+#7 15.39 Selecting previously unselected package gcc-x86-64-linux-gnu.
+#7 15.39 Preparing to unpack .../29-gcc-x86-64-linux-gnu_4%3a14.2.0-1_amd64.deb ...
+#7 15.40 Unpacking gcc-x86-64-linux-gnu (4:14.2.0-1) ...
+#7 15.42 Selecting previously unselected package gcc.
+#7 15.42 Preparing to unpack .../30-gcc_4%3a14.2.0-1_amd64.deb ...
+#7 15.42 Unpacking gcc (4:14.2.0-1) ...
+#7 15.44 Selecting previously unselected package libc-dev-bin.
+#7 15.44 Preparing to unpack .../31-libc-dev-bin_2.41-12+deb13u2_amd64.deb ...
+#7 15.44 Unpacking libc-dev-bin (2.41-12+deb13u2) ...
+#7 15.46 Selecting previously unselected package linux-libc-dev.
+#7 15.46 Preparing to unpack .../32-linux-libc-dev_6.12.74-2_all.deb ...
+#7 15.47 Unpacking linux-libc-dev (6.12.74-2) ...
+#7 15.68 Selecting previously unselected package libcrypt-dev:amd64.
+#7 15.68 Preparing to unpack .../33-libcrypt-dev_1%3a4.4.38-1_amd64.deb ...
+#7 15.68 Unpacking libcrypt-dev:amd64 (1:4.4.38-1) ...
+#7 15.70 Selecting previously unselected package rpcsvc-proto.
+#7 15.71 Preparing to unpack .../34-rpcsvc-proto_1.4.3-1_amd64.deb ...
+#7 15.71 Unpacking rpcsvc-proto (1.4.3-1) ...
+#7 15.73 Selecting previously unselected package libc6-dev:amd64.
+#7 15.73 Preparing to unpack .../35-libc6-dev_2.41-12+deb13u2_amd64.deb ...
+#7 15.73 Unpacking libc6-dev:amd64 (2.41-12+deb13u2) ...
+#7 15.85 Selecting previously unselected package libpq5:amd64.
+#7 15.85 Preparing to unpack .../36-libpq5_17.9-0+deb13u1_amd64.deb ...
+#7 15.85 Unpacking libpq5:amd64 (17.9-0+deb13u1) ...
+#7 15.88 Selecting previously unselected package libssl-dev:amd64.
+#7 15.88 Preparing to unpack .../37-libssl-dev_3.5.5-1~deb13u2_amd64.deb ...
+#7 15.88 Unpacking libssl-dev:amd64 (3.5.5-1~deb13u2) ...
+#7 16.02 Selecting previously unselected package libpq-dev.
+#7 16.02 Preparing to unpack .../38-libpq-dev_17.9-0+deb13u1_amd64.deb ...
+#7 16.02 Unpacking libpq-dev (17.9-0+deb13u1) ...
+#7 16.05 Selecting previously unselected package manpages-dev.
+#7 16.05 Preparing to unpack .../39-manpages-dev_6.9.1-1_all.deb ...
+#7 16.05 Unpacking manpages-dev (6.9.1-1) ...
+#7 16.14 Preparing to unpack .../40-openssl_3.5.5-1~deb13u2_amd64.deb ...
+#7 16.14 Unpacking openssl (3.5.5-1~deb13u2) over (3.5.5-1~deb13u1) ...
+#7 16.21 Setting up manpages (6.9.1-1) ...
+#7 16.21 Setting up binutils-common:amd64 (2.44-3) ...
+#7 16.22 Setting up libpq5:amd64 (17.9-0+deb13u1) ...
+#7 16.22 Setting up linux-libc-dev (6.12.74-2) ...
+#7 16.23 Setting up libctf-nobfd0:amd64 (2.44-3) ...
+#7 16.24 Setting up libsframe1:amd64 (2.44-3) ...
+#7 16.24 Setting up libjansson4:amd64 (2.14-2+b3) ...
+#7 16.25 Setting up rpcsvc-proto (1.4.3-1) ...
+#7 16.26 Setting up libmpfr6:amd64 (4.2.2-1) ...
+#7 16.26 Setting up libquadmath0:amd64 (14.2.0-19) ...
+#7 16.27 Setting up libssl-dev:amd64 (3.5.5-1~deb13u2) ...
+#7 16.27 Setting up libmpc3:amd64 (1.3.1-1+b3) ...
+#7 16.28 Setting up libatomic1:amd64 (14.2.0-19) ...
+#7 16.28 Setting up libubsan1:amd64 (14.2.0-19) ...
+#7 16.29 Setting up libhwasan0:amd64 (14.2.0-19) ...
+#7 16.30 Setting up libcrypt-dev:amd64 (1:4.4.38-1) ...
+#7 16.31 Setting up libasan8:amd64 (14.2.0-19) ...
+#7 16.31 Setting up libtsan2:amd64 (14.2.0-19) ...
+#7 16.32 Setting up libbinutils:amd64 (2.44-3) ...
+#7 16.33 Setting up libisl23:amd64 (0.27-1) ...
+#7 16.33 Setting up libc-dev-bin (2.41-12+deb13u2) ...
+#7 16.34 Setting up openssl (3.5.5-1~deb13u2) ...
+#7 16.34 Setting up libcc1-0:amd64 (14.2.0-19) ...
+#7 16.35 Setting up liblsan0:amd64 (14.2.0-19) ...
+#7 16.36 Setting up libitm1:amd64 (14.2.0-19) ...
+#7 16.36 Setting up libctf0:amd64 (2.44-3) ...
+#7 16.37 Setting up manpages-dev (6.9.1-1) ...
+#7 16.37 Setting up libpq-dev (17.9-0+deb13u1) ...
+#7 16.38 Setting up libgprofng0:amd64 (2.44-3) ...
+#7 16.39 Setting up cpp-14-x86-64-linux-gnu (14.2.0-19) ...
+#7 16.39 Setting up cpp-14 (14.2.0-19) ...
+#7 16.40 Setting up libc6-dev:amd64 (2.41-12+deb13u2) ...
+#7 16.40 Setting up libgcc-14-dev:amd64 (14.2.0-19) ...
+#7 16.41 Setting up binutils-x86-64-linux-gnu (2.44-3) ...
+#7 16.42 Setting up cpp-x86-64-linux-gnu (4:14.2.0-1) ...
+#7 16.42 Setting up binutils (2.44-3) ...
+#7 16.43 Setting up cpp (4:14.2.0-1) ...
+#7 16.44 Setting up gcc-14-x86-64-linux-gnu (14.2.0-19) ...
+#7 16.45 Setting up gcc-x86-64-linux-gnu (4:14.2.0-1) ...
+#7 16.45 Setting up gcc-14 (14.2.0-19) ...
+#7 16.46 Setting up gcc (4:14.2.0-1) ...
+#7 16.47 Processing triggers for libc-bin (2.41-12+deb13u2) ...
+#7 DONE 16.6s
+
+#8 [3/6] RUN pip install --no-cache-dir     sqlalchemy     psycopg2-binary     lightgbm     scikit-learn     pandas     xgboost     tensorboard
+#8 0.722 Defaulting to user installation because normal site-packages is not writeable
+#8 0.762 Requirement already satisfied: sqlalchemy in /home/ftuser/.local/lib/python3.13/site-packages (2.0.48)
+#8 0.920 Collecting psycopg2-binary
+#8 1.038   Downloading psycopg2_binary-2.9.11-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (4.9 kB)
+#8 1.044 Requirement already satisfied: lightgbm in /home/ftuser/.local/lib/python3.13/site-packages (4.6.0)
+#8 1.045 Requirement already satisfied: scikit-learn in /home/ftuser/.local/lib/python3.13/site-packages (1.8.0)
+#8 1.046 Requirement already satisfied: pandas in /home/ftuser/.local/lib/python3.13/site-packages (2.3.3)
+#8 1.047 Requirement already satisfied: xgboost in /home/ftuser/.local/lib/python3.13/site-packages (3.2.0)
+#8 1.048 Requirement already satisfied: tensorboard in /home/ftuser/.local/lib/python3.13/site-packages (2.20.0)
+#8 1.053 Requirement already satisfied: greenlet>=1 in /home/ftuser/.local/lib/python3.13/site-packages (from sqlalchemy) (3.3.2)
+#8 1.054 Requirement already satisfied: typing-extensions>=4.6.0 in /home/ftuser/.local/lib/python3.13/site-packages (from sqlalchemy) (4.15.0)
+#8 1.058 Requirement already satisfied: numpy>=1.17.0 in /home/ftuser/.local/lib/python3.13/site-packages (from lightgbm) (2.4.3)
+#8 1.058 Requirement already satisfied: scipy in /home/ftuser/.local/lib/python3.13/site-packages (from lightgbm) (1.17.1)
+#8 1.060 Requirement already satisfied: joblib>=1.3.0 in /home/ftuser/.local/lib/python3.13/site-packages (from scikit-learn) (1.5.3)
+#8 1.060 Requirement already satisfied: threadpoolctl>=3.2.0 in /home/ftuser/.local/lib/python3.13/site-packages (from scikit-learn) (3.6.0)
+#8 1.066 Requirement already satisfied: python-dateutil>=2.8.2 in /home/ftuser/.local/lib/python3.13/site-packages (from pandas) (2.9.0.post0)
+#8 1.066 Requirement already satisfied: pytz>=2020.1 in /home/ftuser/.local/lib/python3.13/site-packages (from pandas) (2026.1.post1)
+#8 1.067 Requirement already satisfied: tzdata>=2022.7 in /home/ftuser/.local/lib/python3.13/site-packages (from pandas) (2025.3)
+#8 1.071 Requirement already satisfied: nvidia-nccl-cu12 in /home/ftuser/.local/lib/python3.13/site-packages (from xgboost) (2.29.7)
+#8 1.072 Requirement already satisfied: absl-py>=0.4 in /home/ftuser/.local/lib/python3.13/site-packages (from tensorboard) (2.4.0)
+#8 1.072 Requirement already satisfied: grpcio>=1.48.2 in /home/ftuser/.local/lib/python3.13/site-packages (from tensorboard) (1.80.0)
+#8 1.073 Requirement already satisfied: markdown>=2.6.8 in /home/ftuser/.local/lib/python3.13/site-packages (from tensorboard) (3.10.2)
+#8 1.073 Requirement already satisfied: packaging in /usr/local/lib/python3.13/site-packages (from tensorboard) (26.0)
+#8 1.073 Requirement already satisfied: pillow in /home/ftuser/.local/lib/python3.13/site-packages (from tensorboard) (12.1.1)
+#8 1.074 Requirement already satisfied: protobuf!=4.24.0,>=3.19.6 in /home/ftuser/.local/lib/python3.13/site-packages (from tensorboard) (7.34.1)
+#8 1.074 Requirement already satisfied: setuptools>=41.0.0 in /home/ftuser/.local/lib/python3.13/site-packages (from tensorboard) (82.0.1)
+#8 1.074 Requirement already satisfied: tensorboard-data-server<0.8.0,>=0.7.0 in /home/ftuser/.local/lib/python3.13/site-packages (from tensorboard) (0.7.2)
+#8 1.075 Requirement already satisfied: werkzeug>=1.0.1 in /home/ftuser/.local/lib/python3.13/site-packages (from tensorboard) (3.1.7)
+#8 1.080 Requirement already satisfied: six>=1.5 in /home/ftuser/.local/lib/python3.13/site-packages (from python-dateutil>=2.8.2->pandas) (1.17.0)
+#8 1.089 Requirement already satisfied: markupsafe>=2.1.1 in /home/ftuser/.local/lib/python3.13/site-packages (from werkzeug>=1.0.1->tensorboard) (3.0.3)
+#8 1.117 Downloading psycopg2_binary-2.9.11-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (4.2 MB)
+#8 1.761    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.2/4.2 MB 6.9 MB/s  0:00:00
+#8 1.828 Installing collected packages: psycopg2-binary
+#8 1.910 Successfully installed psycopg2-binary-2.9.11
+#8 2.026 
+#8 2.026 [notice] A new release of pip is available: 25.3 -> 26.0.1
+#8 2.026 [notice] To update, run: pip install --upgrade pip
+#8 DONE 2.2s
+
+#9 [4/6] RUN pip install --no-cache-dir "torch>=2.6.0" --index-url https://download.pytorch.org/whl/cpu 2>/dev/null ||     pip install --no-cache-dir "torch>=2.6.0"
+#9 0.762 Defaulting to user installation because normal site-packages is not writeable
+#9 0.801 Looking in indexes: https://download.pytorch.org/whl/cpu
+#9 1.768 Collecting torch>=2.6.0
+#9 1.958   Downloading https://download-r2.pytorch.org/whl/cpu/torch-2.11.0%2Bcpu-cp313-cp313-manylinux_2_28_x86_64.whl.metadata (29 kB)
+#9 1.965 Requirement already satisfied: filelock in /home/ftuser/.local/lib/python3.13/site-packages (from torch>=2.6.0) (3.25.2)
+#9 1.965 Requirement already satisfied: typing-extensions>=4.10.0 in /home/ftuser/.local/lib/python3.13/site-packages (from torch>=2.6.0) (4.15.0)
+#9 2.324 Collecting setuptools<82 (from torch>=2.6.0)
+#9 2.348   Downloading https://download.pytorch.org/whl/setuptools-70.2.0-py3-none-any.whl.metadata (5.8 kB)
+#9 2.818 Collecting sympy>=1.13.3 (from torch>=2.6.0)
+#9 2.893   Downloading sympy-1.14.0-py3-none-any.whl.metadata (12 kB)
+#9 3.458 Collecting networkx>=2.5.1 (from torch>=2.6.0)
+#9 3.480   Downloading networkx-3.6.1-py3-none-any.whl.metadata (6.8 kB)
+#9 3.488 Requirement already satisfied: jinja2 in /home/ftuser/.local/lib/python3.13/site-packages (from torch>=2.6.0) (3.1.6)
+#9 3.955 Collecting fsspec>=0.8.5 (from torch>=2.6.0)
+#9 3.978   Downloading fsspec-2026.2.0-py3-none-any.whl.metadata (10 kB)
+#9 4.149 Collecting mpmath<1.4,>=1.1.0 (from sympy>=1.13.3->torch>=2.6.0)
+#9 4.175   Downloading mpmath-1.3.0-py3-none-any.whl.metadata (8.6 kB)
+#9 4.188 Requirement already satisfied: MarkupSafe>=2.0 in /home/ftuser/.local/lib/python3.13/site-packages (from jinja2->torch>=2.6.0) (3.0.3)
+#9 4.225 Downloading https://download-r2.pytorch.org/whl/cpu/torch-2.11.0%2Bcpu-cp313-cp313-manylinux_2_28_x86_64.whl (190.3 MB)
+#9 33.70    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 190.3/190.3 MB 6.5 MB/s  0:00:29
+#9 33.74 Downloading https://download.pytorch.org/whl/setuptools-70.2.0-py3-none-any.whl (930 kB)
+#9 33.87    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 930.8/930.8 kB 7.4 MB/s  0:00:00
+#9 33.89 Downloading fsspec-2026.2.0-py3-none-any.whl (202 kB)
+#9 33.98 Downloading networkx-3.6.1-py3-none-any.whl (2.1 MB)
+#9 34.28    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 7.1 MB/s  0:00:00
+#9 34.30 Downloading sympy-1.14.0-py3-none-any.whl (6.3 MB)
+#9 35.22    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.3/6.3 MB 6.8 MB/s  0:00:00
+#9 35.25 Downloading mpmath-1.3.0-py3-none-any.whl (536 kB)
+#9 35.33    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 kB 7.5 MB/s  0:00:00
+#9 35.52 Installing collected packages: mpmath, sympy, setuptools, networkx, fsspec, torch
+#9 39.47   Attempting uninstall: setuptools
+#9 39.47     Found existing installation: setuptools 82.0.1
+#9 39.49     Uninstalling setuptools-82.0.1:
+#9 39.69       Successfully uninstalled setuptools-82.0.1
+#9 48.61 
+#9 48.61 Successfully installed fsspec-2026.2.0 mpmath-1.3.0 networkx-3.6.1 setuptools-70.2.0 sympy-1.14.0 torch-2.11.0+cpu
+#9 DONE 49.3s
+
+#10 [5/6] COPY entrypoint.sh /entrypoint.sh
+#10 DONE 0.1s
+
+#11 [6/6] RUN chmod +x /entrypoint.sh
+#11 DONE 0.1s
+
+#12 exporting to image
+#12 exporting layers
+#12 exporting layers 19.2s done
+#12 exporting manifest sha256:e21e4067c92c20186283e68bb7343765b4e3cc53740dd1bf409cfa6ecc3a55f9 done
+#12 exporting config sha256:898a65d48b5d7eff37c146e6e452aba79c42cd29223ed58c80ebec15b3bdd148 done
+#12 exporting attestation manifest sha256:b22f518ce286405175722a461be21a6261e6a21d2bc30483df7eba7b5e2f3a61 0.0s done
+#12 exporting manifest list sha256:4de437e32678067353217fce4173be61b0c73cc8f0c2dd8b5d073a1e6d31ff69 done
+#12 naming to docker.io/library/tfg_trading_bot-freqtrade:latest done
+#12 unpacking to docker.io/library/tfg_trading_bot-freqtrade:latest
+#12 unpacking to docker.io/library/tfg_trading_bot-freqtrade:latest 5.7s done
+#12 DONE 25.0s
+
+#13 resolving provenance for metadata file
+#13 DONE 0.0s
