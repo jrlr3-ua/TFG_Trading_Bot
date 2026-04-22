@@ -15,6 +15,8 @@ help:
 	@echo "make logs     - Muestra el log centralizado del Bot principal"
 	@echo "make nlp-logs - Muestra los logs del motor FinBERT"
 	@echo "make db-logs  - Muestra los logs de TimescaleDB"
+	@echo "make backup   - Crea una instantánea SQL comprimida de Postgres"
+	@echo "make test     - Lanza la suite de Pruebas Unitaria Local (Pytest)"
 	@echo "make clean    - Borra modelos y logs obsoletos (recomendado antes de backtests)"
 	@echo "--------------------------------------------------------"
 
@@ -36,6 +38,12 @@ nlp-logs:
 
 db-logs:
 	docker compose logs -f timescaledb
+
+backup:
+	./backup_db.sh
+
+test:
+	export PYTHONPATH=./ && pytest tests/ -v
 
 clean:
 	@echo "🧹 Limpiando modelos obsoletos de la IA..."
