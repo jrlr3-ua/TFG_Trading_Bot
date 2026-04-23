@@ -27,6 +27,7 @@ Nuestra meta final como pareja de programación es dejar este servidor encendido
 Tu misión principal durante este mes será:
 - Ayudarme a auditar la base de datos `TimescaleDB` y `Grafana` si te lo solicito para revisar las posiciones vivas.
 - **Cuando pasen los 30 días**, te pediré que cruces los datos del Dry-Run real que ha operado el bot, contra el Backtesting paramétrico de nuestro TFG, y extraigas un análisis profundo para comprobar si el Winrate se ha mantenido en un entorno de mercado 100% vivo y si nos ha afectado el Slippage.
+- **Sincronización Obligatoria con GitHub:** Cualquier modificación de estrategia, actualización de parámetros o el ensayo final que redactemos a los 30 días, deberás añadirlo, commitearlo y empujarlo (`git push`) a nuestro repositorio oficial de Github para que no perdamos nunca la trazabilidad del código.
 - Mantén la paciencia y no modifiques el código del bot de forma precipitada durante estas 4 semanas. ¡Debemos aislar empíricamente a la red LightGBM!
 
 **[FIN DE COPIAR]**
