@@ -3,10 +3,10 @@
 **Trabajo de Final de Grado**
 
 **Autor:** Joan Romà Llorca  
-**Universidad:** Universitat Politècnica de València (UPV)  
-**Escuela:** Escuela Técnica Superior de Ingeniería Informática (ETSINF)  
+**Universidad:** Universitat de Alicante (UA)  
+**Escuela:** Escuela Politécnica Superior  
 **Grado:** Grado en Ingeniería Informática  
-**Tutor:** [Nombre del tutor/a]  
+**Tutor:** José Ignacio Abreu Salas 
 **Curso Académico:** 2025-2026  
 **Fecha de entrega:** Abril 2026  
 **Palabras clave:** Trading algorítmico, Machine Learning, LightGBM, NLP, FinBERT, Docker, Microservicios, Criptomonedas, Gestión de riesgo, FreqAI

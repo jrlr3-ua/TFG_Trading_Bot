@@ -1,0 +1,69 @@
+//@version=5
+// ==============================================================================
+// TFG Bot Institucional V4 - PROXY VISUAL DE EXPLICABILIDAD SHAP
+// ==============================================================================
+// Este script NO es la IA en sí (ya que una Neural Net no computa en Pine), 
+// sino una REPLICA de LÓGICA PARAMÉTRICA estricta que traza las operaciones basándose 
+// en aquellas "Features" que la matriz SHAP determinó como vitales para LightGBM 
+// (Volatilidad Multi-Timeframe y Momentum OBV). Ideal para capturas gráficas.
+
+strategy("TFG Bot Institucional V4 (Visual Proxy)", overlay=true, initial_capital=1000, default_qty_type=strategy.percent_of_equity, default_qty_value=40)
+
+// -------------------------------------------------------------
+// [ESTRUCTURA DE FEATURES SHAP]
+// -------------------------------------------------------------
+// Feature 1: La Inteligencia identificó fuertemente el "Momentum Index"
+rsi_len = input.int(14, title="Longitud Momentum Prox")
+momentum = ta.rsi(close, rsi_len)
+
+// Feature 2: Expansión de Volatilidad Relativa (Bandas de Bollinger)
+bb_len = input.int(20, title="Ciclo Volatilidad")
+bb_mult = input.float(2.0, title="Desviación BB mult")
+[bb_basis, bb_upper, bb_lower] = ta.bb(close, bb_len, bb_mult)
+
+// Ratio de compresión/expansión (Para confirmar convicción al 0.025 threshold)
+vol_expansion = (bb_upper - bb_lower) / bb_basis
+
+// -------------------------------------------------------------
+// [CEREBRO HEURÍSTICO - Simulació n de Predicción AI >= 0.025]
+// -------------------------------------------------------------
+// Condiciones paramétricas que coinciden aprox con el comportamiento del ML model
+bull_conviction = momentum > 55 and close > bb_basis and vol_expansion > 0.015 and close > ta.sma(close, 50)
+bear_conviction = momentum < 45 and close < bb_basis and vol_expansion > 0.015 and close < ta.sma(close, 50)
+
+// -------------------------------------------------------------
+// [GESTIÓN DE ÓRDENES Y MOTOR DE RIESGO - Half Kelly + ATR]
+// -------------------------------------------------------------
+atr_val = ta.atr(14)
+sl_coef = input.float(1.5, title="Coeficiente ATR para Stop Loss")
+tp_coef = input.float(1.2, title="Coeficiente ATR para Take Profit Temprano")
+
+// Entradas dinámicas (Limitadas al 40% Half Kelly dictado en strategy)
+if (bull_conviction)
+    strategy.entry("Long V4", strategy.long)
+
+if (bear_conviction)
+    strategy.entry("Short V4", strategy.short)
+
+// Salidas calculadas por ATR dinámico
+long_sl = close - (atr_val * sl_coef)
+long_tp = close + (atr_val * tp_coef)
+
+short_sl = close + (atr_val * sl_coef)
+short_tp = close - (atr_val * tp_coef)
+
+if (strategy.position_size > 0)
+    strategy.exit("Exit LONG", "Long V4", stop=long_sl, limit=long_tp)
+
+if (strategy.position_size < 0)
+    strategy.exit("Exit SHORT", "Short V4", stop=short_sl, limit=short_tp)
+
+// -------------------------------------------------------------
+// [PINTOR GRÁFICO TFG (AESTHETICS PARA LA MEMORIA)]
+// -------------------------------------------------------------
+// Dibuja franjas verdes cuando el Bot huele oportunidad Alcista 
+// Dibuja franjas rojas cuando huele colapso Bajista
+bgcolor(bull_conviction ? color.new(color.green, 90) : na, title="V4 Bullish Zone")
+bgcolor(bear_conviction ? color.new(color.red, 90) : na, title="V4 Bearish Zone")
+
+plot(bb_basis, color=color.new(color.gray, 50), title="Centro Volatilidad")
