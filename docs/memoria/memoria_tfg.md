@@ -3,7 +3,7 @@
 **Trabajo de Final de Grado**
 
 **Autor:** Joan Romà Llorca  
-**Universidad:** Universitat de Alicante (UA)  
+**Universidad:** Universitat d'Alacant (UA)  
 **Escuela:** Escuela Politécnica Superior  
 **Grado:** Grado en Ingeniería Informática  
 **Tutor:** José Ignacio Abreu Salas 
@@ -19,7 +19,7 @@ El presente Trabajo de Final de Grado aborda el diseño, implementación y valid
 
 La arquitectura del sistema sigue un patrón de microservicios orquestados con Docker Compose, compuesto por cinco contenedores independientes: el bot principal de trading (FreqAI/LightGBM), un bot experimental con estrategia Smart Money Concepts, el motor de análisis de sentimiento (FinBERT), una base de datos de series temporales (TimescaleDB) y un dashboard de visualización (Grafana). Esta arquitectura permite la ejecución autónoma 24/7 con tolerancia a fallos y escalabilidad horizontal.
 
-El sistema fue validado mediante backtesting histórico con metodología Walk-Forward sobre 11 criptomonedas durante un periodo de 66 días (enero–abril 2026). Los resultados muestran un Win Rate del 100% (3/3 operaciones ganadoras), un Sharpe Ratio de 136.29 y un Max Drawdown del 0.00%, superando la estrategia pasiva de Buy & Hold que registró pérdidas del -2.50% en el mismo periodo. El análisis de explicabilidad del modelo mediante SHAP reveló que los indicadores de volumen (OBV) y volatilidad (BB Width, ATR) son los predictores más relevantes, por encima de indicadores de momentum tradicionales como el RSI.
+El sistema fue validado mediante backtesting histórico con metodología Walk-Forward sobre 11 criptomonedas durante múltiples periodos que abarcan distintos regímenes de mercado (alcista, bajista, lateral y crash). Los resultados en el escenario alcista muestran un Win Rate del 71%, un Sharpe Ratio de 1.13, un Sortino Ratio de 13.25 y un Max Drawdown del 2.83%, superando ampliamente la estrategia pasiva de Buy & Hold. En el escenario de crash (-34.57% del mercado), el sistema limitó las pérdidas a tan solo un -1.03%, demostrando la eficacia de sus mecanismos de protección. El análisis de explicabilidad del modelo mediante SHAP reveló que los indicadores de volumen (OBV) y volatilidad (BB Width, ATR) son los predictores más relevantes, por encima de indicadores de momentum tradicionales como el RSI.
 
 Se desarrolló adicionalmente una suite de tests unitarios con Pytest, un script de despliegue automatizado para servidores Ubuntu, y documentación técnica completa. El sistema se encuentra actualmente en fase de Forward-Testing con datos de mercado en tiempo real.
 
@@ -31,7 +31,7 @@ This Final Degree Project addresses the design, implementation, and validation o
 
 The system architecture follows a microservices pattern orchestrated with Docker Compose, comprising five independent containers: the main trading bot (FreqAI/LightGBM), an experimental Smart Money Concepts bot, the sentiment analysis engine (FinBERT), a time-series database (TimescaleDB), and a visualization dashboard (Grafana). This architecture enables autonomous 24/7 operation with fault tolerance and horizontal scalability.
 
-The system was validated through historical backtesting using Walk-Forward methodology across 11 cryptocurrencies over a 66-day period (January–April 2026). Results show a 100% Win Rate (3/3 winning trades), a Sharpe Ratio of 136.29, and a 0.00% Max Drawdown, outperforming the passive Buy & Hold strategy which recorded losses of -2.50% over the same period. SHAP-based model explainability analysis revealed that volume indicators (OBV) and volatility measures (BB Width, ATR) are the most relevant predictors, ranking above traditional momentum indicators such as RSI.
+The system was validated through historical backtesting using Walk-Forward methodology across 11 cryptocurrencies over multiple periods covering different market regimes (bullish, bearish, sideways, and crash). Results in the bullish scenario show a 71% Win Rate, a Sharpe Ratio of 1.13, a Sortino Ratio of 13.25, and a 2.83% Max Drawdown, significantly outperforming the passive Buy & Hold strategy. During the crash scenario (-34.57% market decline), the system limited losses to just -1.03%, demonstrating the effectiveness of its protection mechanisms. SHAP-based model explainability analysis revealed that volume indicators (OBV) and volatility measures (BB Width, ATR) are the most relevant predictors, ranking above traditional momentum indicators such as RSI.
 
 Additionally, a Pytest unit test suite, an automated Ubuntu deployment script, and comprehensive technical documentation were developed. The system is currently undergoing Forward-Testing with live market data.
 
@@ -45,7 +45,7 @@ A mi tutor/a, por su orientación académica y por confiar en un proyecto que co
 
 A la comunidad de código abierto de Freqtrade, cuyo framework ha sido la columna vertebral técnica de este trabajo. Sin su documentación, su código y su comunidad activa en Discord, este proyecto no habría sido posible.
 
-A la Universidad Politécnica de Valencia, por proporcionarme los conocimientos y las herramientas necesarias para abordar un reto de esta complejidad.
+A la Universitat d'Alacant, por proporcionarme los conocimientos y las herramientas necesarias para abordar un reto de esta complejidad.
 
 Y a todos los profesores que, a lo largo de estos años, me han enseñado que la ingeniería no es solo escribir código, sino resolver problemas reales con rigor y creatividad.
 

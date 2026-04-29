@@ -1,0 +1,38 @@
+# ==============================================================================
+# TFG Trading Bot - Dependencias Python
+# ==============================================================================
+# Este fichero documenta las dependencias principales del proyecto.
+# La instalación real se realiza dentro de los contenedores Docker
+# (ver Dockerfile, Dockerfile.sentiment, Dockerfile.onchain).
+#
+# Para ejecutar los tests localmente:
+#   pip install pytest beautifulsoup4
+#
+# Para el bot completo (dentro de Docker):
+#   freqtrade (framework base)
+#   lightgbm>=4.0
+#   scikit-learn
+#   sqlalchemy
+#   psycopg2-binary
+#   pandas
+#   numpy
+#   ta-lib
+#   tensorboard
+#   torch>=2.6.0
+
+# Motor NLP (Dockerfile.sentiment):
+#   transformers>=4.30
+#   torch>=2.6.0
+#   feedparser
+#   beautifulsoup4
+#   sqlalchemy
+#   psycopg2-binary
+
+# On-Chain (Dockerfile.onchain):
+#   requests
+#   sqlalchemy
+#   psycopg2-binary
+
+# Tests:
+pytest>=8.0
+beautifulsoup4>=4.12
