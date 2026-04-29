@@ -398,7 +398,7 @@ La selección prioriza activos con alto volumen diario de negociación (>$100M) 
 
 El sistema sigue una arquitectura de microservicios orquestada con Docker Compose. Cada servicio se ejecuta en un contenedor independiente con su propio sistema de archivos, dependencias y ciclo de vida, comunicándose exclusivamente a través de la base de datos compartida TimescaleDB.
 
-> *Figura 4.1: Arquitectura de microservicios del sistema (ver diagrama generado)*
+![Figura 4.1: Arquitectura de microservicios del sistema](fig_4_1_arquitectura.png){ width=85% }
 
 *Tabla 4.1: Servicios del sistema y configuración de red*
 
@@ -439,7 +439,7 @@ Todos los servicios están configurados con `restart: always` (excepto Tensorboa
 
 El corazón del sistema es un motor de decisión de 7 capas que requiere la **confluencia** de múltiples filtros independientes para generar una señal de trading. Este diseño reduce drásticamente los falsos positivos al exigir que todas las capas estén alineadas simultáneamente.
 
-> *Figura 4.2: Pirámide del Motor de Decisión Multi-Capa (ver diagrama generado)*
+![Figura 4.2: Motor de Decisión Multi-Capa — 7 capas de confluencia](fig_4_2_piramide.png){ width=75% }
 
 *Tabla 4.2: Reglas de las 7 capas de confluencia (señal LONG)*
 
@@ -481,7 +481,7 @@ TimescaleDB se configura con dos tablas principales (hypertables particionadas p
 
 El pipeline de Procesamiento de Lenguaje Natural se ejecuta en un contenedor independiente:
 
-> *Figura 4.3: Pipeline NLP (ver diagrama generado)*
+![Figura 4.3: Pipeline de Procesamiento NLP](fig_4_3_pipeline_nlp.png){ width=85% }
 
 1. **Ingesta (RSS):** Descarga titulares de CoinDesk, CoinTelegraph y Bitcoin.com usando `feedparser` cada 5 minutos.
 2. **Limpieza HTML:** Elimina etiquetas HTML residuales con `BeautifulSoup` para evitar tokens espurios en la inferencia.
@@ -707,7 +707,7 @@ Los tests utilizan `unittest.mock.MagicMock` para simular las dependencias de Fr
 
 El sistema ha atravesado 6 versiones principales a lo largo de 4 meses de desarrollo activo:
 
-> *Figura 6.1: Línea temporal de la evolución del sistema (ver diagrama generado)*
+![Figura 6.1: Evolución del sistema v1.0 → v3.0](fig_6_1_evolucion.png){ width=90% }
 
 *Tabla 6.1: Evolución del sistema — Problemas y soluciones*
 
@@ -800,7 +800,7 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 
 ### 7.3.1 Escenario 1: Bull Market (Abril – Mayo 2025)
 
-> *Figura 7.1: Curva de equity — Escenario Bull Market*
+![Figura 7.1: Rendimiento Bot vs Buy & Hold por escenario](fig_7_1_comparativa.png){ width=85% }
 
 *Tabla 7.1: Resultados del backtesting — Bull Market*
 
@@ -817,7 +817,7 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 
 ### 7.3.2 Escenario 2: Crash (Octubre – Diciembre 2025)
 
-> *Figura 7.2: Curva de equity — Escenario Crash*
+
 
 | Métrica | Valor |
 |---------|-------|
@@ -862,9 +862,9 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 
 ## 7.5 Explicabilidad del Modelo (SHAP + Feature Importance)
 
-> *Figura 7.3: SHAP Summary Plot (ver artifacts)*
 
-> *Figura 7.4: Feature Importance LightGBM (ver artifacts)*
+
+![Figura 7.4: Importancia de features por categoría (SHAP)](fig_7_4_feature_importance.png){ width=75% }
 
 El análisis de explicabilidad mediante SHAP reveló la siguiente jerarquía de importancia:
 
