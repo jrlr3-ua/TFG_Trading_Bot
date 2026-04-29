@@ -1,0 +1,988 @@
+--- PAGINA 1 ---
+ 
+ 
+pág. 0 
+ 
+ 
+ 
+ 
+ 
+ 
+BIBLIOTECA UNIVERSITARIA 
+Cómo elaborar la 
+memoria del TFG de 
+Ingeniería Informática 
+Material formativo 
+ 
+ 
+ 
+Reconocimiento – NoComercial-CompartirIgual (By-ns-sa): No se permite un 
+uso comercial de la obra original ni de las posibles obras derivadas, la 
+distribución de las cuales se debe hacer con una licencia igual a la que regula la 
+obra original. 
+
+--- PAGINA 2 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 1 
+ 
+ÍNDICE 
+ 
+ 
+Para empezar                                                                                                                                          2 
+Memoria del TFG                                                                                                                                    2 
+Estructura del TFG                                                                                                                                  3                                                    
+ 
+ 
+ 
+La portada                                                                                                                                   4  
+ 
+Resumen                                                                                                                                      4             
+ 
+Palabras clave                                                                                                                           10                                                 
+ 
+Índice                                                                                                                                          12 
+ 
+Introducción                                                                                                                              13 
+ 
+Antecedentes                                                                                                                            14 
+ 
+Objetivos e hipótesis                                                                                                               16 
+  
+Metodología                                                                                                                              17 
+              Resultados                                                                                                                                  21 
+ 
+Discusión de resultados                                                                                                           22 
+ 
+Conclusiones                                   
+ 
+ 
+                                                  24 
+ 
+Bibliografía                                                                                                                                 26 
+ 
+Anexos                                                                                                                                        27 
+Consejos de redacción                                                                                                                           27 
+Para terminar                                                                                                                                           27 
+Bibliografía                                                                                                                                               28 
+ 
+ 
+ 
+
+--- PAGINA 3 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 2 
+CÓMO ELABORAR LA MEMORIA DEL TFG DE 
+INGENIERÍA INFORMÁTICA 
+Para empezar 
+ 
+Te presentamos éste tema de "Cómo elaborar la memoria de un Trabajo de Fin de Grado". 
+ 
+Te animamos a que descubras cuál es la estructura o las partes de las que debe constar, así 
+como te sugerimos unas recomendaciones sobre su redacción. 
+ 
+Memoria del TFG 
+ 
+Los planes de estudio de los diferentes Grados impartidos en la Universidad de Alicante 
+establecen que el Trabajo de Fin de Grado (TFG) es una asignatura que representa la fase final del 
+plan de estudios (último semestre) y concluye con la elaboración y defensa de la memoria del TFG. 
+ 
+Cada Junta de Centro desarrollará normativas sobre los TFG que reflejen las características 
+propias de cada uno de los títulos de grado que se impartan en su centro. 
+ 
+En el caso del Grado en Ingeniería Informática, tienes toda la información en esta web. 
+ 
+ 
+
+--- PAGINA 4 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 3 
+ 
+ 
+A continuación, vamos a exponer los criterios generales para la redacción de la memoria del 
+TFG. 
+Estructura de la memoria del TFG 
+ 
+Con carácter general la estructura de esta memoria se ajustará a la de cualquier trabajo de 
+investigación, aunque no figuren de forma explícita todos los apartados (posteriormente, cada 
+tutor/a hará las matizaciones específicas): 
+ Portada 
+ Resumen y palabras clave 
+ Índice 
+ Introducción y/o justificación del tema, y/o antecedentes, y/o estado de la 
+cuestión, y/o marco teórico 
+ Objetivos generales, Objetivos específicos o hipótesis 
+ Metodología 
+ Desarrollo y/o Resultados 
+ Discusión y/o Reflexión 
+ Conclusiones 
+ Bibliografía 
+ Anexos, si fuesen necesarios 
+  El TFG se deberá ajustar a la normativa general definida por la Universidad de Alicante, 
+y a la normativa específica y guía de estilo definida por la titulación.  
+ Normativa sobre los Trabajos Fin de Grado en la Universidad de Alicante 
+ Reglamento por el que se regulan los Trabajos Fin de Grado en la EPS 
+ Modificación Reglamento sobre los Trabajos Fin de Grado 
+ Reglamento específico para el Grado en Ingeniería Informática 
+ Libro de Estilo para la presentación de memorias del Trabajo Fin de Grado de la EPS 
+
+--- PAGINA 5 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 4 
+Te presentamos cada uno de estos apartados con más detalle junto con unos consejos de 
+redacción: 
+La portada 
+Se ajustará a la normativa que establezca la CTFG de tu titulación. 
+Resumen 
+¿Qué es un resumen? 
+ 
+ 
+El resumen es la carta de presentación de la memoria TFG, se redacta al final del trabajo ya 
+que sólo cuando se ha redactado la memoria es cuando se conoce en profundidad el tema y 
+cuando se sabe qué es lo más relevante, y qué es lo que por tanto debe incorporarse al resumen. 
+ 
+ 
+Breve descripción
+Principales ideas
+TFG
+Representa al documento 
+original
+Entre 200 y 300 palabras
+RESUMEN
+El resumen (abstract, en inglés) consiste en una breve descripción de las principales 
+ideas de la memoria a la que precede.  Es un nuevo documento representativo del 
+original, que debe incluir todos los aspectos destacados del documento siguiendo el 
+estilo y la ordenación del mismo. 
+  Tal y como se establece en la normativa sobre los Trabajos de Fin de Grado de la EPS, 
+esta memoria debe incluir un resumen que no exceda de las 500 palabras. 
+ 
+
+--- PAGINA 6 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 5 
+Fases del proceso resumir 
+ 
+El proceso de elaboración de un resumen presenta dos etapas básicas: 
+ análisis 
+ síntesis 
+ 
+El ANÁLISIS 
+ 
+El análisis es un proceso intelectual en el que se extraen las ideas fundamentales que irán 
+incluidas en el resumen. Sobre esta base, se cimentará la etapa de síntesis. 
+ 
+Los pasos del proceso de análisis son: 
+ Lectura rápida del documento primario para localizar las categorías temáticas y los 
+párrafos más relevantes. 
+ Toma de notas y subrayado de las partes de la memoria que mejor representen el 
+contenido de la misma. 
+ Lectura profunda de las partes fundamentales 
+ Disociar lo sustancial de lo accidental 
+ Omitir la información que resulte obvia o conocida 
+ 
+La SÍNTESIS 
+ 
+La síntesis supone elaborar información nueva y concisa a partir de los datos extraídos del 
+análisis. 
+ 
+Los pasos del proceso de síntesis son: 
+ Primero reorganizar y recomponer la información resultante del análisis 
+respetando la estructura del documento primario. 
+ Releer el resumen con el objetivo de filtrar y depurar la información para obtener 
+un nuevo documento secundario autónomo y fiel al original. 
+ 
+
+--- PAGINA 7 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 6 
+ 
+Estructura del resumen 
+ 
+Como hemos visto, el resumen es un sumario completo o síntesis objetiva de la 
+investigación que debe reflejar la estructura de la memoria del TFG, por lo cual generalmente 
+presenta el siguiente patrón: 
+Esto se conoce como la estructura: IMRC. 
+ 
+Introducción 
+ 
+En la introducción se detallan los objetivos y el alcance, es decir, el propósito que tenías al 
+realizar el trabajo. 
+ 
+Este apartado puede incluir de manera general uno o varios de los siguientes aspectos: 
+ Intención del autor, tesis o hipótesis del trabajo. 
+ El planteamiento del problema. 
+ Información sobre los antecedentes. 
+ Metas, objetivos y tipo de investigación. 
+Metodología 
+ 
+En la metodología se expone la información sobre el diseño metodológico de la 
+investigación, cómo se efectuó el estudio, procedimientos o métodos utilizados, herramientas, 
+participantes y el alcance del trabajo. 
+ Introducción (I), método (M), resultados (R) y conclusión (C). 
+
+--- PAGINA 8 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 7 
+Resultados 
+ 
+Esta sección resume los datos recolectados más relevantes, los hallazgos y, si es del caso, se 
+plantean soluciones al problema. 
+ 
+Conclusiones 
+ 
+En este apartado se detallan las conclusiones extraídas, que constituyen la esencia del TFG. 
+Si lo formulamos en preguntas, el resumen debería responder a las siguientes preguntas: 
+ ¿Qué hizo el autor? 
+ ¿Cómo lo hizo? 
+ ¿Cuáles fueron los resultados? 
+ ¿Cuál es la conclusión a la que ha llegado el autor? 
+ 
+ 
+ "el resumen debe en primera instancia indicar los objetivos principales y el alcance de 
+la investigación; en segundo lugar, describir los métodos empleados; tercero, presentar los 
+resultados; y cuarto, enunciar las conclusiones más importantes." Robert Day (1994 [2003], 
+p.28). 
+
+--- PAGINA 9 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 8 
+Recomendaciones y características del resumen 
+ 
+Existen normas internacionales como la ISO 214:1976, y nacionales, como la UNE 50-
+103:1990 que tratan de regular la presentación y el estilo de los resúmenes de los trabajos de 
+investigación. 
+ 
+Algunas de estas pautas generales recogidas en estas normas que permiten elaborar un buen 
+resumen son: 
+En cuanto al contenido: 
+ 
+ Empezar con una frase representativa del contenido del documento, pero no 
+parafrasear el título. 
+ Utilizar la secuencia: introducción/objetivos, metodología, resultados y 
+conclusiones. 
+ Recoger todos los conceptos importantes del documento 
+ Ser fiel al original, no introducir variaciones, ni interpretaciones 
+ Evitar aclaraciones innecesarias o información obvia y conocida, evitar 
+redundancias. 
+ No recoger los ejemplos 
+ 
+En cuanto al estilo: 
+ El resumen es un todo coherente, tiene una integridad 
+ Emplear un estilo, claro, conciso y fluido. 
+ No empezar con “Este trabajo, Este documento, El autor…” 
+ No extraer frases textuales 
+ Utilizar frases cortas, pero a la vez, evitar el estilo telegráfico. 
+ La forma verbal estará cerca del sujeto. 
+ No se mezclarán distintas formas verbales. 
+ Se utilizará la tercera persona, la voz activa y el tiempo presente. 
+
+--- PAGINA 10 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 9 
+ No emplear siglas ni abreviaturas, a no ser que sean muy conocidas como “ONU”. 
+ El resumen debe ser autosuficiente e inteligible para el lector. 
+ 
+Por lo tanto, según lo expuesto anteriormente, las características básicas de todo resumen son: 
+ Objetividad (garantiza la calidad del resumen) 
+ Pertinencia 
+ No redundancia 
+ Respeto del principio de entropía (o economía del lenguaje) [se basa en expresar la 
+mayor cantidad de información utilizando el menor número de palabras]. 
+ Coherencia (es el grado de relevancia entre las partes del resumen) en dos 
+aspectos: mantener el orden de las proposiciones o ideas del documento y la 
+coherencia lingüística (normas gramaticales, ortográficas y sintácticas). 
+ 
+ En definitiva, un buen resumen: 
+ Remite en términos breves y precisos a lo esencial del contenido de la 
+memoria del TFG. 
+ Permite a los potenciales lectores formarse una representación concisa de 
+la información contenida en el documento primario. 
+ Genera un nuevo texto coherente, claro, preciso y fiel al original. 
+ 
+ 
+
+--- PAGINA 11 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 10 
+Palabras clave 
+Las palabras clave deberían coincidir con los términos que utilizarías si quisieras buscar 
+información sobre el tema elegido para tu memoria TFG. 
+ Las palabras clave son términos que deben reflejar el tema central de un texto, es 
+decir conceptos que representan el contenido del trabajo de investigación. Es muy 
+importante elegirlas adecuadamente ya que permiten la recuperación de información 
+en los buscadores. 
+ Ten en cuenta que una buena elección de ellas permite una mayor difusión de tu 
+trabajo, al facilitar que otros investigadores interesados en el tema localicen tu trabajo. 
+ 
+ No olvides que deben ser distintas a las que aparecen en el título pues actualmente 
+los ordenadores ya buscan en todo el texto. Así, las palabras clave pueden completar la 
+información que proporciona el título. 
+ 
+ 
+ 
+ 
+ 
+
+--- PAGINA 12 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 11 
+ 
+Redacción de palabras clave 
+ 
+ 
+Es necesario que prepares junto con el resumen, las palabras clave que identifican tu 
+memoria. Las palabras clave podrían ser distintas a las usadas en el título y en el resúmen pero 
+deben reflejar con precisión el contenido de la memoria del TFG. 
+Te sugerimos una serie de orientaciones para la selección y redacción de las palabras clave: 
+ Si necesitas representar términos compuestos intenta construir frases, en vez de 
+utilizar varias palabras clave sueltas. 
+EJEMPLO: ingeniería del software, en vez de sólo ingeniería, software 
+ Evita la repetición de ideas 
+EJEMPLO: programa informático, software  
+ No uses conjunciones ni artículos 
+EJEMPLO: la programación 
+ No pongas los sustantivos en plural cuando son genéricos 
+EJEMPLO: profesionales, estudiantes universitarios.  
+ 
+
+--- PAGINA 13 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 12 
+ 
+ 
+Índice 
+ 
+El índice es imprescindible para que los posibles lectores se puedan ubicar rápida y 
+fácilmente en el trabajo. Toda memoria de un TFG debe incorporar un índice que indique la 
+estructura del contenido y también podrían incluirse índices de tablas, ilustraciones, figuras o 
+anexos, si los hubiese. 
+ 
+En el índice se indica cada una de las partes en las que se ha dividido la memoria de un 
+TFG: introducción, antecedentes, metodología etc., reseñando la página en la que se encuentra 
+cada una de dichas partes. Ten en cuenta que sólo debes reflejar la página en la que empieza. 
+ 
+Por lo que respecta a las tablas, figuras, anexos, etc. que aparezcan en el trabajo, deben 
+estar debidamente identificadas y numeradas en secuencia, desde la primera hasta la última, para 
+posteriormente realizar el índice correspondiente, si se considera necesario. 
+ 
+A continuación, se describen los apartados que se incluyen habitualmente en la memoria 
+de un TFG. Debes comprobar qué apartados ha establecido la CTFG de tu titulación en función del 
+tipo de trabajo de que se trate y ajustarte a ellos 
+ 
+ Suelen ser de 3 a 5 las palabras clave que acompañarán al resumen, pero debes 
+consultar si en la normativa de la CTFG de cada titulación se establece un número exacto. 
+ Cómo redactar las palabras claves... 
+
+--- PAGINA 14 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 13 
+ 
+ 
+ 
+Introducción 
+ 
+En la introducción de la memoria del TFG se describe e introduce el tema a investigar 
+destacando sus aspectos relevantes de una forma clara y breve. 
+ 
+En este apartado es donde debes indicar qué pretendes con tu TFG, por tanto la introducción 
+debe responder a la pregunta de "por qué se ha planteado este trabajo y por qué es importante", 
+es decir, deberías incluir información sobre el contexto del trabajo, la relevancia que tiene en el 
+campo al que pertenece, citar los principales trabajos en ese campo, etc. 
+ 
+En definitiva, la introducción debe dar una panorámica de la estructura general del trabajo 
+que se desarrollará de forma extensa en el resto de la memoria. 
+ 
+Debes de tener en cuenta que los puntos tratados en la introducción volverán a retomarse y 
+desarrollarse de forma extensa en el resto de la memoria. 
+ A modo de resumen, la introducción permite: 
+
+--- PAGINA 15 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 14 
+ 
+ 
+Antecedentes 
+ 
+La ciencia es acumulativa, cada científico y cada pensador recorren nuevos caminos desde 
+los pasos de sus anteriores colegas. De ahí la importancia de conocer qué es lo que se ha publicado 
+sobre el tema de tu trabajo. 
+ 
+Establecer los antecedentes consiste principalmente en plasmar (referenciando las fuentes 
+consultadas) la información relevante referida a un tema concreto sobre el que deseamos 
+investigar. Es decir, se trata de reflejar el conocimiento y las ideas que se han establecido sobre una 
+determinada cuestión. 
+ 
+Podemos decir que para conocer los antecedentes es necesario desarrollar dos fases: 
+ Búsqueda de la información 
+ Análisis de la misma. 
+ 
+En la primera fase se procede a la búsqueda y recopilación de las fuentes de información 
+relacionadas con tu tema. Dichas fuentes de información pueden ser de muchas características y de 
+diferente naturaleza: 
+a. Bibliografías, anuarios; monografías; artículos; trabajos especiales. 
+b. Documentos oficiales o privados 
+c. Investigaciones aplicadas 
+d. Filmaciones; audiovisuales; grabaciones, multimedios. 
+e. Consulta de expertos en el área que orienten sobre el tema 
+ 
+ 
+
+--- PAGINA 16 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 15 
+ 
+En la búsqueda de información debes acudir en primer lugar a los antecedentes del tema, es 
+decir, a todos aquellos trabajos de investigación que preceden al que estás realizando y que están 
+relacionados con el objeto de estudio. 
+ 
+En la fase de análisis cada una de las fuentes investigadas anteriormente se releerá, se 
+interpretará y se clasificará de acuerdo con su importancia dentro del trabajo de investigación. 
+ 
+Una forma cómoda de ir ordenando el trabajo es hacer pequeñas fichas bibliográficas de los 
+títulos encontrados, donde, además de los datos usuales para poder citar la fuente, estén 
+recopiladas las ideas principales del autor, subtemas que tratan, desde qué perspectiva toca el tema 
+y los subtemas... 
+ 
+Por tanto, cualquier investigación debe partir de una revisión bibliográfica sobre los 
+estudios ya realizados y relacionados con el tema de estudio. Esta revisión permitirá contextualizar 
+el propio trabajo. 
+ 
+ 
+Por ello, cuando se va a investigar en un tema, no se pueden obviar cuestiones como las que siguen: 
+ ¿Qué han publicado otros autores acerca de este tema o de temas cercanos? 
+ ¿Qué aspectos han sido analizados? 
+ ¿Qué discusiones o polémicas se han suscitado? 
+ ¿Cuáles son los aspectos analíticos, históricos y sistemáticos del tema? 
+ 
+ 
+ Es importante reseñar que en tu trabajo debes tener en cuenta no solo aquellos 
+trabajos y descubrimientos concordantes con la propia perspectiva, sino también aquellos 
+contrarios a la misma. 
+
+--- PAGINA 17 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 16 
+Una vez realizada la búsqueda, recuperación y análisis de las fuentes de información y cuando vas a 
+realizar la redacción los antecedentes, debes evitar hacer un simple inventario resumido de lo que 
+dice cada autor: lo que realmente interesa es qué nuevo enfoque o tema aporta cada uno, siempre 
+guiado por un hilo conductor que puede ser el objetivo que te has planteado en tu TFG o aspectos 
+poco tratados en el tema de investigación, etc. 
+ 
+Uno de los objetivos básicos de los antecedentes es mostrar que tienes un dominio del tema 
+que estás trabajando. 
+ 
+Objetivos e hipótesis 
+ 
+Una vez que hayas revisado lo que hay escrito sobre el tema, los resultados de 
+investigaciones anteriores, y/o lo que sabes a partir de tu observación de la experiencia debes 
+formular los objetivos de la memoria del TFG. 
+ 
+Los objetivos de la memoria del TFG especifican los propósitos que tienes con tu trabajo en 
+función de los conocimientos previos que tengas. 
+ 
+Se enuncian con un verbo en infinitivo, que denota estudio o búsqueda de conocimientos: 
+describir, explorar, examinar, investigar, entender, comparar, evaluar, explicar, proponer, etc. 
+ 
+Vinculados con los objetivos están las preguntas de investigación: 
+ ¿Qué es lo que me interesa contestar? 
+ ¿Dónde está el centro de las preocupaciones de la investigación? 
+ En los antecedentes de tu TFG debes ser capaz de identificar y recoger: 
+ Las distintas líneas de investigación que existen sobre el mismo 
+ Los autores principales que han publicado sobre la materia 
+ Los conceptos esenciales que se deben conocer 
+ Detectar cuáles son los posibles vacíos en la bibliografía (aquellos puntos que 
+no quedan suficientemente aclarados o que no se han explorado hasta el 
+momento). 
+
+--- PAGINA 18 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 17 
+ 
+Las preguntas de investigación suponen un a priori que formulamos en función del 
+conocimiento y la experiencia que hasta el momento se ha adquirido acerca del fenómeno a 
+estudiar. 
+ 
+Metodología 
+ 
+ Las hipótesis son las respuestas  esperadas a la pregunta de investigación aunque no 
+son necesarias en todas las modalidades de investigación, en la metodología 
+experimental es imprescindible formularlas como paso necesario en el proceso de 
+investigación. 
+   No olvides!! 
+ 
+La metodología es la parte donde se responde a la pregunta de cómo se realizó la 
+investigación para la consecución de los objetivos del TFG. 
+ 
+ 
+ El apartado de metodología debe: 
+ Describir el diseño que has utilizado en la investigación. Tendrás que 
+establecer la estrategia general de observación. 
+
+--- PAGINA 19 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 18 
+ 
+A la hora de planificar el método de investigación tienes que prestar mucha atención y 
+consensuarlo con tu tutor. 
+ 
+Dependiendo del área de conocimiento a la cual pertenezca tu TFG, podrá existir una 
+variabilidad en cuanto a la presencia-ausencia o incluso el orden de aparición de los distintos 
+elementos o estructura de la metodología. También dependerá del área de conocimiento el método 
+de investigación que hayas utilizado. 
+ 
+Población 
+ 
+Se tendrá en cuenta para generalizar los resultados. Describirás la población tanto en los 
+estudios cuantitativos como cualitativos. 
+ 
+ 
+ 
+ 
+ Indicar los instrumentos que permitieron la observación: materiales 
+bibliográficos, cuestionarios, revisiones, e incluso, grabaciones o vídeos. 
+ Explicar y registrar la técnica que usaste, así como el lugar donde se hizo y 
+cuándo y cómo se realizó. 
+  En general, el apartado de metodología, podría incluir la siguiente información: 
+ Población 
+ Diseño 
+ Materiales 
+ Procedimiento 
+ Factores externos e internos 
+ 
+  Es muy importante que definas muy bien las características de la población, ya que 
+ello va a permitir que realices una buena selección de la muestra, sobre la cual llevarás a cabo 
+la memoria del trabajo de investigación y sobre las cuales generalizarás las conclusiones. 
+
+--- PAGINA 20 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 19 
+Diseño 
+En el diseño tendrás que describir cómo se han organizado los sujetos o variables en el TFG, 
+así como el análisis de los datos. 
+ 
+La explicación de cómo se han organizado los sujetos es importante para que se puedan 
+entender mejor las conclusiones, así como conceptualizar la memoria del TFG. 
+Materiales 
+ 
+En lo referente a los instrumentos de recogida de datos, debes especificar y justificar, si es 
+preciso, toda la información que permita conocer qué medios has utilizado para recabar la 
+información necesaria para la comprobación de tus hipótesis. 
+ 
+Si los instrumentos que utilizaste para realizar el TFG existen ya en el mercado, tendrás que 
+incluir la información referente a la validez y fiabilidad de los mismos, la población a la que se dirige, 
+etc. 
+ 
+Si por el contrario, los instrumentos que has utilizado han sido elaborados por ti mismo 
+(cuestionario, escalas, entrevistas, estadísticas, test, pruebas objetivas, etc.) debes mencionar el 
+proceso de construcción, el estudio piloto, el grado de fiabilidad y validez, nivel de aplicación, 
+normas de aplicación, etc. 
+ 
+Es necesario que hagas una descripción de los posibles materiales utilizados en la 
+investigación y que señales su grado de disponibilidad. 
+Procedimiento 
+ 
+ 
+En algunos trabajos de investigación, ésta parte se correspondería con el tratamiento 
+experimental. 
+ 
+Validez interna y validez externa 
+  Es importante que señales qué factores tanto internos como externos han afectado a 
+los resultados del trabajo. 
+
+--- PAGINA 21 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 20 
+ 
+ 
+  Para terminar, no olvides que la metodología de tu memoria de TFG debería cumplir 
+las siguientes funciones: 
+ Identificar los materiales utilizados en la realización de la investigación 
+ Identificar cualquier condición especial bajo la cual fue llevada a cabo la investigación 
+ Identificar los criterios específicos tenidos en cuenta para realizar la selección de 
+materiales, sujetos, equipos y métodos de evaluación. 
+ Identificar el método específico utilizado para llevar a cabo la investigación y 
+ Justificar, siempre que sea necesario, cualquiera de las elecciones tomadas desde el 
+punto de vista de los criterios seguidos, los métodos adoptados y las condiciones 
+experimentales elegidas. 
+ 
+ 
+ 
+En resumen, la metodología de la memoria del TFG debe responder a las siguientes 
+preguntas: 
+
+--- PAGINA 22 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 21 
+Resultados 
+ 
+En esta fase de la memoria debes presentar los datos que has obtenido en la investigación e 
+indicar las deducciones que has hecho tras el análisis de los mismos. 
+ 
+En este apartado sería conveniente que empezaras con una breve reseña de la finalidad del 
+TFG y del método de investigación que has empleado. 
+ 
+ 
+ 
+  A continuación, te indicamos una serie de consejos...: 
+ Sería conveniente que hicieras referencias a las tablas y figuras que presentas. 
+ Es aconsejable que cada figura esté en la página en la que está el texto que se refiere a 
+ella, para que el lector pueda examinar ambas fuentes de información con el mínimo 
+esfuerzo. 
+ Es importante que separes los resultados más relevantes o más destacados de los que 
+sólo se presentan a modo ilustrativo o que se consideren secundarios. 
+ Los resultados que presentes deben ser concisos y legibles, 
+ Respecto a la presentación de los mismos, se recomienda primero describir los más 
+simples, y después los más complejos. 
+ Para presentar los resultados puedes hacerlo en forma de: 
+o Tablas 
+o Figuras 
+o Esquemas 
+o Gráficos 
+o Fotografías 
+o Diagramas 
+ Debes tener cuidado con la presentación de los datos, fundamentalmente con las 
+unidades de medida en el caso de que se utilicen cifras. 
+ A modo de resumen, no olvides… 
+
+--- PAGINA 23 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 22 
+ 
+Discusión de los resultados 
+ 
+ 
+En esta fase respaldarás o discutirás la hipótesis planteada. En este punto explicarás, 
+compararás los resultados que has obtenido con la teoría que has planteado y de ese modo 
+redactarás posteriormente las conclusiones que hayas sacado. De la redacción de ésta discusión 
+saldrán los elementos para plantear las conclusiones. 
+ 
+ 
+  
+En esta parte de la memoria, debes explicar qué significado tienen los resultados 
+respecto a los objetivos que te has marcado. La discusión de los resultados es una relación 
+entre hechos y explicaciones y en algunas memorias de TFG los resultados y la discusión de 
+ellos se presentan en un único epígrafe. 
+ La discusión corresponde a la forma que tienes de interpretar los datos. Se trata de 
+que dilucides qué significan los resultados y por qué han ocurrido. 
+
+--- PAGINA 24 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 23 
+La discusión de los resultados variará dependiendo del tipo de trabajo que hayas hecho. 
+ 
+La comparación de los resultados que has obtenido, debes realizarla con resultados que sean 
+objetivamente comparables, con estudios que compartan las mismas hipótesis o que las 
+contradigan, porque sobre ellas se construye el análisis. 
+Lo ideal es que hagas una discusión puntual, es decir, no prolongarla ni hacerla redundante. No es 
+necesario que la hagas extensa, pero sí que sea clara. 
+ 
+ 
+ 
+ Es importante que menciones y discutas los resultados poco a poco, siempre teniendo 
+en cuenta que no debes repetirlos. 
+  Para realizar la discusión de los resultados se recomienda seguir los siguientes pasos: 
+ Presentar las relaciones y generalizaciones que los resultados indican. 
+ Señalar las excepciones y falta de correlación y delimitar los aspectos no resueltos. No 
+ocultar ni alterar los datos que no cuadren. 
+ Mostrar la relación que existe o que no existe entre los resultados con trabajos que se 
+hayan publicado anteriormente. 
+ Exponer las consecuencias teóricas de la investigación y las posibles aplicaciones 
+prácticas de la misma. 
+ Dar alguna recomendación o sugerencia si lo consideras necesario. 
+ Formular las conclusiones de la forma más clara posible. 
+ Resumir las pruebas que respaldan cada conclusión. 
+
+--- PAGINA 25 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 24 
+ 
+ 
+ 
+Conclusiones 
+ 
+Esta última parte de la memoria del TFG es donde se sintetizan los resultados de la 
+investigación de tal modo que se puede apreciar los resultados obtenidos, producto de la 
+demostración o negación de la hipótesis y/o del alcance de los objetivos generales y específicos 
+trazados inicialmente. 
+ A modo de resumen, para poder realizar la discusión de los resultados, podrías 
+empezar haciéndote las siguientes preguntas: 
+ 
+Debes recordar que las conclusiones no son resúmenes de los capítulos. 
+ 
+Se recomienda que en el momento de redactar las conclusiones tengas en cuenta como 
+referencia lo siguiente: 
+ Debes señalar los resultados que se hayan encontrado 
+ Debes evidenciar cómo se han encontrado los resultados 
+
+--- PAGINA 26 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 25 
+ 
+ 
+Puede ocurrir que las conclusiones tengan poco que ver con la finalidad, objetivos e 
+hipótesis que habían sido planteados al inicio, lo que demostraría cierta incongruencia entre 
+principio y final. Debes controlar continuamente las relaciones entre finalidad, objetivos, hipótesis 
+y conclusiones. 
+ 
+Cómo se presentan las conclusiones 
+ Debes señalar la conclusión general producto de la demostración de la 
+hipótesis, si la has planteado. 
+ Debes mostrar conclusiones de carácter parcial logradas en el desarrollo de la 
+investigación, tantas como objetivos planteados. 
+ Resaltarás finalmente los aportes que se realicen al campo de investigación 
+específico. 
+ Debes resaltar aquello que no se haya podido demostrar para que otro 
+investigador pueda abocarse a su investigación. 
+ No debes olvidar que existe una gran relación entre la introducción y las 
+conclusiones, pues mientras la primera nos muestra qué hipótesis 
+pretendemos demostrar o negar, el segundo nos indica cómo hemos logrado 
+obtener el resultado. 
+ No debes olvidar que, al igual que la introducción, las conclusiones también 
+deben ser expuestas a la lectura de personas no especialistas en el tema para 
+ver cuanta claridad y capacidad de síntesis tenemos en nuestra redacción y, si 
+no son lo suficientemente claras, tendremos que volver a redactarlos. 
+ 
+Concluir es sacar provecho del proceso y de los resultados y decir lo que en ellos hay 
+de valioso, justificando las afirmaciones.  
+ Se admiten dos formas de presentar las conclusiones: 
+
+--- PAGINA 27 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 26 
+ 
+Tanto en un formato como en otro, las conclusiones deben dejar bien patentes las 
+relaciones entre finalidad, objetivos e hipótesis. 
+ 
+Bibliografía de la memoria del TFG 
+ 
+Todos los libros, artículos y materiales utilizados para la elaboración del TFG, deberán ser 
+convenientemente citados y recogidos en este apartado. 
+ 
+ 
+Debes citar siempre: 
+ La fuente original de frases copiadas literalmente 
+ La fuente original de ideas o textos de otros autores que se parafraseen (o se reproduzcan 
+con otras palabras). 
+ La fuente de los datos estadísticos, las fuentes orales... 
+ 
+ 
+ 
+ 
+ La primera, en forma de texto cuidadoso, con enunciados comprensibles y bien 
+encadenados. Debes indicar qué concluyes y cómo has llegado a esas 
+conclusiones. 
+ La segunda, en forma de enumeración. En este caso las conclusiones deben 
+presentarse de forma concisa y precisa. 
+ 
+ 
+  Citar es el proceso por el cual reconoces qué documentos has consultado para la 
+elaboración de tu trabajo, sea cual sea su formato o soporte. 
+ Citar correctamente las fuentes consultadas permitirá que cualquier persona pueda 
+volver a llegar a ellas. 
+
+--- PAGINA 28 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 27 
+Existen distintos estilos de cita, algunos específicos de determinadas disciplinas y otros 
+usados por publicaciones concretas. A este respecto, se recomienda que para las memorias del 
+TFG de la EPS las fuentes se citen de acuerdo con las normas que determine el tutor del trabajo. 
+ 
+Anexos 
+ 
+Los anexos pueden contener aquellas partes del trabajo que siendo fundamentales (análisis 
+de datos, fichas de trabajo, herramientas...) no son imprescindibles en el cuerpo del trabajo, y 
+cuya eliminación del mismo no limita la visión global del trabajo. 
+ 
+Consejos de redacción 
+ 
+Además de la claridad en el planteamiento general de la memoria del TFG, esta debe ser 
+redactada con un léxico preciso, claro y ágil. 
+ 
+Según el Reglamento de TFG para el Grado en Ingeniería Informática se podrá presentar la 
+memoria en inglés, acompañándola de un resumen, que podrá estar escrito en cualquiera de los 
+idiomas oficiales de la Universidad de Alicante. 
+Las normas básicas de estilo serán establecidas por el Libro de Estilo de la EPS. 
+ 
+Los gráficos y las tablas que aparezcan en el TFG deberán ir acompañados de la referencia a 
+las fuentes de las que se han obtenido. 
+ 
+Para terminar 
+Debes hacer una revisión final de tu memoria: 
+1. Haz una lectura detenida del texto, sin olvidar revisar la ortografía y la sintaxis.  
+2. Comprueba que los títulos de las distintas secciones coinciden con el índice. 
+3. Revisa la paginación y comprueba que coincide con la del índice. 
+4. Comprueba que el texto completo se ajusta al formato requerido. 
+ 
+ 
+ 
+
+--- PAGINA 29 ---
+Cómo elaborar la memoria del TFG de Ingeniería 
+Informática 
+ 
+ 
+  
+ 
+ pág. 28 
+Bibliografía 
+ 
+ CLANCHY, John; BALLARD, Brigid. Cómo se hace un trabajo académico: guía práctica 
+para estudiantes universitarios. Zaragoza: Prensas Univesitarias de Zaragoza, 1995 
+ CARRERAS PACHÓN, Antonio. Guía práctica para la elaboración de un trabajo científico. 
+Salamanca: Universidad de Salamanca, 1994. ISBN 9788460501725 
+ DE LA FUENTE LAMAS, Alfredo. Estrategias para elaborar investigaciones científicas. 
+Sevilla: Trillas, 2006. ISBN 9788466546225 
+ ESLAVA-SCHMALBALCH, Javier; ALZATE, Pablo. Cómo elaborar la discusión de un 
+artículo científico. Revista Colombiana de Ortopedia y Traumatología ,2011, 25(1), 14-7. 
+ISSN 0120-8845 
+ FERRER, Jesús. Conceptos básicos de metodología de la investigación [en línea]. 
+[Consultado 16 septiembre 2013]. Disponible en: 
+http://metodologia02.blogspot.com.es/  
+ FONTANET, Inmaculada. Cómo escribir un artículo de investigación en inglés. Madrid: 
+Alianza editorial, 2011. ISBN 9788420651231 
+ FORCADA, Mikel. ¿Cómo se escriben y se publican trabajos de investigación? [en línea]. 
+[Consultado 16 septiembre 2013]. Disponible en: 
+http://www.dlsi.ua.es/~mlf/ceptc/notas.html  
+ GÓMEZ HERNANDEZ, Felix Antonio. Guía para la elaboración de artículos científicos [en 
+línea]. [Consultado 15 septiembre 2013]. Disponible en: 
+http://www.slideshare.net/felixsigno/redaccin-artculo-cientfico  
+ PINTO MOLINA, María. Iniciación a la investigación [en línea]. [Consultado 10 
+septiembre 2013]. Disponible en: http://www.mariapinto.es/e-coms/ini_inves.htm  
+ REBORATTI, Carlos. Estado de la cuestión y análisis crítico de textos: quía para su 
+elaboración [en línea]. [Consultado 17 septiembre 2013]. Disponible en: 
+http://cienciapoliticauspt.files.wordpress.com/2009/05/estadocuestion1.pdf  
+
