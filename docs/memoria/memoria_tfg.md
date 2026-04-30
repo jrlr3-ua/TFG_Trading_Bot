@@ -60,14 +60,11 @@ Y a todos los profesores que, a lo largo de estos años, me han enseñado que la
 - **Figura 4.2:** Pirámide del Motor de Decisión Multi-Capa (7 capas)
 - **Figura 4.3:** Pipeline de Procesamiento NLP (FinBERT + NER)
 - **Figura 4.4:** Ciclo de vida de una operación de trading
-- **Figura 4.5:** Esquema de la base de datos TimescaleDB
-- **Figura 5.1:** Feature Importance — Ranking de las 18+ features del modelo LightGBM
-- **Figura 5.2:** SHAP Summary Plot — Explicabilidad de la IA
+- **Figura 5.3:** Capas de gestión de riesgo del sistema
 - **Figura 6.1:** Línea temporal de la evolución del sistema (v1.0 → v3.0)
-- **Figura 7.1:** Curva de equity — Escenario Bull Market
-- **Figura 7.2:** Curva de equity — Escenario Crash
-- **Figura 7.3:** SHAP Summary Plot detallado
-- **Figura 7.4:** Distribución de importancia por categoría de feature
+- **Figura 7.1:** Rendimiento Bot vs Buy & Hold por escenario
+- **Figura 7.2:** Alpha generado sobre Buy & Hold
+- **Figura 7.4:** Importancia de features por categoría (SHAP)
 
 # Índice de Tablas
 
@@ -610,6 +607,10 @@ Las salidas se gestionan mediante 4 mecanismos complementarios:
 
 ## 5.5 Gestión de Riesgo
 
+![Figura 5.3: Capas de Gestión de Riesgo del sistema](fig_5_3_riesgo.png){ width=85% }
+
+El sistema implementa 4 capas de protección patrimonial independientes que actúan de forma coordinada.
+
 ### 5.5.1 Criterio de Kelly al 40% (`custom_stake_amount`)
 
 ```python
@@ -859,6 +860,8 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 | **PROMEDIO** | **-1.51%** | **-11.34%** | **+9.83%** |
 
 **Conclusión estadística:** El sistema genera un alpha promedio de +9.83 puntos porcentuales sobre Buy & Hold, con su mayor ventaja durante las crisis de mercado donde actúa como un preservador de capital.
+
+![Figura 7.2: Alpha generado por escenario sobre Buy & Hold](fig_7_2_alpha.png){ width=80% }
 
 ## 7.5 Explicabilidad del Modelo (SHAP + Feature Importance)
 
