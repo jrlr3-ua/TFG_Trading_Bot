@@ -24,7 +24,6 @@
         "180": 0.01
     },
 
-    "stoploss": -0.025,
     "trailing_stop": true,
     "trailing_stop_positive": 0.01,
     "trailing_stop_positive_offset": 0.03,

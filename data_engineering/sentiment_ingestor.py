@@ -27,6 +27,7 @@ import os
 import re
 import time
 import logging
+import gc
 from datetime import datetime, timezone
 
 import pandas as pd
@@ -350,6 +351,9 @@ def main():
 
             # Reset contador de errores consecutivos
             consecutive_errors = 0
+
+            # Forzar Garbage Collection para evitar fuga de memoria de Pytorch/Transformers
+            gc.collect()
 
             # Esperar 5 minutos
             logger.info("⏳ Esperando 5 minutos para el siguiente ciclo...")

@@ -26,6 +26,7 @@
 #   → docs/strategy_evolution.md
 # ==========================================
 
+import os
 import logging
 from datetime import datetime, timezone
 from typing import Optional
@@ -69,7 +70,16 @@ class FreqaiExampleStrategy(IStrategy):
     startup_candle_count: int = 200
 
     # ─── CONEXIÓN A BASE DE DATOS ───────────────────────────────────────
-    DB_URL = "postgresql://postgres:password@timescaledb:5432/freqtrade"
+    DB_PASSWORD = os.environ.get("POSTGRES_PASSWORD", "password")
+    DB_URL = f"postgresql://postgres:{DB_PASSWORD}@timescaledb:5432/freqtrade"
+
+    # Engine reutilizable
+    _db_engine = None
+
+    def _get_db_engine(self):
+        if self._db_engine is None:
+            self._db_engine = create_engine(self.DB_URL)
+        return self._db_engine
 
     # ─── PARÁMETROS OPTIMIZABLES (Hyperopt) ─────────────────────────────
     # PARÁMETROS OPTIMIZADOS DEFINITIVOS (Vía 2 Deep Hyperopt)
@@ -135,12 +145,13 @@ class FreqaiExampleStrategy(IStrategy):
         dataframe['order_book_imbalance'] = 0.5
         if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
             try:
-                order_book = self.dp.market(metadata['pair']).fetch_order_book(limit=10)
-                bids_vol = sum([bid[1] for bid in order_book['bids']])
-                asks_vol = sum([ask[1] for ask in order_book['asks']])
-                total_vol = bids_vol + asks_vol
-                if total_vol > 0:
-                    dataframe.loc[dataframe.index[-1], 'order_book_imbalance'] = bids_vol / total_vol
+                order_book = self.dp.orderbook(metadata['pair'], 1)
+                if order_book and 'bids' in order_book and 'asks' in order_book:
+                    bids_vol = sum([bid[1] for bid in order_book['bids']])
+                    asks_vol = sum([ask[1] for ask in order_book['asks']])
+                    total_vol = bids_vol + asks_vol
+                    if total_vol > 0:
+                        dataframe.loc[dataframe.index[-1], 'order_book_imbalance'] = bids_vol / total_vol
             except Exception as e:
                 logger.debug(f"Error cargando Order Book: {e}")
 
@@ -201,7 +212,7 @@ class FreqaiExampleStrategy(IStrategy):
         dataframe['sentiment_score'] = 0.0
         if self.dp and self.dp.runmode.value in ('live', 'dry_run'):
             try:
-                engine = create_engine(self.DB_URL)
+                engine = self._get_db_engine()
                 pair = dataframe.attrs.get('pair', '')
                 # Extraer símbolo de la moneda (ej: "BTC/USDT:USDT" → "BTC")
                 coin = pair.split('/')[0] if '/' in pair else ''
@@ -231,8 +242,6 @@ class FreqaiExampleStrategy(IStrategy):
                         ORDER BY time DESC LIMIT 500
                     """
                     sentiment_df = pd.read_sql(query_global, engine)
-
-                engine.dispose()
 
                 if not sentiment_df.empty:
                     sentiment_df['time'] = pd.to_datetime(sentiment_df['time']).dt.tz_convert('UTC')
@@ -396,14 +405,13 @@ class FreqaiExampleStrategy(IStrategy):
             # Si el mercado está en Extreme Fear (<15), bloquear SHORTs
             # Si está en Extreme Greed (>85), bloquear LONGs
             try:
-                engine = create_engine(self.DB_URL)
+                engine = self._get_db_engine()
                 fng_query = """
                     SELECT metric_value FROM onchain_metrics
                     WHERE metric_name = 'fear_greed_index'
                     ORDER BY time DESC LIMIT 1
                 """
                 fng_df = pd.read_sql(fng_query, engine)
-                engine.dispose()
                 if not fng_df.empty:
                     fng_value = fng_df.iloc[0]['metric_value']
                     if side == 'long' and fng_value > 85:
@@ -451,7 +459,7 @@ class FreqaiExampleStrategy(IStrategy):
         return True
 
     # ═══════════════════════════════════════════════════════════════════
-    # DIMENSIONAMIENTO DE POSICIÓN (Kelly Criterion Adaptado)
+    # DIMENSIONAMIENTO DE POSICIÓN (Conviction-Based Sizing / Proxy Kelly)
     # ═══════════════════════════════════════════════════════════════════
     def custom_stake_amount(self, pair: str, current_time: datetime, current_rate: float,
                             proposed_stake: float, min_stake: float, max_stake: float,
@@ -480,9 +488,14 @@ class FreqaiExampleStrategy(IStrategy):
 
         risk_factor = min(predicted_change / 0.02, 1.0) * vol_discount
 
-        # Stake proporcional a la confianza reducida por la volatilidad
-        total_wallet = self.wallets.get_total_stake_amount()
-        max_risk_per_trade = total_wallet * 0.40  # Half-Kelly: máx 40%
+        # Stake proporcional a la convicción reducida por la volatilidad
+        if self.wallets:
+            total_wallet = self.wallets.get_total_stake_amount()
+            max_risk_per_trade = total_wallet * 0.40  # Proxy Kelly: máx 40%
+        else:
+            # Fallback seguro para backtesting sin objeto wallets
+            max_risk_per_trade = proposed_stake * 2.0
+            
         adjusted_stake = min_stake + (max_risk_per_trade - min_stake) * risk_factor
 
         return min(max(adjusted_stake, min_stake), max_stake)
