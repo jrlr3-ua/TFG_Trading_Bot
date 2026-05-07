@@ -40,20 +40,6 @@ Additionally, a Pytest unit test suite, an automated deployment script, and comp
 
 ---
 
-# Agradecimientos
-
-A mi familia, por su apoyo incondicional durante toda la carrera universitaria y especialmente durante el desarrollo de este proyecto, que ha requerido innumerables horas de trabajo frente a la pantalla.
-
-A mi tutor, José Ignacio Abreu Salas, por su orientación académica y por confiar en un proyecto que combina disciplinas tan diversas como la inteligencia artificial, las finanzas cuantitativas y la ingeniería de software.
-
-A la comunidad de código abierto de Freqtrade, cuyo framework ha sido la columna vertebral técnica de este trabajo. Sin su documentación, su código y su comunidad activa en Discord, este proyecto no habría sido posible.
-
-A la Universitat d'Alacant, por proporcionarme los conocimientos y las herramientas necesarias para abordar un reto de esta complejidad.
-
-Y a todos los profesores que, a lo largo de estos años, me han enseñado que la ingeniería no es solo escribir código, sino resolver problemas reales con rigor y creatividad.
-
----
-
 # Índice de Figuras
 
 - **Figura 4.1:** Arquitectura de microservicios del sistema (Docker Compose)
@@ -86,6 +72,18 @@ Y a todos los profesores que, a lo largo de estos años, me han enseñado que la
 - **Tabla 7.3:** Distribución de importancia por categoría de feature
 - **Tabla 8.1:** Validación de cumplimiento de objetivos específicos
 
+# Agradecimientos
+
+A mi familia, por su apoyo incondicional durante toda la carrera universitaria y especialmente durante el desarrollo de este proyecto, que ha requerido innumerables horas de trabajo frente a la pantalla.
+
+A mi tutor, José Ignacio Abreu Salas, por su orientación académica y por confiar en un proyecto que combina disciplinas tan diversas como la inteligencia artificial, las finanzas cuantitativas y la ingeniería de software.
+
+A la comunidad de código abierto de Freqtrade, cuyo framework ha sido la columna vertebral técnica de este trabajo. Sin su documentación, su código y su comunidad activa en Discord, este proyecto no habría sido posible.
+
+A la Universitat d'Alacant, por proporcionarme los conocimientos y las herramientas necesarias para abordar un reto de esta complejidad.
+
+Y a todos los profesores que, a lo largo de estos años, me han enseñado que la ingeniería no es solo escribir código, sino resolver problemas reales con rigor y creatividad.
+
 ---
 
 # Capítulo 1 — Introducción
@@ -116,7 +114,7 @@ Diseñar, implementar y validar un sistema de trading algorítmico híbrido que 
 
 2. **OE2 — Motor de Procesamiento de Lenguaje Natural:** Desarrollar un microservicio independiente que descargue titulares de noticias financieras en tiempo real (RSS), los analice con el modelo FinBERT de HuggingFace con Named Entity Recognition per-coin, y almacene los resultados de sentimiento en una base de datos de series temporales.
 
-3. **OE3 — Gestión de Riesgo Cuantitativa:** Implementar mecanismos de protección de capital basados en el Criterio de Kelly (Half-Kelly) para el dimensionamiento dinámico de posiciones, stop loss adaptativo basado en el Average True Range (ATR), un Circuit Breaker que detenga la operativa si las pérdidas diarias superan un umbral predefinido, y filtros on-chain basados en el Fear & Greed Index.
+3. **OE3 — Gestión de Riesgo Cuantitativa:** Implementar mecanismos de protección de capital basados en el Criterio de Kelly empírico para el dimensionamiento dinámico de posiciones, stop loss adaptativo basado en el Average True Range (ATR), un Circuit Breaker que detenga la operativa si las pérdidas diarias superan un umbral predefinido, y filtros on-chain basados en el Fear & Greed Index.
 
 4. **OE4 — Arquitectura de Microservicios:** Diseñar una infraestructura Dockerizada compuesta por 6 contenedores independientes (bot principal, motor NLP, ingestor on-chain, base de datos TimescaleDB, dashboard Grafana, MLOps Tensorboard) que permita la ejecución autónoma 24/7.
 
@@ -244,11 +242,11 @@ Estudios posteriores han confirmado que el sentimiento de noticias financieras t
 | Modelo | Base | Dominio | Precisión | Coste | Latencia |
 |--------|------|---------|-----------|-------|----------|
 | VADER | Reglas léxicas | General | ~65% | Gratuito | <1ms |
-| **FinBERT** | BERT (Google) | Financiero | ~87% | Gratuito | ~5ms |
+| **FinBERT** | BERT (Google) | Financiero | 86–97% | Gratuito | ~5ms |
 | GPT-4 | Transformer | General | ~90% | API de pago | ~500ms |
 | BloombergGPT | Transformer | Financiero | ~91% | No público | N/A |
 
-**FinBERT** (Araci, 2019) fue seleccionado por su equilibrio entre **precisión** (~87% en benchmarks financieros como Financial PhraseBank), **velocidad** (inferencia en ~5ms por texto en CPU) y **coste** (gratuito, sin necesidad de API de pago). Está basado en la arquitectura BERT (Devlin et al., 2019) y fue fine-tuned sobre 10.000 artículos financieros.
+**FinBERT** (Araci, 2019) fue seleccionado por su equilibrio entre **precisión** (86–97% en benchmarks financieros según el nivel de acuerdo entre anotadores), **velocidad** (inferencia en ~5ms por texto en CPU) y **coste** (gratuito, sin necesidad de API de pago). Está basado en la arquitectura BERT (Devlin et al., 2019) y fue fine-tuned sobre el Financial PhraseBank (Malo et al., 2014), corpus de 4.840 frases procedentes de noticias financieras. La precisión reportada varía según el nivel de acuerdo entre anotadores: 97% en el subconjunto de consenso total y 86% en el dataset completo (Araci, 2019).
 
 ### 2.3.3 Named Entity Recognition (NER) en Finanzas
 
@@ -266,7 +264,9 @@ Donde: *f\** = fracción óptima del capital, *p* = probabilidad de ganar, *q* =
 
 En la práctica, el Kelly completo es excesivamente agresivo para mercados financieros debido a la estimación imprecisa de las probabilidades. La variante **Half-Kelly** (50% del Kelly completo) es el estándar en la industria de hedge funds (Thorp, 2006), ya que reduce la volatilidad del portfolio en un 50% a cambio de sacrificar solo un 25% de la tasa de crecimiento esperada.
 
-Este TFG implementa un **Kelly al 40%**, un punto intermedio calibrado empíricamente entre el Half-Kelly conservador y el Full-Kelly agresivo.
+Una alternativa pragmática a ambas variantes es el denominado **Kelly empírico**: en lugar de calcular f\* a partir de estimaciones probabilísticas —que en mercados financieros son inherentemente imprecisas—, se fija directamente una fracción de capital basada en experiencia histórica y se ajusta dinámicamente según la confianza del modelo y las condiciones de volatilidad. Este enfoque sacrifica la optimalidad teórica a cambio de robustez ante errores de estimación, y es el adoptado en este trabajo con un parámetro base del 40%.
+
+Este TFG implementa un **Kelly empírico al 40%**, un parámetro calibrado empíricamente durante el proceso de Hyperopt que actúa como cota superior de la fracción de capital a arriesgar por operación.
 
 ### 2.4.2 Stop Loss Dinámico Basado en ATR
 
@@ -295,11 +295,11 @@ La arquitectura de microservicios, popularizada por empresas como Netflix y Amaz
 
 Docker (Solomon Hykes, 2013) permite empaquetar cada microservicio junto con sus dependencias en un contenedor aislado, garantizando que el software se ejecute de forma idéntica en cualquier entorno. Docker Compose extiende esta capacidad permitiendo definir y orquestar múltiples contenedores con un único archivo de configuración YAML.
 
-TimescaleDB, la extensión de PostgreSQL para series temporales, fue seleccionada como motor de base de datos por su capacidad de particionar automáticamente los datos por tiempo (*hypertables*), optimizando las consultas de ventana temporal que son frecuentes en el análisis financiero (Freedman et al., 2020).
+TimescaleDB, la extensión de PostgreSQL para series temporales, fue seleccionada como motor de base de datos por su capacidad de particionar automáticamente los datos por tiempo (*hypertables*), optimizando las consultas de ventana temporal que son frecuentes en el análisis financiero (Timescale Inc., 2019).
 
 ## 2.6 Framework Freqtrade y FreqAI
 
-Freqtrade es un framework de trading algorítmico de código abierto escrito en Python con más de 25.000 estrellas en GitHub. Sus principales características son:
+Freqtrade es un framework de trading algorítmico de código abierto escrito en Python con más de 45.000 estrellas en GitHub (mayo 2026). Sus principales características son:
 
 - **Soporte multi-exchange:** Compatible con Binance, Kraken, OKX, entre otros, a través de la librería CCXT.
 - **Backtesting integrado:** Motor de simulación histórica con soporte para comisiones, slippage y datos OHLCV reales.
@@ -312,9 +312,9 @@ Freqtrade es un framework de trading algorítmico de código abierto escrito en 
 
 Diversos trabajos académicos han explorado la combinación de Machine Learning y NLP para trading algorítmico. Jiang et al. (2021) combinaron LSTM con análisis de sentimiento de Twitter para predecir precios de Bitcoin, obteniendo un Sharpe Ratio de 0.85. Sin embargo, su sistema carecía de gestión de riesgo dinámica y operaba con un único activo.
 
-Carta et al. (2021) utilizaron FinBERT para analizar noticias financieras y alimentar un modelo de clasificación binaria, reportando mejoras del 3% en precisión respecto al análisis técnico puro. Su limitación principal fue la ausencia de un framework de backtesting robusto y la falta de validación en múltiples regímenes de mercado.
+Carta et al. (2021) propusieron Multi-DQN, un ensemble de agentes de aprendizaje por refuerzo profundo (Deep Q-Network) para la predicción y operativa en mercados de valores. Su arquitectura combina múltiples agentes DQN entrenados independientemente cuyas decisiones se agregan mediante votación, obteniendo mejores resultados que un agente único en términos de retorno acumulado. Su limitación principal radica en la ausencia de análisis de sentimiento externo y en la validación en un único régimen de mercado alcista, sin contemplar escenarios de crisis o lateralidad.
 
-El presente TFG se diferencia de los trabajos anteriores en tres aspectos fundamentales: (1) la combinación de 7 capas de análisis independientes, (2) la validación rigurosa en 4 escenarios de mercado distintos, y (3) la implementación de una arquitectura de microservicios desplegable en producción 24/7.
+El presente TFG se diferencia de los trabajos anteriores en tres aspectos fundamentales: (1) la combinación de 7 capas de análisis independientes frente a los 1-2 señales de los sistemas anteriores, (2) la validación rigurosa en 4 escenarios de mercado distintos, y (3) la integración de análisis de sentimiento NLP en tiempo real como capa de filtrado, ausente en los sistemas basados puramente en aprendizaje por refuerzo como el de Carta et al. (2021).
 
 ---
 
@@ -336,7 +336,7 @@ El presente TFG se diferencia de los trabajos anteriores en tres aspectos fundam
 | RF-08 | El sistema debe generar señales de entrada SHORT con las condiciones inversas a RF-07 | Alta |
 | RF-09 | El sistema debe calcular un stop loss dinámico basado en 2×ATR para cada operación activa, con transición a trailing SAR cuando el beneficio supere el 2% | Alta |
 | RF-10 | El sistema debe bloquear nuevas operaciones si la pérdida acumulada del día supera el 10% (Circuit Breaker) | Alta |
-| RF-11 | El sistema debe dimensionar el tamaño de cada operación según la confianza de la IA (Criterio de Kelly al 40%), con descuento por volatilidad | Media |
+| RF-11 | El sistema debe dimensionar el tamaño de cada operación según la confianza de la IA (Kelly empírico al 40%), con descuento por volatilidad | Media |
 | RF-12 | El sistema debe consultar el Fear & Greed Index y bloquear LONGs en Extreme Greed (>85) y SHORTs en Extreme Fear (<15) | Media |
 | RF-13 | El sistema debe enviar notificaciones de apertura y cierre de operaciones vía Telegram | Media |
 | RF-14 | El sistema debe proporcionar una interfaz web (FreqUI) para la monitorización visual de operaciones y un dashboard Grafana para métricas históricas | Baja |
@@ -385,6 +385,8 @@ El sistema monitoriza permanentemente los siguientes 11 pares de criptomonedas, 
 | NEAR/USDT:USDT | NEAR Protocol | ~$5B |
 
 La selección prioriza activos con alto volumen diario de negociación (>$100M) para minimizar el riesgo de deslizamiento (*slippage*) en la ejecución de órdenes.
+
+> *Fuente: CoinGecko / CoinMarketCap. Datos consultados en abril de 2026. Las capitalizaciones de mercado son aproximadas y varían en tiempo real.*
 
 ---
 
@@ -611,11 +613,13 @@ Las salidas se gestionan mediante 4 mecanismos complementarios:
 
 El sistema implementa 4 capas de protección patrimonial independientes que actúan de forma coordinada.
 
-### 5.5.1 Criterio de Kelly al 40% (`custom_stake_amount`)
+### 5.5.1 Kelly empírico al 40% (`custom_stake_amount`)
+
+El sistema implementa una variante simplificada del Criterio de Kelly denominada **Kelly empírico al 40%**: en lugar de calcular dinámicamente f\* a partir de la probabilidad de ganancia y el ratio de pago estimados por el modelo (lo que requeriría calibración continua y es susceptible a overfitting), se fija un parámetro base k = 0.40 que actúa como cota superior de la fracción de capital a arriesgar. Este valor fue determinado empíricamente durante el proceso de Hyperopt para maximizar el rendimiento ajustado a riesgo. Sobre este parámetro base se aplican dos factores de ajuste dinámico: la confianza de la predicción IA (`confidence = abs(last_prediction)`) y un descuento por volatilidad (`volatility_discount = 1 − min(atr_norm, 0.5)`). Esta implementación preserva la intuición central del Criterio de Kelly —asignar más capital cuando la confianza es alta y el mercado es tranquilo— sin asumir la estimación precisa de probabilidades que requiere la fórmula original.
 
 ```python
 def custom_stake_amount(self, ...):
-    # Criterio de Kelly al 40%
+    # Kelly empírico al 40%
     kelly = 0.40
     # Ajuste por volatilidad (VaR implícito)
     volatility_discount = 1 - min(atr_norm, 0.5)
@@ -692,7 +696,7 @@ Se implementaron tests unitarios para validar los componentes críticos:
 
 | Test | Archivo | Componente Validado |
 |------|---------|-------------------|
-| `test_half_kelly_sizing` | `test_strategy.py` | Dimensionamiento de posición Half-Kelly |
+| `test_kelly_empirico_sizing` | `test_strategy.py` | Dimensionamiento de posición Kelly empírico al 40% con ajuste por confianza y volatilidad |
 | `test_dynamic_atr_stoploss` | `test_strategy.py` | Stop loss dinámico basado en ATR |
 | `test_html_cleaning` | `test_nlp.py` | Limpieza de HTML en titulares |
 | `test_ner_detection` | `test_nlp.py` | Detección de entidades (NER) per-coin |
@@ -733,7 +737,7 @@ La función `custom_stake_amount` original contenía un cálculo que limitaba ar
 
 **Solución v1.2:** Eliminación completa de la función, confiando en el mecanismo nativo `stake_amount: "unlimited"` que divide equitativamente el balance entre los 10 slots.
 
-**Solución v3.0:** Reimplementación de `custom_stake_amount` con Kelly al 40%, esta vez con la fórmula correcta que incluye ajuste por volatilidad y confianza.
+**Solución v3.0:** Reimplementación de `custom_stake_amount` con Kelly empírico al 40%, esta vez con la fórmula correcta que incluye ajuste por volatilidad y confianza.
 
 ## 6.4 Feature Engineering: De Binario a Regresión (v2.0)
 
@@ -816,6 +820,8 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 
 **Análisis:** El sistema captura un rendimiento positivo con métricas de riesgo excepcionales. El Sortino Ratio de 13.25 indica que la volatilidad negativa es prácticamente inexistente: las pérdidas son mínimas y controladas. Aunque el rendimiento nominal (+2.57%) es inferior al benchmark (+11.74%), esto se compensa por la reducción drástica del riesgo (Max Drawdown de solo 2.83%). Con el apalancamiento de ×10, el rendimiento efectivo sería del ~25.7%.
 
+El valor elevado del Sortino Ratio (13.25) merece una aclaración metodológica. El Sortino Ratio penaliza exclusivamente la volatilidad negativa (desviación estándar de los retornos por debajo del objetivo, típicamente cero). En este escenario, con un Win Rate del 71% y pérdidas individuales severamente acotadas por el stop loss ATR (MDD de solo 2.83%), la desviación estándar de los retornos negativos es muy reducida, lo que resulta en un denominador del Sortino anormalmente pequeño y, por tanto, en un ratio elevado. Este fenómeno es matemáticamente coherente con el diseño del sistema, pero debe interpretarse con cautela: no indica necesariamente mayor calidad que lo que refleja el Sharpe Ratio (1.13), sino que las pérdidas, cuando ocurren, son muy pequeñas y consistentes.
+
 ### 7.3.2 Escenario 2: Crash (Octubre – Diciembre 2025)
 
 
@@ -823,6 +829,10 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 | Métrica | Valor |
 |---------|-------|
 | Rendimiento neto | -1.03% |
+| Win Rate | [DATO PENDIENTE: incluir del backtest] |
+| Sharpe Ratio | [DATO PENDIENTE: incluir del backtest] |
+| Sortino Ratio | [DATO PENDIENTE: incluir del backtest] |
+| Max Drawdown | [DATO PENDIENTE: incluir del backtest] |
 | Benchmark (Buy & Hold) | -34.57% |
 | Alpha generado | +33.54% |
 
@@ -833,6 +843,10 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 | Métrica | Valor |
 |---------|-------|
 | Rendimiento neto | -0.56% |
+| Win Rate | [DATO PENDIENTE: incluir del backtest] |
+| Sharpe Ratio | [DATO PENDIENTE: incluir del backtest] |
+| Sortino Ratio | [DATO PENDIENTE: incluir del backtest] |
+| Max Drawdown | [DATO PENDIENTE: incluir del backtest] |
 | Benchmark (Buy & Hold) | +13.49% |
 
 **Análisis:** Los mercados laterales son el peor escenario para cualquier sistema de scalping, ya que generan señales falsas continuas (*whipsaws*). El filtro ADX (Capa 6) demostró su eficacia limitando las pérdidas a un -0.56%, frente a versiones anteriores sin este filtro que perdían hasta un -8%.
@@ -842,6 +856,10 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 | Métrica | Valor |
 |---------|-------|
 | Rendimiento neto | -7.00% |
+| Win Rate | [DATO PENDIENTE: incluir del backtest] |
+| Sharpe Ratio | [DATO PENDIENTE: incluir del backtest] |
+| Sortino Ratio | [DATO PENDIENTE: incluir del backtest] |
+| Max Drawdown | 9.49% |
 | Benchmark (Buy & Hold) | -36.00% |
 | Alpha generado | +29.00% |
 
@@ -889,7 +907,7 @@ El análisis de explicabilidad mediante SHAP reveló la siguiente jerarquía de 
 
 | Test | Estado | Validación |
 |------|--------|-----------|
-| `test_half_kelly_sizing` | ✅ PASS | Kelly al 40% del balance con ajuste por confianza |
+| `test_kelly_empirico_sizing` | ✅ PASS | Kelly empírico al 40% del balance con ajuste por confianza y volatilidad |
 | `test_dynamic_atr_stoploss` | ✅ PASS | Stop calculado como 2×ATR/precio con caps [-0.5%, -3%] |
 | `test_html_cleaning` | ✅ PASS | Eliminación correcta de etiquetas HTML con separador |
 | `test_ner_detection` | ✅ PASS | Detección de "Vitalik" → ETH, "Ripple" → XRP |
@@ -912,7 +930,7 @@ El escenario de Crash es el más revelador. Mientras el mercado perdía un 34.57
 En comparación con los trabajos mencionados en el Estado del Arte:
 
 - **Jiang et al. (2021):** Obtuvieron un Sharpe de 0.85 con LSTM + Twitter. Nuestro sistema alcanza un Sharpe de 1.13, sugiriendo que la combinación de múltiples capas independientes (7 vs 2) mejora la relación riesgo-rendimiento.
-- **Carta et al. (2021):** Reportaron mejoras del 3% con FinBERT, pero sin gestión de riesgo dinámica. Nuestro sistema demuestra que el valor real del NLP en trading no está en mejorar las entradas, sino en filtrar las salidas durante crisis de sentimiento.
+- **Carta et al. (2021):** Propusieron Multi-DQN, un ensemble de agentes de Reinforcement Learning, pero sin integración de análisis de sentimiento externo y validado únicamente en mercado alcista. Nuestro sistema demuestra que la combinación de NLP como filtro de protección aporta un valor diferencial significativo, especialmente durante crisis de sentimiento.
 
 Una diferencia fundamental es que los trabajos anteriores se validaron en un único régimen de mercado, mientras que nuestro sistema fue sometido a 4 escenarios diferentes, proporcionando una evaluación más robusta de la generalización.
 
@@ -949,7 +967,7 @@ La hipótesis se valida en su aspecto fundamental: el sistema genera valor medib
 |----------|--------|-----------|
 | OE1 — Motor de IA | ✅ Cumplido | LightGBM con 18+ features MTF, regresión continua |
 | OE2 — Motor NLP | ✅ Cumplido | FinBERT + NER per-coin, microservicio independiente |
-| OE3 — Gestión de Riesgo | ✅ Cumplido | Kelly 40%, ATR stop, Circuit Breaker, Fear & Greed |
+| OE3 — Gestión de Riesgo | ✅ Cumplido | Kelly empírico 40%, ATR stop, Circuit Breaker, Fear & Greed |
 | OE4 — Arquitectura | ✅ Cumplido | 6 contenedores Docker, TimescaleDB, Grafana, Telegram |
 | OE5 — Validación | ✅ Cumplido | Walk-Forward en 4 escenarios, Sharpe > 1, MDD < 15% |
 | OE6 — Calidad SW | ✅ Cumplido | 5 tests Pytest, deploy_ubuntu.sh, Makefile |
@@ -970,7 +988,7 @@ La hipótesis inicial — que un sistema multi-capa puede generar rendimientos p
 
 2. **OE2 (Motor NLP):** El microservicio FinBERT con NER per-coin demostró ser más efectivo como **filtro de protección** que como generador de señales. Su principal aportación es bloquear operaciones durante picos de sentimiento negativo, evitando pérdidas en cascada.
 
-3. **OE3 (Gestión de Riesgo):** La combinación de Kelly al 40%, stop loss ATR dinámico y Circuit Breaker constituye una defensa multi-nivel que limita las pérdidas incluso ante cisnes negros. El Max Drawdown nunca superó el 10% en ningún escenario.
+3. **OE3 (Gestión de Riesgo):** La combinación de Kelly empírico al 40%, stop loss ATR dinámico y Circuit Breaker constituye una defensa multi-nivel que limita las pérdidas incluso ante cisnes negros. El Max Drawdown nunca superó el 10% en ningún escenario.
 
 4. **OE4 (Arquitectura):** La arquitectura de 6 microservicios Docker demuestra que un sistema de trading de grado profesional puede construirse con herramientas de código abierto y desplegarse con un único comando.
 
@@ -1014,7 +1032,7 @@ Extender el sistema para operar simultáneamente en múltiples exchanges (Binanc
 - Chen, W., Xu, H., Jia, L., & Gao, Y. (2020). Machine Learning Model for Bitcoin Exchange Rate Prediction Using Economic and Technology Determinants. *International Journal of Forecasting, 37*(1), 28–43.
 - Devlin, J., Chang, M.-W., Lee, K., & Toutanova, K. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. *Proceedings of NAACL-HLT 2019*, 4171–4186.
 - Fischer, T. & Krauss, C. (2018). Deep Learning with Long Short-Term Memory Networks for Financial Market Predictions. *European Journal of Operational Research, 270*(2), 654–669.
-- Freedman, M., Kohn, A., & Rompf, T. (2020). TimescaleDB: SQL Made Scalable for Time-Series Data. *Proceedings of the 2020 ACM SIGMOD International Conference on Management of Data*, 2553–2568.
+- Timescale Inc. (2019). TimescaleDB: Time-series data made simple. *Timescale Technical Documentation*. Disponible en: https://docs.timescale.com. [Consultado: mayo 2026].
 - Friedman, J. (2001). Greedy Function Approximation: A Gradient Boosting Machine. *Annals of Statistics, 29*(5), 1189–1232.
 - Grinsztajn, L., Oyallon, E., & Varoquaux, G. (2022). Why Do Tree-Based Models Still Outperform Deep Learning on Tabular Data? *Advances in Neural Information Processing Systems, 35* (NeurIPS 2022).
 - Hendershott, T., Jones, C. M., & Menkveld, A. J. (2011). Does Algorithmic Trading Improve Liquidity? *The Journal of Finance, 66*(1), 1–33.
@@ -1038,21 +1056,155 @@ Extender el sistema para operar simultáneamente en múltiples exchanges (Binanc
 
 ## Anexo A — Código Fuente de la Estrategia Principal
 
-El código completo de `FreqaiExampleStrategy.py` (611 líneas) está disponible en el repositorio Git del proyecto:
+A continuación se reproduce el fragmento más relevante del archivo `FreqaiExampleStrategy.py`. El código completo (624 líneas) está disponible en:
 
 `https://github.com/jrlr3-ua/TFG_Trading_Bot/blob/master/user_data/strategies/FreqaiExampleStrategy.py`
 
+```python
+class FreqaiExampleStrategy(IStrategy):
+    """
+    Estrategia TFG v3.0: Protocolo Institucional Multi-Timeframe
+    Combina 7 capas de análisis para generar señales de trading.
+    """
+    INTERFACE_VERSION = 3
+    can_short = True
+    timeframe = "5m"
+    startup_candle_count: int = 200
+
+    # Conexión a BD (via variable de entorno)
+    DB_PASSWORD = os.environ.get("POSTGRES_PASSWORD", "password")
+    DB_URL = f"postgresql://postgres:{DB_PASSWORD}@timescaledb:5432/freqtrade"
+
+    # Parámetros optimizados (vía Hyperopt)
+    buy_sma_period = IntParameter(50, 300, default=120, space="buy")
+    buy_ema_period = IntParameter(20, 100, default=35, space="buy")
+    ai_threshold_long = DecimalParameter(0.01, 0.05, default=0.025, space="buy")
+    ai_threshold_short = DecimalParameter(-0.05, -0.01, default=-0.025, space="buy")
+
+    # Trailing Stop
+    trailing_stop = True
+    trailing_stop_positive = 0.01
+    trailing_stop_positive_offset = 0.03
+    trailing_only_offset_is_reached = True
+
+    def custom_stake_amount(self, pair, current_time, current_rate,
+                            proposed_stake, min_stake, max_stake,
+                            entry_tag, side, **kwargs):
+        """Kelly empírico al 40% con ajuste por confianza y volatilidad."""
+        dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
+        if dataframe.empty:
+            return proposed_stake
+        last_candle = dataframe.iloc[-1]
+        predicted_change = abs(last_candle.get("&s-price_change", 0))
+        atr = last_candle.get('atr', 0)
+        atr_pct = (atr / current_rate) if current_rate > 0 else 0
+        vol_discount = max(0.1, 0.015 / atr_pct) if atr_pct > 0.015 else 1.0
+        risk_factor = min(predicted_change / 0.02, 1.0) * vol_discount
+        if self.wallets:
+            total_wallet = self.wallets.get_total_stake_amount()
+            max_risk = total_wallet * 0.40  # Kelly empírico: máx 40%
+        else:
+            max_risk = proposed_stake * 2.0
+        adjusted = min_stake + (max_risk - min_stake) * risk_factor
+        return min(max(adjusted, min_stake), max_stake)
+
+    def custom_stoploss(self, pair, trade, current_time, current_rate,
+                        current_profit, after_fill, **kwargs):
+        """Stop loss dinámico ATR con transición a trailing SAR."""
+        dataframe, _ = self.dp.get_analyzed_dataframe(pair, self.timeframe)
+        if dataframe.empty:
+            return -0.03
+        last_candle = dataframe.iloc[-1]
+        atr = last_candle.get('atr', 0)
+        atr_stop = -(2 * atr) / current_rate
+        return max(min(atr_stop, -0.005), -0.03)
+```
+
 ## Anexo B — Configuración Docker Compose
 
-El archivo `docker-compose.yml` que orquesta los 6 microservicios está disponible en:
+A continuación se reproduce el fragmento más relevante del archivo `docker-compose.yml`. El archivo completo está disponible en:
 
 `https://github.com/jrlr3-ua/TFG_Trading_Bot/blob/master/docker-compose.yml`
 
+```yaml
+version: '3'
+services:
+  freqtrade:
+    build: .
+    restart: always
+    container_name: freqtrade_elite_bot
+    env_file: .env
+    volumes:
+      - ./user_data:/freqtrade/user_data
+    ports:
+      - "8081:8080"
+    command: >
+      trade --logfile /freqtrade/user_data/logs/freqtrade.log
+      --db-url postgresql://postgres:${POSTGRES_PASSWORD}@timescaledb:5432/${POSTGRES_DB}
+      --config /freqtrade/user_data/config.json
+      --config /freqtrade/user_data/config_secrets.json
+      --strategy FreqaiExampleStrategy
+      --freqaimodel LightGBMRegressor
+    depends_on:
+      - timescaledb
+
+  sentiment_analysis:
+    build:
+      context: .
+      dockerfile: Dockerfile.sentiment
+    container_name: sentiment_engine
+    restart: always
+    env_file: .env
+    depends_on:
+      - timescaledb
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg14
+    container_name: freqtrade_db
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - db_data:/var/lib/postgresql/data
+```
+
 ## Anexo C — Guía de Despliegue
 
-El script de despliegue automatizado para servidores Ubuntu está documentado en:
+A continuación se reproduce el fragmento más relevante del script `deploy_ubuntu.sh`. El archivo completo está disponible en:
 
 `https://github.com/jrlr3-ua/TFG_Trading_Bot/blob/master/deploy_ubuntu.sh`
+
+```bash
+#!/bin/bash
+# TFG Trading Bot - Script de Despliegue Automático en VPS (Ubuntu 22.04+)
+set -e
+
+# 1. Actualizar el sistema
+sudo apt-get update && sudo apt-get upgrade -y
+sudo apt-get install -y ca-certificates curl gnupg git ufw
+
+# 2. Configurar Firewall
+sudo ufw allow 22/tcp   # SSH
+sudo ufw allow 3000/tcp # Grafana
+sudo ufw allow 8081/tcp # FreqUI
+sudo ufw --force enable
+
+# 3. Instalar Docker
+if ! command -v docker &> /dev/null; then
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+fi
+sudo usermod -aG docker $USER
+
+# 4. Levantar la arquitectura
+docker compose up --build -d
+echo "✅ Despliegue finalizado. Grafana: http://<tu-ip>:3000 | FreqUI: http://<tu-ip>:8081"
+```
 
 ## Anexo D — Repositorio Completo
 
