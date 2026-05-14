@@ -61,15 +61,20 @@ Additionally, a Pytest unit test suite, an automated deployment script, and comp
 - **Tabla 3.1:** Requisitos funcionales del sistema
 - **Tabla 3.2:** Requisitos no funcionales del sistema
 - **Tabla 3.3:** Universo de activos monitorizados
+- **Tabla 3.4:** Planificación temporal del proyecto
+- **Tabla 3.5:** Estimación de costes del proyecto
+- **Tabla 3.6:** Análisis de riesgos y mitigaciones
 - **Tabla 4.1:** Servicios del sistema y puertos de acceso
 - **Tabla 4.2:** Reglas de las 7 capas de confluencia
 - **Tabla 5.1:** Stack tecnológico del entorno de desarrollo
 - **Tabla 5.2:** Features del modelo organizadas por categoría (18+)
-- **Tabla 5.3:** Resultados de la suite de tests unitarios
+- **Tabla 5.3:** Suite de tests unitarios (10 tests)
 - **Tabla 6.1:** Comparativa de limitaciones v1.2 vs soluciones v3.0
 - **Tabla 7.1:** Resultados del backtesting por escenario de mercado
+- **Tabla 7.1b:** Resumen consolidado de métricas por escenario
 - **Tabla 7.2:** Comparativa Bot vs Buy & Hold
 - **Tabla 7.3:** Distribución de importancia por categoría de feature
+- **Tabla 7.4:** Resultados de la suite de tests unitarios (10/10 PASSED)
 - **Tabla 8.1:** Validación de cumplimiento de objetivos específicos
 
 # Agradecimientos
@@ -152,13 +157,13 @@ La presente memoria se organiza en 9 capítulos:
 
 - **Capítulo 1 (Introducción):** Presenta la motivación, objetivos, hipótesis y alcance del proyecto.
 - **Capítulo 2 (Estado del Arte):** Revisa la literatura académica sobre trading algorítmico, ML en finanzas, NLP financiero y gestión de riesgo cuantitativa.
-- **Capítulo 3 (Análisis de Requisitos):** Define los requisitos funcionales y no funcionales del sistema, las restricciones y el universo de activos.
+- **Capítulo 3 (Análisis de Requisitos):** Define los requisitos funcionales y no funcionales, el universo de activos, la metodología de desarrollo, la planificación temporal, la estimación de costes y el análisis de riesgos.
 - **Capítulo 4 (Diseño del Sistema):** Describe la arquitectura de microservicios, el motor de decisión multi-capa, el diseño de la base de datos y los pipelines de datos.
 - **Capítulo 5 (Implementación):** Detalla la implementación del Feature Engineering, el motor NLP, la estrategia de trading, la infraestructura Docker y los tests unitarios.
 - **Capítulo 6 (Evolución y Problemas Resueltos):** Documenta las iteraciones del sistema (v1.0 → v3.0) y los bugs resueltos durante el desarrollo.
-- **Capítulo 7 (Experimentación y Resultados):** Presenta los resultados del backtesting por escenario, el análisis SHAP y los resultados de los tests unitarios.
+- **Capítulo 7 (Experimentación y Resultados):** Presenta los resultados del backtesting por escenario, la tabla consolidada de métricas, el análisis SHAP y los resultados de los 10 tests unitarios.
 - **Capítulo 8 (Discusión de Resultados):** Interpreta los resultados, los compara con trabajos relacionados y valida la hipótesis.
-- **Capítulo 9 (Conclusiones y Trabajo Futuro):** Sintetiza los hallazgos, valida los objetivos y propone líneas de trabajo futuro.
+- **Capítulo 9 (Conclusiones y Trabajo Futuro):** Sintetiza los hallazgos, valida los objetivos, expone las lecciones aprendidas y propone líneas de trabajo futuro.
 
 ---
 
@@ -390,6 +395,85 @@ La selección prioriza activos con alto volumen diario de negociación (>$100M) 
 
 ---
 
+## 3.5 Metodología de Desarrollo
+
+El desarrollo del sistema siguió una **metodología iterativa incremental** inspirada en los principios ágiles, adaptada al contexto individual de un TFG. El proceso se organizó en ciclos de desarrollo de 2-4 semanas (sprints), donde cada iteración producía una versión funcional del sistema con incrementos progresivos de complejidad.
+
+Las fases del ciclo iterativo fueron:
+
+1. **Investigación y diseño:** Análisis de la literatura, selección de tecnologías y diseño de la arquitectura del sprint actual.
+2. **Implementación:** Codificación de la funcionalidad planificada, siguiendo convenciones PEP 8 y documentación con docstrings.
+3. **Testing:** Ejecución de tests unitarios, verificación de la integración con Docker y pruebas manuales en modo *dry-run*.
+4. **Backtesting y evaluación:** Ejecución de backtests Walk-Forward para validar el impacto de los cambios en el rendimiento.
+5. **Retrospectiva:** Análisis de resultados, identificación de problemas y planificación del siguiente sprint.
+
+Este enfoque iterativo permitió evolucionar el sistema desde una versión mínima (v1.0, 5 features, target binario) hasta la versión final (v3.0, 18+ features MTF, 7 capas de confluencia) en 6 iteraciones documentadas en el Capítulo 6.
+
+**Herramientas de gestión:** Git (control de versiones), GitHub (repositorio remoto), Docker Compose (entorno reproducible), Makefile (automatización de tareas), Pytest (validación continua).
+
+## 3.6 Planificación Temporal
+
+El proyecto se desarrolló a lo largo de 5 meses (enero – mayo 2026), con una dedicación estimada de **350 horas** distribuidas en las siguientes fases:
+
+*Tabla 3.4: Planificación temporal del proyecto*
+
+| Fase | Periodo | Semanas | Horas | Entregable |
+|------|---------|---------|-------|------------|
+| F1 — Investigación y Estado del Arte | Ene 2026 | 3 | 40 | Revisión bibliográfica, selección de frameworks |
+| F2 — Diseño de la Arquitectura | Ene – Feb 2026 | 2 | 30 | Docker Compose, esquema de BD, pipeline de datos |
+| F3 — Implementación v1.0 – v1.2 | Feb 2026 | 4 | 60 | Bot funcional, 5 features, target binario, Hyperopt |
+| F4 — Implementación v2.0 – v2.1 | Mar 2026 | 4 | 70 | 12 features, regresión, ATR stop, filtro ADX |
+| F5 — Implementación v3.0 | Mar – Abr 2026 | 4 | 80 | MTF features, NER per-coin, on-chain, MLOps |
+| F6 — Backtesting y Validación | Abr 2026 | 3 | 35 | Walk-Forward en 4 escenarios, análisis SHAP |
+| F7 — Redacción de la Memoria | Abr – May 2026 | 4 | 35 | Memoria completa, figuras, bibliografía |
+| **Total** | **Ene – May 2026** | **24** | **350** | |
+
+Las fases F3, F4 y F5 se solapan parcialmente con F6, dado que los backtests se ejecutaron de forma incremental tras cada iteración de desarrollo.
+
+## 3.7 Estimación de Costes
+
+Se presenta una estimación de los costes asociados al desarrollo y operación del sistema, a efectos de evaluar la viabilidad económica del proyecto en un contexto profesional.
+
+*Tabla 3.5: Estimación de costes del proyecto*
+
+| Concepto | Detalle | Coste unitario | Cantidad | Total |
+|----------|---------|---------------|----------|-------|
+| **Personal** | | | | |
+| Ingeniero Informático Junior | Desarrollo, testing, documentación | 15 €/h | 350 h | 5.250 € |
+| **Hardware** | | | | |
+| MacBook (amortización 4 años) | Equipo de desarrollo | 1.500 € / 48 meses | 5 meses | 156 € |
+| VPS (producción) | Oracle Cloud Free Tier / Hetzner CX22 | 0 – 5 €/mes | 5 meses | 0 – 25 € |
+| **Software** | | | | |
+| Freqtrade, Docker, Grafana, TimescaleDB | Código abierto (licencia MIT/Apache) | 0 € | — | 0 € |
+| FinBERT (HuggingFace) | Modelo pre-entrenado gratuito | 0 € | — | 0 € |
+| API Binance (Futures Testnet) | Gratuita para modo simulado | 0 € | — | 0 € |
+| **Datos** | | | | |
+| Datos de mercado (OHLCV via CCXT) | API pública de Binance | 0 € | — | 0 € |
+| Feeds RSS (CoinDesk, CoinTelegraph) | Públicos y gratuitos | 0 € | — | 0 € |
+| Fear & Greed API (alternative.me) | Pública y gratuita | 0 € | — | 0 € |
+| | | | **TOTAL** | **~5.400 €** |
+
+El coste total del proyecto es de aproximadamente **5.400 €**, de los cuales el 97% corresponde al coste de personal. El uso exclusivo de herramientas de código abierto y APIs gratuitas reduce drásticamente los costes de software e infraestructura, demostrando la viabilidad de construir un sistema de trading de grado profesional con inversión mínima en licencias.
+
+## 3.8 Análisis de Riesgos
+
+Se identificaron los principales riesgos del proyecto y las estrategias de mitigación implementadas:
+
+*Tabla 3.6: Análisis de riesgos y mitigaciones*
+
+| ID | Riesgo | Probabilidad | Impacto | Mitigación Implementada |
+|----|--------|-------------|---------|------------------------|
+| R1 | Caída de la API de Binance durante operación | Media | Alto | Freqtrade implementa reintentos automáticos con backoff; el bot pausa y reanuda sin pérdida de estado |
+| R2 | Fallo simultáneo de los 3 feeds RSS | Baja | Medio | `FALLBACK_HEADLINES` con 4 titulares de emergencia; fallback a sentimiento neutro (0.0) |
+| R3 | Overfitting del modelo LightGBM | Alta | Alto | Validación Walk-Forward (no hay filtración de datos futuros); re-entrenamiento cada 2h con ventana deslizante |
+| R4 | Pérdida de datos por fallo de TimescaleDB | Baja | Alto | Volumen Docker persistente; script `backup_db.sh` con retención de 7 días |
+| R5 | Ejecución involuntaria con dinero real | Baja | Crítico | `dry_run: true` en configuración; exchange keys vacías; Circuit Breaker como última barrera |
+| R6 | Exposición de credenciales en Git | Media | Alto | `.gitignore` para `.env` y `config_secrets.json`; plantillas `*.example` en repositorio |
+| R7 | Incompatibilidad de dependencias Python | Media | Medio | Docker aísla cada servicio; versiones fijadas en `Dockerfile`; parche de datasieve documentado |
+| R8 | Mercado lateral prolongado (whipsaw) | Alta | Medio | Filtro ADX > 20 (Capa 2) bloquea operaciones en mercados sin tendencia |
+
+---
+
 
 # Capítulo 4 — Diseño del Sistema
 
@@ -433,6 +517,12 @@ Todos los servicios están configurados con `restart: always` (excepto Tensorboa
 - TimescaleDB tiene healthcheck configurado (`pg_isready`) con 5 reintentos.
 - El bot principal depende de TimescaleDB (`depends_on`), garantizando que la base de datos esté lista antes de arrancar.
 - Los servicios NLP y On-Chain implementan bloques `try/except` con logging de errores, permitiendo que continúen operando ante fallos puntuales de los feeds RSS o APIs externas.
+
+### 4.1.3 Ciclo de Vida de una Operación
+
+La Figura 4.4 ilustra el ciclo de vida completo de una operación de trading, desde la recepción de una nueva vela de precio hasta la ejecución o rechazo de la orden en el exchange. Cada vela de 5 minutos dispara la ejecución secuencial de las 7 capas de análisis; solo si todas las condiciones se cumplen simultáneamente, la operación pasa al gate de seguridad (`confirm_trade_entry`) donde el Circuit Breaker, el filtro Fear & Greed y el control de Portfolio Heat realizan la validación final.
+
+![Figura 4.4: Ciclo de vida de una operación de trading](fig_4_4_flujo_operacion.png){ width=85% }
 
 ## 4.2 Motor de Decisión Multi-Capa
 
@@ -549,7 +639,7 @@ La ingeniería de características es el componente más crítico del modelo pre
 | 9 | `%-return_std` | Estadístico | std(returns, 20) | Régimen de volatilidad reciente |
 | 10 | `%-candle_dir` | Precio | close / open | Dirección y fuerza de la vela |
 | 11 | `%-pct_change` | Precio | (close - close[-1]) / close[-1] | Cambio porcentual base |
-| 12 | `%-sentiment_score` | Fundamental | NLP per-coin via TimescaleDB | Sentimiento de noticias financieras |
+| 12 | `sentiment_score` | Fundamental (filtro) | NLP per-coin via TimescaleDB | Filtro de entrada, no feature ML (varianza 0 en backtest) |
 | 13 | `%-price_ratio_5m_1h` | MTF | close_5m / close_1h | Divergencia micro vs macro |
 | 14 | `%-dist_sma200_1h` | MTF | (close - SMA200_1h) / SMA200_1h | Posición relativa a tendencia macro |
 | 15 | `%-dist_ema50_1h` | MTF | (close - EMA50_1h) / EMA50_1h | Zona de valor en timeframe superior |
@@ -690,19 +780,24 @@ Ambos archivos están en `.gitignore` y se proporcionan plantillas (`*.example`)
 
 ## 5.9 Suite de Tests (Pytest)
 
-Se implementaron tests unitarios para validar los componentes críticos:
+Se implementaron 10 tests unitarios organizados en dos módulos para validar los componentes críticos del sistema:
 
-*Tabla 5.3: Suite de tests unitarios*
+*Tabla 5.3: Suite de tests unitarios (10 tests)*
 
-| Test | Archivo | Componente Validado |
-|------|---------|-------------------|
-| `test_kelly_empirico_sizing` | `test_strategy.py` | Dimensionamiento de posición Kelly empírico al 40% con ajuste por confianza y volatilidad |
-| `test_dynamic_atr_stoploss` | `test_strategy.py` | Stop loss dinámico basado en ATR |
-| `test_html_cleaning` | `test_nlp.py` | Limpieza de HTML en titulares |
-| `test_ner_detection` | `test_nlp.py` | Detección de entidades (NER) per-coin |
-| `test_rss_fallback` | `test_nlp.py` | Fallback cuando los feeds RSS fallan |
+| # | Test | Archivo | Componente Validado |
+|---|------|---------|-------------------|
+| 1 | `test_conviction_based_sizing` | `test_strategy.py` | Dimensionamiento Kelly empírico: mayor confianza → mayor stake, cap 40% |
+| 2 | `test_conviction_sizing_without_wallets` | `test_strategy.py` | Sizing sin wallets (escenario de backtesting) no produce errores |
+| 3 | `test_dynamic_atr_stoploss` | `test_strategy.py` | Stop loss ATR con alta volatilidad: ATR=50 → capped a -3% |
+| 4 | `test_atr_stoploss_low_volatility` | `test_strategy.py` | Stop loss ATR con baja volatilidad: ATR=3 → -0.6% dentro de caps |
+| 5 | `test_clean_html_logic` | `test_nlp.py` | Limpieza HTML: separación de tags pegados ("Bitcoinsoars" → "Bitcoin soars") |
+| 6 | `test_clean_html_nested_tags` | `test_nlp.py` | HTML complejo con tags anidados y entidades HTML |
+| 7 | `test_detect_coins_ner` | `test_nlp.py` | NER: detección de ETH+ADA en titular, vacío en titular genérico |
+| 8 | `test_detect_coins_case_insensitive` | `test_nlp.py` | NER case-insensitive: "BITCOIN" y "dogecoin" detectados |
+| 9 | `test_fallback_headlines` | `test_nlp.py` | Fallback: lista no vacía con titular de Bitcoin si RSS falla |
+| 10 | `test_coin_aliases_completeness` | `test_nlp.py` | Los 11 pares del whitelist tienen ≥2 aliases NER cada uno |
 
-Los tests utilizan `unittest.mock.MagicMock` para simular las dependencias de Freqtrade sin necesidad de levantar el framework completo.
+Los tests utilizan `unittest.mock.MagicMock` para simular las dependencias de Freqtrade sin necesidad de levantar el framework completo. El archivo `conftest.py` pre-mockea todas las dependencias pesadas (numpy, pandas, talib, sqlalchemy, transformers), permitiendo ejecutar la suite en menos de 1 segundo sin Docker.
 
 ---
 
@@ -871,7 +966,26 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 
 **Análisis:** En el escenario bajista sostenido, el sistema demostró su máxima capacidad de preservación de capital: frente a una caída del -36% del mercado, las pérdidas del bot se limitaron a un -1.71%, generando un alpha de +34.29 puntos porcentuales —el mayor de todos los escenarios evaluados. Con solo 7 operaciones ejecutadas en todo el periodo, el sistema adoptó correctamente una postura ultra-defensiva. El reducido Max Drawdown (2.26%) confirma que las capas de protección (Circuit Breaker, sentimiento NLP y filtro Fear & Greed) bloquearon la mayoría de las señales en un entorno donde operar habría sido contraproducente.
 
-## 7.4 Comparativa Bot vs Buy & Hold
+## 7.4 Tabla Consolidada de Resultados
+
+*Tabla 7.1b: Resumen consolidado de métricas por escenario*
+
+| Métrica | Bull Market | Crash | Lateral | Bear Market |
+|---------|-------------|-------|---------|-------------|
+| Periodo | Abr–May 2025 | Oct–Dic 2025 | Ene–Mar 2025 | Jul–Oct 2025 |
+| Trades ejecutados | 15 | 13 | 54 | 7 |
+| Rendimiento neto | +0.23% | -2.61% | -2.29% | -1.71% |
+| Win Rate | 53.3% | 15.4% | 59.3% | 14.3% |
+| Sharpe Ratio | 0.06 | -1.78 | -1.29 | -0.75 |
+| Sortino Ratio | 0.13 | -3.24 | -1.89 | -2.97 |
+| Max Drawdown | 2.97% | 2.61% | 4.25% | 2.26% |
+| Profit Factor | 1.03 | 0.33 | 0.83 | 0.47 |
+| Benchmark (B&H) | +11.74% | -34.57% | +13.49% | -36.00% |
+| **Alpha sobre B&H** | -11.51pp | **+31.96pp** | -15.78pp | **+34.29pp** |
+
+**Observación clave:** El Max Drawdown no supera el 4.25% en ningún escenario, muy por debajo del límite del 15% establecido en la hipótesis. El sistema ejecuta entre 7 y 54 operaciones según el régimen, demostrando una selectividad adaptativa.
+
+## 7.5 Comparativa Bot vs Buy & Hold
 
 *Tabla 7.2: Comparativa global Bot vs Buy & Hold*
 
@@ -887,7 +1001,7 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 
 ![Figura 7.2: Alpha generado por escenario sobre Buy & Hold](fig_7_2_alpha.png){ width=80% }
 
-## 7.5 Explicabilidad del Modelo (SHAP + Feature Importance)
+## 7.6 Explicabilidad del Modelo (SHAP + Feature Importance)
 
 
 
@@ -907,17 +1021,22 @@ El análisis de explicabilidad mediante SHAP reveló la siguiente jerarquía de 
 
 **Hallazgo clave:** El modelo aprendió que los impulsos de precio sin soporte real de volumen (OBV) carecen de continuidad, priorizando el análisis de flujo monetario sobre los indicadores técnicos de precio. Esto confirma la tesis de que "el volumen precede al precio".
 
-## 7.6 Resultados de los Tests Unitarios
+## 7.7 Resultados de los Tests Unitarios
 
-*Tabla 7.4: Resultados de la suite de tests unitarios*
+*Tabla 7.4: Resultados de la suite de tests unitarios (10/10 PASSED en 0.24s)*
 
-| Test | Estado | Validación |
-|------|--------|-----------|
-| `test_kelly_empirico_sizing` | ✅ PASS | Kelly empírico al 40% del balance con ajuste por confianza y volatilidad |
-| `test_dynamic_atr_stoploss` | ✅ PASS | Stop calculado como 2×ATR/precio con caps [-0.5%, -3%] |
-| `test_html_cleaning` | ✅ PASS | Eliminación correcta de etiquetas HTML con separador |
-| `test_ner_detection` | ✅ PASS | Detección de "Vitalik" → ETH, "Ripple" → XRP |
-| `test_rss_fallback` | ✅ PASS | Fallback a sentimiento neutro (0.0) si RSS falla |
+| # | Test | Estado | Validación |
+|---|------|--------|-----------|
+| 1 | `test_conviction_based_sizing` | ✅ PASS | Mayor convicción → mayor stake; cap 40% del wallet |
+| 2 | `test_conviction_sizing_without_wallets` | ✅ PASS | No crashea en backtesting sin objeto wallets |
+| 3 | `test_dynamic_atr_stoploss` | ✅ PASS | ATR=50, precio=1000 → -(2×50/1000) = -0.10 → capped a -3% |
+| 4 | `test_atr_stoploss_low_volatility` | ✅ PASS | ATR=3, precio=1000 → -0.006 dentro de caps [-0.5%, -3%] |
+| 5 | `test_clean_html_logic` | ✅ PASS | `<p>Bitcoin<b>soars</b>` → "Bitcoin soars" (separador correcto) |
+| 6 | `test_clean_html_nested_tags` | ✅ PASS | Tags anidados y entidades HTML procesadas correctamente |
+| 7 | `test_detect_coins_ner` | ✅ PASS | "Ethereum and Cardano" → [ETH, ADA]; genérico → [] |
+| 8 | `test_detect_coins_case_insensitive` | ✅ PASS | "BITCOIN" y "dogecoin" detectados (case-insensitive) |
+| 9 | `test_fallback_headlines` | ✅ PASS | Lista no vacía con titular de Bitcoin como fallback |
+| 10 | `test_coin_aliases_completeness` | ✅ PASS | 11 monedas × ≥2 aliases cada una = cobertura completa |
 
 ---
 
@@ -978,7 +1097,7 @@ La hipótesis se valida parcialmente: el sistema no alcanza un Sharpe > 1.0, per
 | OE3 — Gestión de Riesgo | ✅ Cumplido | Kelly empírico 40%, ATR stop, Circuit Breaker, Fear & Greed |
 | OE4 — Arquitectura | ✅ Cumplido | 6 contenedores Docker, TimescaleDB, Grafana, Telegram |
 | OE5 — Validación | ✅ Cumplido | Walk-Forward en 4 escenarios, MDD < 5% en 3 de 4, alpha promedio +9.74pp |
-| OE6 — Calidad SW | ✅ Cumplido | 5 tests Pytest, deploy_ubuntu.sh, Makefile |
+| OE6 — Calidad SW | ✅ Cumplido | 10 tests Pytest (4 estrategia + 6 NLP), deploy_ubuntu.sh, Makefile, backup_db.sh |
 
 ---
 
@@ -1002,7 +1121,7 @@ La hipótesis inicial — que un sistema multi-capa puede generar rendimientos p
 
 5. **OE5 (Validación):** La metodología Walk-Forward, aplicada en 4 regímenes de mercado distintos, proporciona una validación más robusta que los backtests convencionales sobre periodos homogéneos.
 
-6. **OE6 (Calidad):** La suite de 5 tests unitarios, el Makefile operativo y el script de despliegue automatizado demuestran un nivel de ingeniería de software que trasciende el prototipo académico.
+6. **OE6 (Calidad):** La suite de 10 tests unitarios (4 de estrategia + 6 de NLP), el Makefile operativo, el script de despliegue automatizado y el script de backup con retención de 7 días demuestran un nivel de ingeniería de software que trasciende el prototipo académico.
 
 ## 9.3 Aportaciones del Trabajo
 
@@ -1013,19 +1132,35 @@ Las principales aportaciones de este TFG al campo del trading algorítmico son:
 3. **Validación multi-régimen:** La evaluación en 4 escenarios de mercado distintos es poco habitual en trabajos académicos y proporciona una visión más realista del rendimiento esperado.
 4. **Sistema desplegable en producción:** El proyecto no es un prototipo académico sino un producto funcional, actualmente en fase de Forward-Testing con datos reales de mercado.
 
-## 9.4 Trabajo Futuro
+## 9.4 Lecciones Aprendidas
 
-### 9.4.1 Reinforcement Learning (DQN)
+El desarrollo de este proyecto a lo largo de 5 meses ha proporcionado aprendizajes valiosos que trascienden el ámbito puramente técnico:
+
+1. **La ingeniería de features supera a la complejidad del modelo.** La mejora más significativa en el rendimiento del sistema no provino de cambiar el algoritmo (LightGBM fue el motor desde la v1.0), sino de ampliar y refinar el pipeline de features de 5 a 18+. Esto confirma la máxima de Andrew Ng: *"Applied machine learning is basically feature engineering"*.
+
+2. **Los mercados laterales son el enemigo natural de todo sistema tendencial.** El filtro ADX (Capa 2, añadido en la v2.1) fue la solución más efectiva para un problema que había generado las mayores pérdidas en versiones anteriores. La lección es que un buen filtro de *cuándo no operar* es más valioso que un buen generador de señales.
+
+3. **El NLP aporta más valor como escudo que como espada.** Inicialmente se esperaba que el sentimiento de noticias generara señales de entrada. En la práctica, su mayor contribución fue bloquear operaciones durante crisis mediáticas, evitando pérdidas que habrían ocurrido sin este filtro.
+
+4. **La gestión de secretos debe diseñarse desde el primer commit.** La exposición accidental de un token de Telegram en el historial de Git durante el desarrollo ilustra la importancia de configurar `.gitignore` correctamente desde la inicialización del repositorio.
+
+5. **Docker no es un lujo, es una necesidad.** La capacidad de reproducir exactamente el mismo entorno en cualquier máquina — incluido el parche de datasieve — habría sido imposible sin contenedores. El sistema se despliega con un único comando (`make start`), eliminando el problema clásico de *"en mi máquina funciona"*.
+
+6. **La honestidad con los datos es fundamental.** Resistir la tentación de seleccionar únicamente los escenarios favorables (*cherry-picking*) y presentar los 4 regímenes — incluidos los desfavorables — otorga credibilidad a los resultados y permite extraer conclusiones más robustas.
+
+## 9.5 Trabajo Futuro
+
+### 9.5.1 Reinforcement Learning (DQN)
 
 La confluencia condicional actual (reglas booleanas estáticas: "si ADX > 20 AND precio > SMA200...") podría sustituirse por un agente de **Deep Q-Network (DQN)** entrenado con la librería Gymnasium. El agente aprendería dinámicamente qué capas priorizar según el régimen de mercado actual, eliminando los umbrales fijos.
 
-### 9.4.2 Fuentes de Datos Adicionales
+### 9.5.2 Fuentes de Datos Adicionales
 
 - **Twitter/X:** Análisis de sentimiento de tweets de figuras influyentes (Elon Musk, CZ, Vitalik Buterin).
 - **Reddit:** Scraping de subreddits financieros (r/cryptocurrency, r/bitcoin) para capturar el sentimiento minorista.
 - **Datos on-chain avanzados:** Actividad de ballenas (wallets > 1000 BTC), flujos a exchanges, tasa de hash.
 
-### 9.4.3 Multi-Exchange y Multi-Activo
+### 9.5.3 Multi-Exchange y Multi-Activo
 
 Extender el sistema para operar simultáneamente en múltiples exchanges (Binance + Bybit + OKX), implementando arbitraje estadístico entre ellos y ampliando el universo de activos a mercados de renta variable tokenizada.
 
@@ -1050,13 +1185,16 @@ Extender el sistema para operar simultáneamente en múltiples exchanges (Binanc
 - Krauss, C., Do, X. A., & Huck, N. (2017). Deep Neural Networks, Gradient-Boosted Trees, Random Forests: Statistical Arbitrage on the S&P 500. *European Journal of Operational Research, 259*(2), 689–702.
 - Lundberg, S. M. & Lee, S.-I. (2017). A Unified Approach to Interpreting Model Predictions. *Advances in Neural Information Processing Systems, 30* (NeurIPS 2017).
 - Malo, P., Sinha, A., Korhonen, P., Wallenius, J., & Takala, P. (2014). Good Debt or Bad Debt: Detecting Semantic Orientations in Economic Texts. *Journal of the Association for Information Science and Technology, 65*(4), 782–796.
+- Merkel, D. (2014). Docker: Lightweight Linux Containers for Consistent Development and Deployment. *Linux Journal, 2014*(239), 2.
 - Newman, S. (2015). *Building Microservices: Designing Fine-Grained Systems*. O'Reilly Media.
+- Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B., Grisel, O., ... & Duchesnay, É. (2011). Scikit-learn: Machine Learning in Python. *Journal of Machine Learning Research, 12*, 2825–2830.
 - Prokhorenkova, L., Gusev, G., Vorobev, A., Dorogush, A. V., & Gulin, A. (2018). CatBoost: Unbiased Boosting with Categorical Features. *Advances in Neural Information Processing Systems, 31* (NeurIPS 2018).
 - Shwartz-Ziv, R. & Armon, A. (2022). Tabular Data: Deep Learning is Not All You Need. *Information Fusion, 81*, 84–90.
 - Tetlock, P. C. (2007). Giving Content to Investor Sentiment: The Role of Media in the Stock Market. *The Journal of Finance, 62*(3), 1139–1168.
 - Thorp, E. O. (2006). The Kelly Criterion in Blackjack, Sports Betting, and the Stock Market. *Handbook of Asset and Liability Management, 1*, 385–428.
 - Timescale Inc. (2019). TimescaleDB: Time-series data made simple. *Timescale Technical Documentation*. Disponible en: https://docs.timescale.com. [Consultado: mayo 2026].
 - Wilder, J. W. (1978). *New Concepts in Technical Trading Systems*. Trend Research.
+- Wolf, T., Debut, L., Sanh, V., Chaumond, J., Delangue, C., Moi, A., ... & Rush, A. M. (2020). Transformers: State-of-the-Art Natural Language Processing. *Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing: System Demonstrations*, 38–45.
 - Zuckerman, G. (2019). *The Man Who Solved the Market: How Jim Simons Launched the Quant Revolution*. Portfolio/Penguin.
 
 ---
