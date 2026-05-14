@@ -139,7 +139,7 @@ TFG_Trading_Bot/
 ## 🧪 Tests
 
 ```bash
-# Ejecutar la suite completa (9 tests)
+# Ejecutar la suite completa (10 tests)
 make test
 
 # Resultado esperado:

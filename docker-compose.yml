@@ -86,14 +86,15 @@ services:
 
   # 6. MLOPS (Tensorboard en Vivo)
   tensorboard:
-    image: tensorflow/tensorflow:latest
+    image: tensorflow/tensorflow:2.15.0
+    platform: linux/amd64
     container_name: mlops_tensorboard
     restart: unless-stopped
     ports:
       - "6006:6006"
     volumes:
       - ./user_data/models:/opt/tensorboard
-    command: tensorboard --logdir /opt/tensorboard --host 0.0.0.0
+    command: tensorboard --logdir /opt/tensorboard --host 0.0.0.0 --port 6006
 
 volumes:
   db_data:
