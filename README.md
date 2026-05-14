@@ -12,7 +12,7 @@ Sistema de **trading algorítmico institucional** basado en [Freqtrade](https://
 |------|-----------|---------|
 | 🤖 Machine Learning | LightGBM (FreqAI) | Predicción de % de cambio del precio (Regresión) |
 | 📰 NLP | FinBERT + NER per-coin | Sentimiento de noticias financieras por moneda |
-| 📊 Order Flow | Order Book Imbalance | Detección de presión institucional |
+| 📊 Order Flow | Ejecución por Order Book (OBI en desarrollo) | Mejor precio de ejecución vía libro de órdenes |
 | 📈 Análisis Técnico | SMA/EMA/ADX (H1) | Filtro de tendencia macro + régimen de mercado |
 | 🛡️ Risk Management | Conviction Sizing + ATR + Circuit Breaker | Protección dinámica de capital |
 | 🔗 On-Chain | Fear & Greed Index | Bloqueo en extremos emocionales del mercado |
@@ -112,7 +112,7 @@ TFG_Trading_Bot/
 │   ├── config.json                 # Configuración principal del bot
 │   ├── config_secrets.json.example # Template de credenciales
 │   └── strategies/
-│       └── FreqaiExampleStrategy.py  # Estrategia v3.0 (624 líneas)
+│       └── HybridTradingStrategy.py  # Estrategia v3.0 (623 líneas)
 └── archive/                        # Versiones legacy y ficheros históricos
 ```
 

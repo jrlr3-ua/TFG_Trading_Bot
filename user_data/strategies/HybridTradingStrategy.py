@@ -48,7 +48,7 @@ from freqtrade.persistence import Trade
 logger = logging.getLogger(__name__)
 
 
-class FreqaiExampleStrategy(IStrategy):
+class HybridTradingStrategy(IStrategy):
     """
     Estrategia TFG v3.0: Protocolo Institucional Multi-Timeframe
     =============================================================

@@ -50,3 +50,8 @@ user_data/plots/
 
 # === BACKUPS ===
 user_data/backups/
+
+# === DOCUMENTACIÓN INTERNA UNIVERSIDAD (no pertenece al repo) ===
+Como-elaborar-memoria-TFG.pdf
+*.pdf
+!docs/**/*.pdf

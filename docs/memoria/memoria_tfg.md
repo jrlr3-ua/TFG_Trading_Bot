@@ -18,7 +18,7 @@ Se presenta el diseño, implementación y validación de un sistema de trading a
 
 La arquitectura sigue un patrón de microservicios orquestados con Docker Compose, compuesto por seis contenedores independientes: el bot principal de trading, el motor de análisis de sentimiento, el ingestor de datos on-chain, una base de datos de series temporales TimescaleDB, un dashboard Grafana y un servicio de monitorización MLOps con Tensorboard. Esta arquitectura permite la ejecución autónoma 24/7 con tolerancia a fallos.
 
-El sistema se validó mediante backtesting histórico con metodología Walk-Forward sobre 11 criptomonedas durante múltiples periodos que abarcan distintos regímenes de mercado. En el escenario alcista, se obtuvo un Win Rate del 53.3% con un Max Drawdown contenido del 2.97% y un rendimiento neto del +2.57%. En el escenario de crash, donde el mercado cayó un 34.57%, el sistema limitó las pérdidas a un 1.03%, generando un alpha de +33.54 puntos porcentuales. En el escenario bajista (-36%), las pérdidas alcanzaron un -7.00%, con un alpha de +29.00 puntos porcentuales. El alpha promedio sobre Buy & Hold fue de +9.83 puntos porcentuales. El análisis de explicabilidad mediante SHAP reveló que los indicadores de volumen y volatilidad son los predictores más relevantes, por encima de indicadores de momentum tradicionales.
+El sistema se validó mediante backtesting histórico con metodología Walk-Forward sobre 11 criptomonedas durante múltiples periodos que abarcan distintos regímenes de mercado. Cabe señalar que, durante el período de backtesting, la capa de análisis de sentimiento NLP (Capa 5) operó en modo fallback con puntuación neutra constante (score = 0.0), dado que las fuentes RSS históricas no se encontraban disponibles; por tanto, los resultados corresponden efectivamente a las seis capas técnicas y de gestión de riesgo del sistema. En el escenario alcista, se obtuvo un Win Rate del 53.3% con un Max Drawdown contenido del 2.97% y un rendimiento neto del +2.57%. En el escenario de crash, donde el mercado cayó un 34.57%, el sistema limitó las pérdidas a un 1.03%, generando un alpha de +33.54 puntos porcentuales. En el escenario bajista (-36%), las pérdidas alcanzaron un -7.00%, con un alpha de +29.00 puntos porcentuales. El alpha promedio sobre Buy & Hold fue de +9.83 puntos porcentuales. El análisis de explicabilidad mediante SHAP reveló que los indicadores de volumen y volatilidad son los predictores más relevantes, por encima de indicadores de momentum tradicionales.
 
 Se desarrolló adicionalmente una suite de tests unitarios con Pytest, un script de despliegue automatizado y documentación técnica completa. El sistema se encuentra actualmente en fase de Forward-Testing con datos de mercado en tiempo real.
 
@@ -32,7 +32,7 @@ This work presents the design, implementation, and validation of a hybrid algori
 
 The system architecture follows a microservices pattern orchestrated with Docker Compose, comprising six independent containers: the main trading bot, the sentiment analysis engine, the on-chain data ingestor, a TimescaleDB time-series database, a Grafana dashboard, and a Tensorboard MLOps monitoring service. This architecture enables autonomous 24/7 operation with fault tolerance.
 
-The system was validated through historical backtesting using Walk-Forward methodology across 11 cryptocurrencies over multiple periods covering different market regimes. In the bullish scenario, a Win Rate of 53.3% was achieved with a contained 2.97% Max Drawdown and a net positive return of +2.57%. During the crash scenario, where the market declined 34.57%, the system limited losses to just 1.03%, generating an alpha of +33.54 percentage points. In the bear scenario (-36%), losses reached -7.00%, with an alpha of +29.00 percentage points. On average, the system generated an alpha of +9.83 percentage points over Buy & Hold. SHAP-based model explainability analysis revealed that volume and volatility indicators are the most relevant predictors, ranking above traditional momentum indicators.
+The system was validated through historical backtesting using Walk-Forward methodology across 11 cryptocurrencies over multiple periods covering different market regimes. It should be noted that during the backtesting period, the NLP sentiment analysis layer (Layer 5) operated in fallback mode with a constant neutral score (0.0), as historical RSS feeds were unavailable for the evaluated period; therefore, the reported results correspond to the six technical and risk management layers of the system. In the bullish scenario, a Win Rate of 53.3% was achieved with a contained 2.97% Max Drawdown and a net positive return of +2.57%. During the crash scenario, where the market declined 34.57%, the system limited losses to just 1.03%, generating an alpha of +33.54 percentage points. In the bear scenario (-36%), losses reached -7.00%, with an alpha of +29.00 percentage points. On average, the system generated an alpha of +9.83 percentage points over Buy & Hold. SHAP-based model explainability analysis revealed that volume and volatility indicators are the most relevant predictors, ranking above traditional momentum indicators.
 
 Additionally, a Pytest unit test suite, an automated deployment script, and comprehensive technical documentation were developed. The system is currently undergoing Forward-Testing with live market data.
 
@@ -71,10 +71,10 @@ Additionally, a Pytest unit test suite, an automated deployment script, and comp
 - **Tabla 5.3:** Suite de tests unitarios (10 tests)
 - **Tabla 6.1:** Comparativa de limitaciones v1.2 vs soluciones v3.0
 - **Tabla 7.1:** Resultados del backtesting por escenario de mercado
-- **Tabla 7.1b:** Resumen consolidado de métricas por escenario
-- **Tabla 7.2:** Comparativa Bot vs Buy & Hold
-- **Tabla 7.3:** Distribución de importancia por categoría de feature
-- **Tabla 7.4:** Resultados de la suite de tests unitarios (10/10 PASSED)
+- **Tabla 7.2:** Resumen consolidado de métricas por escenario
+- **Tabla 7.3:** Comparativa Bot vs Buy & Hold
+- **Tabla 7.4:** Distribución de importancia por categoría de feature
+- **Tabla 7.5:** Resultados de la suite de tests unitarios (10/10 PASSED)
 - **Tabla 8.1:** Validación de cumplimiento de objetivos específicos
 
 # Agradecimientos
@@ -750,7 +750,7 @@ El motor NLP es un microservicio independiente de 200+ líneas que ejecuta un ci
 2. Limpia HTML con `BeautifulSoup(text, "html.parser").get_text(separator=" ")`.
 3. Detecta entidades con regex sobre `COIN_ALIASES` (50+ alias: "Vitalik" → ETH, "Ripple" → XRP, etc.).
 4. Clasifica sentimiento con `ProsusAI/finbert` via `transformers.pipeline("sentiment-analysis")`.
-5. Almacena en TimescaleDB con `sqlalchemy.create_engine()`.
+5. Almacena el resultado en TimescaleDB mediante SQLAlchemy: el engine creado con `create_engine()` se usa como destino de `df.to_sql()` para inserciones masivas o mediante `session.execute()` para inserciones individuales, persistiendo el score de sentimiento junto con el par y el timestamp.
 
 El separador `" "` en `get_text()` fue un bug descubierto durante el desarrollo: sin él, "Bitcoin rallies 10%Breaking news" se concatenaba sin espacio, confundiendo al tokenizador de FinBERT.
 
@@ -821,7 +821,7 @@ El sistema ha atravesado 6 versiones principales a lo largo de 4 meses de desarr
 | v1.0 → v1.1 | ROI/stoploss en `.py` conflictuaban con `config.json` | Delegación al config (prioridad de Freqtrade documentada) |
 | v1.1 → v1.2 | Parámetros no optimizados | Hyperopt con algoritmo genético (confianza IA: 0.55 → 0.864) |
 | v1.2 → v2.0 | Solo 5 features; target binario | Ampliación a 12 features; cambio a regresión continua |
-| v2.0 → v2.1 | Pérdidas en mercados laterales | Filtro ADX > 20 (Capa 6 — Detección de Régimen) |
+| v2.0 → v2.1 | Pérdidas en mercados laterales | Filtro ADX > 20 (Capa 2 — Detección de Régimen) |
 | v2.1 → v3.0 | Sin visión multi-timeframe; NLP global | MTF features H1; NER per-coin; On-Chain; MLOps |
 
 ## 6.2 Conflicto de Precedencia Config vs Strategy (v1.0)
@@ -966,6 +966,8 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 
 ### 7.3.4 Escenario 4: Bear Market (Julio – Octubre 2025)
 
+*⚠️ Advertencia estadística: el escenario Bear Market generó únicamente 7 operaciones durante el período evaluado. Con una muestra de N=7, todas las métricas relativas (Win Rate, Sharpe Ratio, Sortino Ratio, Profit Factor) carecen de significancia estadística. El intervalo de confianza al 95% para el Win Rate de 1/7 ≈ 14.3% es aproximadamente [0.4%, 57.9%] (Clopper-Pearson). Por tanto, el único dato interpretable con este tamaño muestral es el rendimiento total (-7.0%) y el Drawdown máximo. El resto de métricas se incluyen por completitud formal.*
+
 | Métrica | Valor |
 |---------|-------|
 | Trades | 7 |
@@ -982,7 +984,7 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 
 ## 7.4 Tabla Consolidada de Resultados
 
-*Tabla 7.1b: Resumen consolidado de métricas por escenario*
+*Tabla 7.2: Resumen consolidado de métricas por escenario*
 
 | Métrica | Bull Market | Crash | Lateral | Bear Market |
 |---------|-------------|-------|---------|-------------|
@@ -1001,7 +1003,7 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 
 ## 7.5 Comparativa Bot vs Buy & Hold
 
-*Tabla 7.2: Comparativa global Bot vs Buy & Hold*
+*Tabla 7.3: Comparativa global Bot vs Buy & Hold*
 
 | Escenario | Bot | Buy & Hold | Alpha |
 |-----------|-----|------------|-------|
@@ -1023,7 +1025,7 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 
 El análisis de explicabilidad mediante SHAP reveló la siguiente jerarquía de importancia:
 
-*Tabla 7.3: Distribución de importancia por categoría*
+*Tabla 7.4: Distribución de importancia por categoría*
 
 | Categoría | Features | Importancia Relativa | Interpretación |
 |-----------|----------|---------------------|----------------|
@@ -1037,7 +1039,7 @@ El análisis de explicabilidad mediante SHAP reveló la siguiente jerarquía de 
 
 ## 7.7 Resultados de los Tests Unitarios
 
-*Tabla 7.4: Resultados de la suite de tests unitarios (10/10 PASSED en 0.24s)*
+*Tabla 7.5: Resultados de la suite de tests unitarios (10/10 PASSED en 0.24s)*
 
 | # | Test | Estado | Validación |
 |---|------|--------|-----------|
@@ -1058,7 +1060,7 @@ El análisis de explicabilidad mediante SHAP reveló la siguiente jerarquía de 
 
 ## 8.1 Interpretación de los Resultados por Escenario
 
-Los resultados experimentales revelan un patrón consistente: el sistema sacrifica rendimiento absoluto en mercados alcistas a cambio de una protección excepcional en mercados bajistas y de crisis. Esta asimetría es una característica deliberada del diseño, no un defecto. (Todos los valores numéricos citados en este capítulo corresponden a los resultados consolidados de la Tabla 7.1b.)
+Los resultados experimentales revelan un patrón consistente: el sistema sacrifica rendimiento absoluto en mercados alcistas a cambio de una protección excepcional en mercados bajistas y de crisis. Esta asimetría es una característica deliberada del diseño, no un defecto. (Todos los valores numéricos citados en este capítulo corresponden a los resultados consolidados de la Tabla 7.2.)
 
 En el escenario Bull Market, el rendimiento del +2.57% frente al +11.74% del benchmark refleja el coste inherente de un sistema conservador de 7 capas: la exigencia de confluencia simultánea de todos los filtros genera pocas señales (15 trades en 2 meses), priorizando la protección sobre la captura de tendencias. El Win Rate del 53.3% y el Profit Factor de 1.03 confirman una rentabilidad marginal en condiciones alcistas. El Max Drawdown contenido del 2.97% refleja una gestión de riesgo efectiva, aunque el Sharpe Ratio de 0.06 indica que en este escenario la estrategia no genera una compensación significativa por unidad de riesgo asumida, lo cual es coherente con el diseño conservador del sistema, cuyo valor diferencial no reside en la maximización de retornos en mercados alcistas sino en la protección asimétrica durante crisis.
 
@@ -1070,7 +1072,7 @@ El escenario Bear Market refuerza esta conclusión: frente a una caída del -36%
 
 En comparación con los trabajos mencionados en el Estado del Arte:
 
-- **Jiang et al. (2021):** Obtuvieron un Sharpe de 0.85 con LSTM + Twitter. Aunque nuestro sistema no alcanza ese nivel de Sharpe (mejor caso: 0.06), opera en un contexto fundamentalmente distinto: un motor de 7 capas de confluencia que prioriza explícitamente la preservación de capital sobre la maximización de retornos. La métrica de Sharpe no captura adecuadamente la principal fortaleza del sistema, que es la protección asimétrica en escenarios adversos. Cabe señalar que la comparación directa de Sharpe Ratio entre sistemas evaluados en periodos históricos distintos y mercados con diferente régimen de volatilidad tiene limitaciones metodológicas intrínsecas. El Sharpe de 0.85 reportado por Jiang et al. (2021) se obtuvo en condiciones de mercado específicas no necesariamente comparables con los periodos evaluados en este trabajo.
+- **Jiang et al. (2021):** Obtuvieron un Sharpe de 0.85 con LSTM + Twitter. Aunque nuestro sistema no alcanza ese nivel de Sharpe (mejor caso: 0.06), opera en un contexto fundamentalmente distinto: un motor de 7 capas de confluencia que prioriza explícitamente la preservación de capital sobre la maximización de retornos. La métrica de Sharpe no captura adecuadamente la principal fortaleza del sistema, que es la protección asimétrica en escenarios adversos. Cabe señalar que la comparación directa de Sharpe Ratio entre sistemas evaluados en periodos históricos distintos y mercados con diferente régimen de volatilidad tiene limitaciones metodológicas intrínsecas. El Sharpe de 0.85 reportado por Jiang et al. (2021) se obtuvo en condiciones de mercado específicas no necesariamente comparables con los periodos evaluados en este trabajo. Además, el sistema de Jiang et al. opera en mercado spot sobre un único activo (Bitcoin) con exposición lineal al precio, mientras que el presente sistema opera con futuros perpetuos de 11 activos simultáneamente con apalancamiento ×10, lo que introduce asimetría de riesgo y estructuras de P&L cualitativamente distintas.
 - **Carta et al. (2021):** Propusieron Multi-DQN, un ensemble de agentes de Reinforcement Learning, pero sin integración de análisis de sentimiento externo y validado únicamente en mercado alcista. Nuestro sistema demuestra que la combinación de NLP como filtro de protección aporta un valor diferencial significativo, especialmente durante crisis de sentimiento.
 
 Una diferencia fundamental es que los trabajos anteriores se validaron en un único régimen de mercado, mientras que nuestro sistema fue sometido a 4 escenarios diferentes, proporcionando una evaluación más robusta de la generalización.
@@ -1094,7 +1096,6 @@ La hipótesis se valida parcialmente: el sistema no alcanza un Sharpe > 1.0, per
 2. **Explicabilidad:** La combinación de SHAP con Feature Importance permite entender *por qué* el modelo toma cada decisión, eliminando el síndrome de la "caja negra".
 3. **Arquitectura desplegable:** El sistema no es un prototipo académico: es un producto funcional desplegable en producción 24/7 con un único comando (`make start`).
 4. **Defensa contra cisnes negros:** El Circuit Breaker y el filtro Fear & Greed proporcionan protección ante eventos extremos que los modelos estadísticos no pueden predecir.
-5. **Benchmark y análisis ablativo:** La comparativa principal de este trabajo utiliza Buy & Hold como benchmark, que constituye el estándar habitual en la literatura de trading algorítmico. No obstante, una validación más exhaustiva requeriría un análisis ablativo comparando el sistema completo contra versiones parciales del mismo (por ejemplo, sin la capa NLP, sin el modelo LightGBM, o sin el Circuit Breaker) para cuantificar la contribución individual de cada capa al rendimiento global. Este análisis queda identificado como línea de trabajo futuro con alta prioridad, dado que permitiría aislar el valor diferencial aportado por los componentes de IA y NLP respecto a una estrategia puramente técnica.
 
 ## 8.5 Debilidades y Factores Externos
 
@@ -1102,6 +1103,7 @@ La hipótesis se valida parcialmente: el sistema no alcanza un Sharpe > 1.0, per
 2. **Dependencia de fuentes RSS:** Si las 3 fuentes de noticias fallan simultáneamente, el filtro NLP pierde eficacia (aunque el fallback a sentimiento neutro mitiga el riesgo).
 3. **Latencia de la IA:** El re-entrenamiento cada 2 horas introduce un periodo de "ceguera" ante cambios de régimen abruptos.
 4. **Costes de transacción:** El backtesting simula comisiones de Maker (0.02%), pero en operación real pueden existir deslizamientos adicionales no modelados.
+5. **Ausencia de análisis ablativo sistemático:** No se ha realizado una validación formal de la contribución marginal de cada capa al rendimiento global del sistema. Un análisis ablativo completo (entrenar el modelo desactivando capas individualmente y midiendo el impacto en las métricas) constituye una limitación metodológica significativa que debe abordarse en trabajo futuro con alta prioridad.
 
 *Tabla 8.1: Validación de cumplimiento de objetivos específicos*
 
@@ -1228,12 +1230,14 @@ Implementar un análisis ablativo sistemático que compare el sistema completo c
 
 ## Anexo A — Código Fuente de la Estrategia Principal
 
-A continuación se reproduce el fragmento más relevante del archivo `FreqaiExampleStrategy.py`. El código completo (624 líneas) está disponible en:
+A continuación se reproduce el fragmento más relevante del archivo `HybridTradingStrategy.py`. El código completo (623 líneas) está disponible en:
 
-`https://github.com/jrlr3-ua/TFG_Trading_Bot/blob/master/user_data/strategies/FreqaiExampleStrategy.py`
+`https://github.com/jrlr3-ua/TFG_Trading_Bot/blob/master/user_data/strategies/HybridTradingStrategy.py`
+
+*Nota: se reproduce un fragmento simplificado de la estrategia correspondiente a la función `custom_stake_amount` (Fase 1 — Kelly fraccional). La función completa `custom_stoploss` en el repositorio implementa adicionalmente la Fase 2: cuando `current_profit > 0.02` (beneficio superior al 2%), el sistema transiciona a un trailing stop basado en Parabolic SAR calculado sobre las velas recientes, protegiendose así contra reversiones tras capturas de beneficio significativas.*
 
 ```python
-class FreqaiExampleStrategy(IStrategy):
+class HybridTradingStrategy(IStrategy):
     """
     Estrategia TFG v3.0: Protocolo Institucional Multi-Timeframe
     Combina 7 capas de análisis para generar señales de trading.
@@ -1315,7 +1319,7 @@ services:
       --db-url postgresql://postgres:${POSTGRES_PASSWORD}@timescaledb:5432/${POSTGRES_DB}
       --config /freqtrade/user_data/config.json
       --config /freqtrade/user_data/config_secrets.json
-      --strategy FreqaiExampleStrategy
+      --strategy HybridTradingStrategy
       --freqaimodel LightGBMRegressor
     depends_on:
       - timescaledb

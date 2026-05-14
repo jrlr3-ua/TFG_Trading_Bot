@@ -1,4 +1,5 @@
-version: '3'
+# Docker Compose — compatible con Docker Engine 20.10+ (sin campo version requerido)
+# Referencia: https://docs.docker.com/compose/compose-file/
 services:
   # 1. BOT PRINCIPAL (Freqtrade - FreqAI / LightGBM)
   freqtrade:
@@ -16,7 +17,7 @@ services:
       --db-url postgresql://postgres:${POSTGRES_PASSWORD}@timescaledb:5432/${POSTGRES_DB}
       --config /freqtrade/user_data/config.json
       --config /freqtrade/user_data/config_secrets.json
-      --strategy FreqaiExampleStrategy
+      --strategy HybridTradingStrategy
       --freqaimodel LightGBMRegressor
     depends_on:
       - timescaledb
