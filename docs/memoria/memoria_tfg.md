@@ -255,6 +255,8 @@ Estudios posteriores han confirmado que el sentimiento de noticias financieras t
 
 **FinBERT** (Araci, 2019) fue seleccionado por su equilibrio entre **precisión** (86–97% en benchmarks financieros según el nivel de acuerdo entre anotadores), **velocidad** (inferencia en ~5ms por texto en CPU) y **coste** (gratuito, sin necesidad de API de pago). Está basado en la arquitectura BERT (Devlin et al., 2019) y fue fine-tuned sobre el Financial PhraseBank (Malo et al., 2014), corpus de 4.840 frases procedentes de noticias financieras. La precisión reportada varía según el nivel de acuerdo entre anotadores: 97% en el subconjunto de consenso total y 86% en el dataset completo (Araci, 2019).
 
+*Nota sobre la precisión reportada:* La precisión del 97% de FinBERT corresponde al subconjunto del corpus Financial PhraseBank con acuerdo unánime entre todos los anotadores. El valor del 86% corresponde al dataset completo incluyendo casos ambiguos. En titulares RSS de producción, la precisión esperada es más cercana al rango inferior dado que el dominio de las fuentes (CoinDesk, CoinTelegraph) difiere del corpus de entrenamiento original.
+
 ### 2.3.3 Named Entity Recognition (NER) en Finanzas
 
 El reconocimiento de entidades nombradas permite identificar qué criptomoneda específica se menciona en cada titular, habilitando un análisis de sentimiento *per-coin* en lugar de un sentimiento global del mercado. Este enfoque es particularmente relevante en el mercado de criptomonedas, donde la correlación entre activos no es constante y un titular negativo sobre una moneda específica puede no afectar al resto del universo de activos.
@@ -542,7 +544,7 @@ El corazón del sistema es un motor de decisión de 7 capas que requiere la **co
 | 4 | Predicción IA | `&s-price_change` > umbral_long | LightGBM predice subida significativa |
 | 5 | Sentimiento NLP | `sentiment_score` > −0.4 | No comprar con noticias negativas |
 | 6 | Volumen | Volumen > media 50 periodos | Confirmar interés real del mercado |
-| 7 | Order Flow | Order Book Imbalance monitoreado (implementación parcial vía configuración de Freqtrade `use_order_book: true`) | Presión compradora vs vendedora en el libro de órdenes |
+| 7 | Order Flow | Ejecución con precio de libro de órdenes (`use_order_book: true`): el bot utiliza el mejor precio disponible en el libro de órdenes para la entrada en posición, reduciendo el slippage. El cálculo de Order Book Imbalance como indicador cuantitativo queda como trabajo futuro (véase sección 9.5). | Mejor precio de ejecución |
 
 ### 4.2.1 Diseño del Trailing Stop Híbrido
 
@@ -887,7 +889,13 @@ La configuración de FreqAI implementa este esquema automáticamente:
 
 Esta metodología previene el *lookahead bias* (filtración de datos del futuro) y proporciona métricas representativas del rendimiento esperado en producción real.
 
+*Consideración sobre la separación entre optimización y evaluación:* Los parámetros de la estrategia (umbrales de la IA, parámetros ADX, Kelly empírico) se optimizaron mediante Hyperopt utilizando periodos históricos. Aunque la metodología Walk-Forward del modelo LightGBM garantiza que el modelo predictivo nunca ve datos futuros durante el entrenamiento, los parámetros fijos de la estrategia (umbrales, filtros) se calibraron con exposición a los mismos periodos de mercado que aparecen en los resultados del backtesting. Esta limitación es inherente al uso de Hyperopt sin un periodo de test completamente reservado (hold-out set), y constituye una fuente de optimismo potencial en las métricas reportadas. Los resultados del Forward-Testing actualmente en curso proporcionarán una evaluación verdaderamente out-of-sample de estos parámetros.
+
+*Nota sobre la capa NLP en backtesting:* El motor de análisis de sentimiento FinBERT opera en tiempo real procesando titulares RSS almacenados en TimescaleDB. Durante el backtesting histórico, los titulares correspondientes a las fechas analizadas no están disponibles en la base de datos, por lo que el sistema activa el mecanismo de fallback configurado (sentimiento neutro, score = 0.0) durante la práctica totalidad de las operaciones simuladas. En consecuencia, los resultados del backtesting reportados en las secciones 7.3.1 a 7.3.4 deben interpretarse como resultados del sistema con la Capa 5 (Sentimiento NLP) en modo fallback, no como resultado del sistema completo de 7 capas con NLP activo. La validación del componente NLP se realizará durante el periodo de Forward-Testing actualmente en curso.
+
 ## 7.2 Escenarios de Mercado
+
+*Nota sobre el cálculo de rendimientos:* Todos los porcentajes de rendimiento reportados en las secciones 7.3.1 a 7.4 se expresan sobre el capital total de la cuenta (balance efectivo), no sobre el capital nocional apalancado. El apalancamiento ×10 en isolated margin significa que cada operación individual utiliza como margen una fracción del balance, limitando la pérdida máxima de cada trade al capital asignado a esa posición. Freqtrade gestiona automáticamente la conversión entre retorno sobre margen y retorno sobre balance en su motor de backtesting para contratos de futuros USDT-M.
 
 El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez del sistema ante condiciones heterogéneas:
 
@@ -897,6 +905,8 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 | Bear Market | Julio – Octubre 2025 | Tendencia bajista sostenida (-36%) |
 | Lateral (Whipsaw) | Enero – Marzo 2025 | Movimiento errático sin dirección (+13.49% con muchos retrocesos) |
 | Crash | Octubre – Diciembre 2025 | Caída extrema (-34.57%) |
+
+*Nota metodológica sobre el benchmark:* Los valores de Buy & Hold reportados corresponden al rendimiento promedio equiponderado de los 11 pares de criptomonedas del universo monitorizado (Tabla 3.3) durante cada periodo de evaluación, calculado asumiendo una posición LONG abierta al inicio del periodo y cerrada al final sin gestión activa. Los datos de precio se obtuvieron de la API de Binance Futures mediante el mismo pipeline de descarga OHLCV utilizado por el sistema.
 
 ## 7.3 Resultados por Escenario
 
@@ -1048,19 +1058,19 @@ El análisis de explicabilidad mediante SHAP reveló la siguiente jerarquía de 
 
 ## 8.1 Interpretación de los Resultados por Escenario
 
-Los resultados experimentales revelan un patrón consistente: el sistema sacrifica rendimiento absoluto en mercados alcistas a cambio de una protección excepcional en mercados bajistas y de crisis. Esta asimetría es una característica deliberada del diseño, no un defecto.
+Los resultados experimentales revelan un patrón consistente: el sistema sacrifica rendimiento absoluto en mercados alcistas a cambio de una protección excepcional en mercados bajistas y de crisis. Esta asimetría es una característica deliberada del diseño, no un defecto. (Todos los valores numéricos citados en este capítulo corresponden a los resultados consolidados de la Tabla 7.1b.)
 
-En el escenario Bull Market, el rendimiento del +0.23% frente al +11.74% del benchmark refleja el coste inherente de un sistema conservador de 7 capas: la exigencia de confluencia simultánea de todos los filtros genera pocas señales (15 trades en 2 meses), priorizando la protección sobre la captura de tendencias. El Win Rate del 53.3% y el Profit Factor de 1.03 confirman que el sistema es marginalmente rentable en condiciones alcistas, con un control de riesgo ejemplar (Max Drawdown 2.97%).
+En el escenario Bull Market, el rendimiento del +2.57% frente al +11.74% del benchmark refleja el coste inherente de un sistema conservador de 7 capas: la exigencia de confluencia simultánea de todos los filtros genera pocas señales (15 trades en 2 meses), priorizando la protección sobre la captura de tendencias. El Win Rate del 53.3% y el Profit Factor de 1.03 confirman una rentabilidad marginal en condiciones alcistas. El Max Drawdown contenido del 2.97% refleja una gestión de riesgo efectiva, aunque el Sharpe Ratio de 0.06 indica que en este escenario la estrategia no genera una compensación significativa por unidad de riesgo asumida, lo cual es coherente con el diseño conservador del sistema, cuyo valor diferencial no reside en la maximización de retornos en mercados alcistas sino en la protección asimétrica durante crisis.
 
-El escenario de Crash es el más revelador. Mientras el mercado perdía un 34.57% de su capitalización — un evento que habría devastado a cualquier inversor pasivo — el sistema limitó las pérdidas a un 2.61%, generando un alpha de +31.96 puntos porcentuales. Este resultado valida empíricamente la eficacia de las capas de protección: el Circuit Breaker detuvo la operativa tras las primeras pérdidas significativas, el filtro ADX detectó la ausencia de tendencia clara, y el sentimiento NLP capturó la narrativa bajista dominante en los medios.
+El escenario de Crash es el más revelador. Mientras el mercado perdía un 34.57% de su capitalización — un evento que habría devastado a cualquier inversor pasivo — el sistema limitó las pérdidas a un 1.03%, generando un alpha de +33.54 puntos porcentuales. Este resultado valida empíricamente la eficacia de las capas de protección: el Circuit Breaker detuvo la operativa tras las primeras pérdidas significativas, el filtro ADX detectó la ausencia de tendencia clara, y el sentimiento NLP (en modo fallback durante el backtest) no bloqueó señales, lo que sugiere que el alpha generado proviene principalmente de las capas técnicas y de gestión de riesgo.
 
-El escenario Bear Market refuerza esta conclusión: frente a una caída del -36%, el bot solo perdió un -1.71%, generando un alpha de +34.29 puntos porcentuales —el mayor de todos los escenarios— con solo 7 operaciones ejecutadas.
+El escenario Bear Market refuerza esta conclusión: frente a una caída del -36%, el bot perdió un -7.00%, generando un alpha de +29.00 puntos porcentuales con solo 7 operaciones ejecutadas. No obstante, cabe señalar que con una muestra de solo 7 trades, las métricas individuales de este escenario (Win Rate 14.3%, Sharpe -0.75) carecen de significancia estadística; el indicador relevante es el resultado agregado de preservación de capital.
 
 ## 8.2 Comparación con Trabajos Relacionados
 
 En comparación con los trabajos mencionados en el Estado del Arte:
 
-- **Jiang et al. (2021):** Obtuvieron un Sharpe de 0.85 con LSTM + Twitter. Aunque nuestro sistema no alcanza ese nivel de Sharpe (mejor caso: 0.06), opera en un contexto fundamentalmente distinto: un motor de 7 capas de confluencia que prioriza explícitamente la preservación de capital sobre la maximización de retornos. La métrica de Sharpe no captura adecuadamente la principal fortaleza del sistema, que es la protección asimétrica en escenarios adversos.
+- **Jiang et al. (2021):** Obtuvieron un Sharpe de 0.85 con LSTM + Twitter. Aunque nuestro sistema no alcanza ese nivel de Sharpe (mejor caso: 0.06), opera en un contexto fundamentalmente distinto: un motor de 7 capas de confluencia que prioriza explícitamente la preservación de capital sobre la maximización de retornos. La métrica de Sharpe no captura adecuadamente la principal fortaleza del sistema, que es la protección asimétrica en escenarios adversos. Cabe señalar que la comparación directa de Sharpe Ratio entre sistemas evaluados en periodos históricos distintos y mercados con diferente régimen de volatilidad tiene limitaciones metodológicas intrínsecas. El Sharpe de 0.85 reportado por Jiang et al. (2021) se obtuvo en condiciones de mercado específicas no necesariamente comparables con los periodos evaluados en este trabajo.
 - **Carta et al. (2021):** Propusieron Multi-DQN, un ensemble de agentes de Reinforcement Learning, pero sin integración de análisis de sentimiento externo y validado únicamente en mercado alcista. Nuestro sistema demuestra que la combinación de NLP como filtro de protección aporta un valor diferencial significativo, especialmente durante crisis de sentimiento.
 
 Una diferencia fundamental es que los trabajos anteriores se validaron en un único régimen de mercado, mientras que nuestro sistema fue sometido a 4 escenarios diferentes, proporcionando una evaluación más robusta de la generalización.
@@ -1072,11 +1082,11 @@ La hipótesis planteada afirmaba que el sistema podía generar *"rendimientos po
 Los resultados confirman parcialmente la hipótesis:
 
 - ❌ **Sharpe Ratio > 1.0:** No cumplido. El mejor Sharpe obtenido fue 0.06 en el escenario alcista. Este criterio requeriría un mayor volumen de operaciones y/o la incorporación de señales adicionales para mejorar la relación retorno-riesgo.
-- ✅ **Max Drawdown < 15%:** Cumplido en todos los escenarios (máximo 4.25% en Lateral).
-- ✅ **Superación del Buy & Hold en promedio:** Alpha promedio de +9.74 puntos porcentuales, con alphas superiores a +30pp en escenarios de crisis.
-- ⚠️ **Rendimientos positivos en todos los escenarios:** Solo cumplido en el escenario alcista (+0.23%). En los demás escenarios las pérdidas oscilan entre -1.71% y -2.61%, aunque son significativamente menores que las del benchmark.
+- ✅ **Max Drawdown < 15%:** Cumplido en todos los escenarios (máximo 7.00% en Bear Market).
+- ✅ **Superación del Buy & Hold en promedio:** Alpha promedio de +9.83 puntos porcentuales, con alphas superiores a +29pp en escenarios de crisis.
+- ⚠️ **Rendimientos positivos en todos los escenarios:** Solo cumplido en el escenario alcista (+2.57%). En los demás escenarios las pérdidas oscilan entre -0.56% y -7.00%, aunque son significativamente menores que las del benchmark.
 
-La hipótesis se valida parcialmente: el sistema no alcanza un Sharpe > 1.0, pero cumple con creces el objetivo de Max Drawdown y genera un alpha significativo sobre la estrategia pasiva. El valor diferencial del sistema reside en su capacidad de preservación de capital durante crisis, no en la maximización de retornos en mercados alcistas. Este resultado es académicamente significativo porque demuestra que las capas de protección (Circuit Breaker, NLP, Fear & Greed) funcionan como está diseñado.
+La hipótesis se valida parcialmente: el sistema no alcanza un Sharpe > 1.0, pero cumple con creces el objetivo de Max Drawdown y genera un alpha significativo sobre la estrategia pasiva. El valor diferencial del sistema reside en su capacidad de preservación de capital durante crisis, no en la maximización de retornos en mercados alcistas. Este resultado es académicamente significativo porque demuestra que las capas de protección (Circuit Breaker, filtro Fear & Greed y gestión de riesgo ATR/Kelly) funcionan como está diseñado, aunque debe considerarse que los resultados del backtesting se obtuvieron con la capa NLP en modo fallback (véase nota metodológica en la sección 7.1).
 
 ## 8.4 Fortalezas del Sistema
 
@@ -1084,6 +1094,7 @@ La hipótesis se valida parcialmente: el sistema no alcanza un Sharpe > 1.0, per
 2. **Explicabilidad:** La combinación de SHAP con Feature Importance permite entender *por qué* el modelo toma cada decisión, eliminando el síndrome de la "caja negra".
 3. **Arquitectura desplegable:** El sistema no es un prototipo académico: es un producto funcional desplegable en producción 24/7 con un único comando (`make start`).
 4. **Defensa contra cisnes negros:** El Circuit Breaker y el filtro Fear & Greed proporcionan protección ante eventos extremos que los modelos estadísticos no pueden predecir.
+5. **Benchmark y análisis ablativo:** La comparativa principal de este trabajo utiliza Buy & Hold como benchmark, que constituye el estándar habitual en la literatura de trading algorítmico. No obstante, una validación más exhaustiva requeriría un análisis ablativo comparando el sistema completo contra versiones parciales del mismo (por ejemplo, sin la capa NLP, sin el modelo LightGBM, o sin el Circuit Breaker) para cuantificar la contribución individual de cada capa al rendimiento global. Este análisis queda identificado como línea de trabajo futuro con alta prioridad, dado que permitiría aislar el valor diferencial aportado por los componentes de IA y NLP respecto a una estrategia puramente técnica.
 
 ## 8.5 Debilidades y Factores Externos
 
@@ -1111,19 +1122,19 @@ La hipótesis se valida parcialmente: el sistema no alcanza un Sharpe > 1.0, per
 
 El presente Trabajo de Final de Grado ha demostrado que es posible diseñar, implementar y validar un sistema de trading algorítmico híbrido que integre Machine Learning, Procesamiento de Lenguaje Natural y gestión de riesgo cuantitativa para operar de forma autónoma en el mercado de futuros de criptomonedas.
 
-La hipótesis inicial — que un sistema multi-capa puede generar rendimientos positivos ajustados a riesgo superando la estrategia pasiva de Buy & Hold — ha sido validada parcialmente en 4 escenarios de mercado diferentes. El resultado más significativo es la capacidad del sistema para actuar como un **preservador de capital** durante crisis de mercado: frente a una caída del 34.57% del benchmark, el sistema limitó las pérdidas a un 2.61%, y en el mercado bajista sostenido (-36%), las pérdidas se contuvieron en un -1.71%, generando alphas superiores a +30 puntos porcentuales en ambos escenarios adversos.
+La hipótesis inicial — que un sistema multi-capa puede generar rendimientos positivos ajustados a riesgo superando la estrategia pasiva de Buy & Hold — ha sido validada parcialmente en 4 escenarios de mercado diferentes. El resultado más significativo es la capacidad del sistema para actuar como un **preservador de capital** durante crisis de mercado: frente a una caída del 34.57% del benchmark, el sistema limitó las pérdidas a un 1.03%, y en el mercado bajista sostenido (-36%), las pérdidas se situaron en un -7.00%, generando alphas de +33.54 y +29.00 puntos porcentuales respectivamente. El alpha promedio sobre Buy & Hold fue de +9.83 puntos porcentuales.
 
 ## 9.2 Conclusiones Específicas
 
 1. **OE1 (Motor de IA):** El modelo LightGBM, alimentado por 18+ features multi-timeframe, demostró capacidad predictiva cuantificable. El análisis SHAP reveló que los indicadores de volumen (OBV) son los predictores más relevantes, confirmando la tesis financiera de que "el volumen precede al precio".
 
-2. **OE2 (Motor NLP):** El microservicio FinBERT con NER per-coin demostró ser más efectivo como **filtro de protección** que como generador de señales. Su principal aportación es bloquear operaciones durante picos de sentimiento negativo, evitando pérdidas en cascada.
+2. **OE2 (Motor NLP):** El microservicio FinBERT con NER per-coin demostró ser más efectivo como **filtro de protección** que como generador de señales. Su principal aportación es bloquear operaciones durante picos de sentimiento negativo, evitando pérdidas en cascada. No obstante, dado que el backtesting se ejecutó con la capa NLP en modo fallback (véase sección 7.1), la validación empírica completa de este componente se realizará durante el periodo de Forward-Testing.
 
-3. **OE3 (Gestión de Riesgo):** La combinación de Kelly empírico al 40%, stop loss ATR dinámico y Circuit Breaker constituye una defensa multi-nivel que limita las pérdidas incluso ante cisnes negros. El Max Drawdown no superó el 4.25% en ningún escenario, muy por debajo del límite del 15% establecido en la hipótesis.
+3. **OE3 (Gestión de Riesgo):** La combinación de Kelly empírico al 40%, stop loss ATR dinámico y Circuit Breaker constituye una defensa multi-nivel que limita las pérdidas incluso ante cisnes negros. El Max Drawdown se mantuvo por debajo del 15% en todos los escenarios, cumpliendo el criterio establecido en la hipótesis.
 
 4. **OE4 (Arquitectura):** La arquitectura de 6 microservicios Docker demuestra que un sistema de trading de grado profesional puede construirse con herramientas de código abierto y desplegarse con un único comando.
 
-5. **OE5 (Validación):** La metodología Walk-Forward, aplicada en 4 regímenes de mercado distintos, proporciona una validación más robusta que los backtests convencionales sobre periodos homogéneos.
+5. **OE5 (Validación):** La metodología Walk-Forward, aplicada en 4 regímenes de mercado distintos, proporciona una validación más robusta que los backtests convencionales sobre periodos homogéneos. Los resultados del escenario Bear Market deben interpretarse con la cautela propia de una muestra reducida (N=7 operaciones); véase la nota metodológica en la sección 7.3.4.
 
 6. **OE6 (Calidad):** La suite de 10 tests unitarios (4 de estrategia + 6 de NLP), el Makefile operativo, el script de despliegue automatizado y el script de backup con retención de 7 días demuestran un nivel de ingeniería de software que trasciende el prototipo académico.
 
@@ -1152,6 +1163,8 @@ El desarrollo de este proyecto a lo largo de 5 meses ha proporcionado aprendizaj
 
 6. **La honestidad con los datos es fundamental.** Resistir la tentación de seleccionar únicamente los escenarios favorables (*cherry-picking*) y presentar los 4 regímenes — incluidos los desfavorables — otorga credibilidad a los resultados y permite extraer conclusiones más robustas.
 
+7. **Higiene del repositorio.** Mantener el repositorio limpio de archivos ajenos al proyecto (documentación de la asignatura, archivos temporales, PDFs institucionales) facilita la comprensión del código por parte de evaluadores externos y es una práctica estándar en entornos profesionales. El archivo `.gitignore` debe configurarse desde el primer commit para excluir este tipo de contenido.
+
 ## 9.5 Trabajo Futuro
 
 ### 9.5.1 Reinforcement Learning (DQN)
@@ -1167,6 +1180,14 @@ La confluencia condicional actual (reglas booleanas estáticas: "si ADX > 20 AND
 ### 9.5.3 Multi-Exchange y Multi-Activo
 
 Extender el sistema para operar simultáneamente en múltiples exchanges (Binance + Bybit + OKX), implementando arbitraje estadístico entre ellos y ampliando el universo de activos a mercados de renta variable tokenizada.
+
+### 9.5.4 Implementación de Order Book Imbalance Real
+
+La Capa 7 actual del sistema utiliza el precio del libro de órdenes para la ejecución pero no calcula el desequilibrio comprador/vendedor como indicador cuantitativo. Una extensión natural sería implementar el cálculo de OBI = (demanda_total - oferta_total) / (demanda_total + oferta_total) sobre los N primeros niveles del libro, incorporándolo como feature adicional del modelo LightGBM y como condición de filtrado de entrada.
+
+### 9.5.5 Análisis Ablativo
+
+Implementar un análisis ablativo sistemático que compare el sistema completo contra versiones parciales (sin NLP, sin LightGBM, sin Circuit Breaker) para cuantificar la contribución marginal de cada capa al rendimiento global y al alpha generado.
 
 ---
 
