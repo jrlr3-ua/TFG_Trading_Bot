@@ -112,7 +112,7 @@ TFG_Trading_Bot/
 │   ├── config.json                 # Configuración principal del bot
 │   ├── config_secrets.json.example # Template de credenciales
 │   └── strategies/
-│       └── FreqaiExampleStrategy.py  # Estrategia v3.0 (611 líneas)
+│       └── FreqaiExampleStrategy.py  # Estrategia v3.0 (624 líneas)
 └── archive/                        # Versiones legacy y ficheros históricos
 ```
 
@@ -144,7 +144,7 @@ make test
 
 # Resultado esperado:
 # tests/test_strategy.py::test_conviction_based_sizing      PASSED
-# tests/test_strategy.py::test_conviction_sizing_no_wallets  PASSED
+# tests/test_strategy.py::test_conviction_sizing_without_wallets  PASSED
 # tests/test_strategy.py::test_dynamic_atr_stoploss          PASSED
 # tests/test_strategy.py::test_atr_stoploss_low_volatility   PASSED
 # tests/test_nlp.py::test_clean_html_logic                   PASSED

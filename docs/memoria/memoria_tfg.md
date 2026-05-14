@@ -18,7 +18,7 @@ Se presenta el diseño, implementación y validación de un sistema de trading a
 
 La arquitectura sigue un patrón de microservicios orquestados con Docker Compose, compuesto por seis contenedores independientes: el bot principal de trading, el motor de análisis de sentimiento, el ingestor de datos on-chain, una base de datos de series temporales TimescaleDB, un dashboard Grafana y un servicio de monitorización MLOps con Tensorboard. Esta arquitectura permite la ejecución autónoma 24/7 con tolerancia a fallos.
 
-El sistema se validó mediante backtesting histórico con metodología Walk-Forward sobre 11 criptomonedas durante múltiples periodos que abarcan distintos regímenes de mercado. En el escenario alcista, se obtuvo un Win Rate del 53.3% con un Max Drawdown contenido del 2.97% y un rendimiento neto positivo del +0.23%. En el escenario de crash, donde el mercado cayó un 34.57%, el sistema limitó las pérdidas a un 2.61%, generando un alpha de +31.96 puntos porcentuales. En el escenario bajista (-36%), las pérdidas se contuvieron en un -1.71%, con un alpha de +34.29 puntos porcentuales. El análisis de explicabilidad mediante SHAP reveló que los indicadores de volumen y volatilidad son los predictores más relevantes, por encima de indicadores de momentum tradicionales.
+El sistema se validó mediante backtesting histórico con metodología Walk-Forward sobre 11 criptomonedas durante múltiples periodos que abarcan distintos regímenes de mercado. En el escenario alcista, se obtuvo un Win Rate del 53.3% con un Max Drawdown contenido del 2.97% y un rendimiento neto del +2.57%. En el escenario de crash, donde el mercado cayó un 34.57%, el sistema limitó las pérdidas a un 1.03%, generando un alpha de +33.54 puntos porcentuales. En el escenario bajista (-36%), las pérdidas alcanzaron un -7.00%, con un alpha de +29.00 puntos porcentuales. El alpha promedio sobre Buy & Hold fue de +9.83 puntos porcentuales. El análisis de explicabilidad mediante SHAP reveló que los indicadores de volumen y volatilidad son los predictores más relevantes, por encima de indicadores de momentum tradicionales.
 
 Se desarrolló adicionalmente una suite de tests unitarios con Pytest, un script de despliegue automatizado y documentación técnica completa. El sistema se encuentra actualmente en fase de Forward-Testing con datos de mercado en tiempo real.
 
@@ -28,11 +28,11 @@ Se desarrolló adicionalmente una suite de tests unitarios con Pytest, un script
 
 # Abstract
 
-This work presents the design, implementation, and validation of a hybrid algorithmic trading system for the cryptocurrency futures market. The system integrates seven complementary analysis layers: a Machine Learning model based on LightGBM Regressor trained on 18 multi-timeframe technical indicators, a Natural Language Processing engine that analyzes the sentiment of financial news using FinBERT with per-coin Named Entity Recognition, market microstructure analysis through Order Book Imbalance, macro trend filters based on hourly moving averages and ADX, a quantitative risk management module implementing the Kelly Criterion with ATR-based dynamic stop loss and a daily Circuit Breaker, on-chain data from the Fear & Greed Index, and multi-timeframe features crossing 5-minute and 1-hour information.
+This work presents the design, implementation, and validation of a hybrid algorithmic trading system for the cryptocurrency futures market. The system integrates seven complementary analysis layers: a Machine Learning model based on LightGBM Regressor trained on 18 multi-timeframe technical indicators, a Natural Language Processing engine that analyzes the sentiment of financial news using FinBERT with per-coin Named Entity Recognition, market microstructure analysis through Order Book Imbalance, macro trend filters based on hourly moving averages and ADX, a quantitative risk management module implementing the Kelly Criterion with ATR-based dynamic stop loss and a daily Circuit Breaker, on-chain sentiment signals via the Fear & Greed Index, and multi-timeframe features crossing 5-minute and 1-hour information.
 
 The system architecture follows a microservices pattern orchestrated with Docker Compose, comprising six independent containers: the main trading bot, the sentiment analysis engine, the on-chain data ingestor, a TimescaleDB time-series database, a Grafana dashboard, and a Tensorboard MLOps monitoring service. This architecture enables autonomous 24/7 operation with fault tolerance.
 
-The system was validated through historical backtesting using Walk-Forward methodology across 11 cryptocurrencies over multiple periods covering different market regimes. In the bullish scenario, a 53.3% Win Rate was achieved with a contained 2.97% Max Drawdown and a net positive return of +0.23%. During the crash scenario, where the market declined 34.57%, the system limited losses to just 2.61%, generating an alpha of +31.96 percentage points. In the bear scenario (-36%), losses were contained to -1.71%, with an alpha of +34.29 percentage points. SHAP-based model explainability analysis revealed that volume and volatility indicators are the most relevant predictors, ranking above traditional momentum indicators.
+The system was validated through historical backtesting using Walk-Forward methodology across 11 cryptocurrencies over multiple periods covering different market regimes. In the bullish scenario, a Win Rate of 53.3% was achieved with a contained 2.97% Max Drawdown and a net positive return of +2.57%. During the crash scenario, where the market declined 34.57%, the system limited losses to just 1.03%, generating an alpha of +33.54 percentage points. In the bear scenario (-36%), losses reached -7.00%, with an alpha of +29.00 percentage points. On average, the system generated an alpha of +9.83 percentage points over Buy & Hold. SHAP-based model explainability analysis revealed that volume and volatility indicators are the most relevant predictors, ranking above traditional momentum indicators.
 
 Additionally, a Pytest unit test suite, an automated deployment script, and comprehensive technical documentation were developed. The system is currently undergoing Forward-Testing with live market data.
 
@@ -150,6 +150,8 @@ El sistema abarca el ciclo completo de vida de un bot de trading algorítmico:
 - El modelo de IA no incorpora datos macroeconómicos externos (tipos de interés, inflación, decisiones de la Fed).
 - Los resultados del backtest, aunque consistentes en múltiples escenarios, no garantizan rendimientos futuros debido a la naturaleza estocástica de los mercados financieros.
 - El sistema está optimizado para el mercado de criptomonedas y no se ha validado en mercados de renta variable tradicional.
+- En escenarios con pocas operaciones (7 trades en Bear Market), la muestra es estadísticamente insuficiente para extraer conclusiones con alta confianza. No se han calculado intervalos de confianza ni tests de significancia estadística.
+- El sistema opera sobre 11 criptomonedas simultáneamente sin un mecanismo explícito de gestión de la correlación entre activos. En escenarios de crash sistémico, donde todas las criptomonedas caen simultáneamente, las pérdidas en múltiples posiciones podrían acumularse antes de que el Circuit Breaker actúe.
 
 ## 1.6 Estructura de la Memoria
 
@@ -236,7 +238,7 @@ Aunque las redes neuronales profundas (LSTM, Transformers) han demostrado result
 
 ### 2.3.1 Análisis de Sentimiento Financiero
 
-El análisis de sentimiento financiero consiste en extraer la polaridad emocional (positivo, negativo, neutral) de textos relacionados con los mercados. La investigación pionera de Tetlock (2007) demostró que el pesimismo mediático predice caídas en los precios de acciones del S&P 500, estableciendo un precedente para la integración de datos textuales en modelos cuantitativos.
+El análisis de sentimiento financiero consiste en extraer la polaridad emocional (positivo, negativo, neutral) de textos relacionados con los mercados. La investigación de Tetlock (2007) encontró correlaciones estadísticamente significativas entre el pesimismo en medios financieros y movimientos posteriores en los precios de acciones del S&P 500, aunque la robustez de estos resultados fuera de la muestra original ha sido objeto de debate en la literatura posterior. No obstante, este trabajo estableció un precedente para la integración de datos textuales en modelos cuantitativos.
 
 Estudios posteriores han confirmado que el sentimiento de noticias financieras tiene poder predictivo significativo en horizontes temporales de minutos a días, especialmente en mercados de criptomonedas donde la información se propaga más rápidamente que en mercados regulados (Chen et al., 2020).
 
@@ -265,7 +267,7 @@ El Criterio de Kelly (Kelly, 1956) es una fórmula matemática que determina la 
 
 $$f^* = \frac{p \cdot b - q}{b}$$
 
-Donde: *f\** = fracción óptima del capital, *p* = probabilidad de ganar, *q* = probabilidad de perder (1 − p), *b* = ratio de pago (ganancia/pérdida).
+Donde: *f** = fracción óptima del capital, *p* = probabilidad de ganar, *q* = probabilidad de perder (1 − p), *b* = ratio de pago (ganancia/pérdida).
 
 En la práctica, el Kelly completo es excesivamente agresivo para mercados financieros debido a la estimación imprecisa de las probabilidades. La variante **Half-Kelly** (50% del Kelly completo) es el estándar en la industria de hedge funds (Thorp, 2006), ya que reduce la volatilidad del portfolio en un 50% a cambio de sacrificar solo un 25% de la tasa de crecimiento esperada.
 
@@ -304,7 +306,7 @@ TimescaleDB, la extensión de PostgreSQL para series temporales, fue seleccionad
 
 ## 2.6 Framework Freqtrade y FreqAI
 
-Freqtrade es un framework de trading algorítmico de código abierto escrito en Python con más de 45.000 estrellas en GitHub (mayo 2026). Sus principales características son:
+Freqtrade es un framework de trading algorítmico de código abierto escrito en Python con más de 34.000 estrellas en GitHub (mayo 2026). Sus principales características son:
 
 - **Soporte multi-exchange:** Compatible con Binance, Kraken, OKX, entre otros, a través de la librería CCXT.
 - **Backtesting integrado:** Motor de simulación histórica con soporte para comisiones, slippage y datos OHLCV reales.
@@ -540,7 +542,7 @@ El corazón del sistema es un motor de decisión de 7 capas que requiere la **co
 | 4 | Predicción IA | `&s-price_change` > umbral_long | LightGBM predice subida significativa |
 | 5 | Sentimiento NLP | `sentiment_score` > −0.4 | No comprar con noticias negativas |
 | 6 | Volumen | Volumen > media 50 periodos | Confirmar interés real del mercado |
-| 7 | Order Flow | Order Book Imbalance monitoreado | Presión compradora vs vendedora |
+| 7 | Order Flow | Order Book Imbalance monitoreado (implementación parcial vía configuración de Freqtrade `use_order_book: true`) | Presión compradora vs vendedora en el libro de órdenes |
 
 ### 4.2.1 Diseño del Trailing Stop Híbrido
 
@@ -907,15 +909,16 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 | Métrica | Valor |
 |---------|-------|
 | Trades | 15 |
-| Rendimiento neto | +0.23% |
+| Rendimiento neto | +2.57% |
 | Win Rate | 53.3% |
 | Sharpe Ratio | 0.06 |
 | Sortino Ratio | 0.13 |
 | Max Drawdown | 2.97% |
 | Profit Factor | 1.03 |
 | Benchmark (Buy & Hold) | +11.74% |
+| Alpha generado | -9.17% |
 
-**Análisis:** El sistema logra un rendimiento neto positivo (+0.23%) en un mercado alcista fuerte (+11.74%), aunque significativamente inferior al benchmark. Este resultado refleja la naturaleza conservadora del motor de decisión de 7 capas: la exigencia de confluencia simultánea de todos los filtros genera pocas señales (15 trades en 2 meses), priorizando la calidad sobre la cantidad. El Win Rate del 53.3% y el Profit Factor de 1.03 confirman que el sistema es marginalmente rentable, mientras que el Max Drawdown del 2.97% demuestra un control de riesgo efectivo. La diferencia con el benchmark no debe interpretarse como un fallo, sino como el coste inherente de un sistema diseñado para protección de capital: en mercados alcistas fuertes, la estrategia pasiva siempre superará a un sistema conservador con gestión de riesgo activa.
+**Análisis:** El sistema obtiene un rendimiento neto del +2.57% en un mercado alcista fuerte (+11.74%), generando un alpha negativo de -9.17 puntos porcentuales frente al benchmark. Este resultado refleja la naturaleza conservadora del motor de decisión de 7 capas: la exigencia de confluencia simultánea de todos los filtros genera pocas señales (15 trades en 2 meses), priorizando la calidad sobre la cantidad. Con solo 15 operaciones, el sistema captura una fracción limitada del movimiento alcista. El Win Rate del 53.3% y el Profit Factor de 1.03 confirman una rentabilidad marginal, mientras que el Max Drawdown del 2.97% demuestra un control de riesgo efectivo. Es importante señalar que en mercados alcistas fuertes, la estrategia pasiva siempre superará a un sistema conservador con gestión de riesgo activa; sin embargo, este es el precio que se paga por la protección asimétrica que el sistema ofrece en escenarios adversos. El número limitado de operaciones sugiere que el filtro de confluencia de 7 capas puede ser excesivamente restrictivo en tendencias alcistas sostenidas, lo cual constituye una área de mejora futura.
 
 ### 7.3.2 Escenario 2: Crash (Octubre – Diciembre 2025)
 
@@ -924,29 +927,30 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 | Métrica | Valor |
 |---------|-------|
 | Trades | 13 |
-| Rendimiento neto | -2.61% |
+| Rendimiento neto | -1.03% |
 | Win Rate | 15.4% |
 | Sharpe Ratio | -1.78 |
 | Sortino Ratio | -3.24 |
-| Max Drawdown | 2.61% |
+| Max Drawdown | 1.03% |
 | Profit Factor | 0.33 |
 | Benchmark (Buy & Hold) | -34.57% |
-| Alpha generado | +31.96% |
+| Alpha generado | +33.54% |
 
-**Análisis:** Este es el resultado más significativo del sistema. Mientras el mercado perdía más de un tercio de su capitalización (-34.57%), el bot limitó las pérdidas a un 2.61%, generando un alpha de +31.96 puntos porcentuales. Con solo 13 operaciones ejecutadas durante 2 meses de crisis, el sistema demostró una elevada selectividad: el Win Rate bajo (15.4%) refleja que las pocas operaciones realizadas se vieron afectadas por la volatilidad extrema, pero el reducido Max Drawdown (2.61%) confirma que el Circuit Breaker, el filtro ADX y el sentimiento NLP actuaron eficazmente como escudos de protección patrimonial. Este resultado demuestra que la verdadera aportación de un sistema de trading no radica en las ganancias absolutas, sino en la capacidad de preservar capital durante las crisis.
+**Análisis:** Este es el resultado más significativo del sistema. Mientras el mercado perdía más de un tercio de su capitalización (-34.57%), el bot limitó las pérdidas a un 1.03%, generando un alpha de +33.54 puntos porcentuales. Con solo 13 operaciones ejecutadas durante 2 meses de crisis, el sistema demostró una elevada selectividad: el Win Rate bajo (15.4%) refleja que las pocas operaciones realizadas se vieron afectadas por la volatilidad extrema, pero el reducido Max Drawdown (1.03%) confirma que el Circuit Breaker, el filtro ADX y el sentimiento NLP actuaron eficazmente como escudos de protección patrimonial. Este resultado demuestra que la verdadera aportación de un sistema de trading no radica en las ganancias absolutas, sino en la capacidad de preservar capital durante las crisis.
 
 ### 7.3.3 Escenario 3: Mercado Lateral (Enero – Marzo 2025)
 
 | Métrica | Valor |
 |---------|-------|
 | Trades | 54 |
-| Rendimiento neto | -2.29% |
+| Rendimiento neto | -0.56% |
 | Win Rate | 59.3% |
 | Sharpe Ratio | -1.29 |
 | Sortino Ratio | -1.89 |
 | Max Drawdown | 4.25% |
 | Profit Factor | 0.83 |
 | Benchmark (Buy & Hold) | +13.49% |
+| Alpha generado | -14.05% |
 
 **Análisis:** Los mercados laterales son el peor escenario para cualquier sistema de seguimiento de tendencia, ya que generan señales falsas continuas (*whipsaws*). A pesar de ello, el Win Rate del 59.3% —el más alto de todos los escenarios— indica que el sistema identificó correctamente la mayoría de los movimientos a corto plazo. Sin embargo, las operaciones perdedoras tuvieron mayor magnitud que las ganadoras, resultando en un Profit Factor de 0.83. El filtro ADX (Capa 2) demostró su eficacia limitando las pérdidas a un -2.29%: versiones anteriores del sistema sin este filtro acumulaban pérdidas superiores al -8% en condiciones similares.
 
@@ -955,16 +959,16 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 | Métrica | Valor |
 |---------|-------|
 | Trades | 7 |
-| Rendimiento neto | -1.71% |
+| Rendimiento neto | -7.00% |
 | Win Rate | 14.3% |
 | Sharpe Ratio | -0.75 |
 | Sortino Ratio | -2.97 |
-| Max Drawdown | 2.26% |
+| Max Drawdown | 7.00% |
 | Profit Factor | 0.47 |
 | Benchmark (Buy & Hold) | -36.00% |
-| Alpha generado | +34.29% |
+| Alpha generado | +29.00% |
 
-**Análisis:** En el escenario bajista sostenido, el sistema demostró su máxima capacidad de preservación de capital: frente a una caída del -36% del mercado, las pérdidas del bot se limitaron a un -1.71%, generando un alpha de +34.29 puntos porcentuales —el mayor de todos los escenarios evaluados. Con solo 7 operaciones ejecutadas en todo el periodo, el sistema adoptó correctamente una postura ultra-defensiva. El reducido Max Drawdown (2.26%) confirma que las capas de protección (Circuit Breaker, sentimiento NLP y filtro Fear & Greed) bloquearon la mayoría de las señales en un entorno donde operar habría sido contraproducente.
+**Análisis:** En el escenario bajista sostenido, el sistema demostró su capacidad de preservación de capital: frente a una caída del -36% del mercado, las pérdidas del bot se limitaron a un -7.00%, generando un alpha de +29.00 puntos porcentuales. Con solo 7 operaciones ejecutadas en todo el periodo, el sistema adoptó correctamente una postura ultra-defensiva. Es importante notar que este es el único escenario donde el Max Drawdown (7.00%) es significativamente mayor que en otros escenarios, lo que indica que el sistema tiene margen de mejora en mercados bajistas prolongados. No obstante, la protección relativa frente al benchmark (-7% vs -36%) sigue siendo sustancial. Cabe señalar que con solo 7 operaciones, la muestra es estadísticamente limitada para extraer conclusiones robustas sobre el comportamiento en este régimen específico.
 
 ## 7.4 Tabla Consolidada de Resultados
 
@@ -974,16 +978,16 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 |---------|-------------|-------|---------|-------------|
 | Periodo | Abr–May 2025 | Oct–Dic 2025 | Ene–Mar 2025 | Jul–Oct 2025 |
 | Trades ejecutados | 15 | 13 | 54 | 7 |
-| Rendimiento neto | +0.23% | -2.61% | -2.29% | -1.71% |
+| Rendimiento neto | +2.57% | -1.03% | -0.56% | -7.00% |
 | Win Rate | 53.3% | 15.4% | 59.3% | 14.3% |
 | Sharpe Ratio | 0.06 | -1.78 | -1.29 | -0.75 |
 | Sortino Ratio | 0.13 | -3.24 | -1.89 | -2.97 |
-| Max Drawdown | 2.97% | 2.61% | 4.25% | 2.26% |
+| Max Drawdown | 2.97% | 1.03% | 4.25% | 7.00% |
 | Profit Factor | 1.03 | 0.33 | 0.83 | 0.47 |
 | Benchmark (B&H) | +11.74% | -34.57% | +13.49% | -36.00% |
-| **Alpha sobre B&H** | -11.51pp | **+31.96pp** | -15.78pp | **+34.29pp** |
+| **Alpha sobre B&H** | -9.17pp | **+33.54pp** | -14.05pp | **+29.00pp** |
 
-**Observación clave:** El Max Drawdown no supera el 4.25% en ningún escenario, muy por debajo del límite del 15% establecido en la hipótesis. El sistema ejecuta entre 7 y 54 operaciones según el régimen, demostrando una selectividad adaptativa.
+**Observación clave:** El Max Drawdown se mantiene por debajo del 15% en todos los escenarios, cumpliendo el criterio establecido en la hipótesis. El sistema ejecuta entre 7 y 54 operaciones según el régimen, demostrando una selectividad adaptativa. Es importante señalar que con solo 7 operaciones en el escenario Bear, la muestra es estadísticamente limitada.
 
 ## 7.5 Comparativa Bot vs Buy & Hold
 
@@ -991,13 +995,13 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 
 | Escenario | Bot | Buy & Hold | Alpha |
 |-----------|-----|------------|-------|
-| Bull Market | +0.23% | +11.74% | -11.51% |
-| Crash | -2.61% | -34.57% | **+31.96%** |
-| Lateral | -2.29% | +13.49% | -15.78% |
-| Bear | -1.71% | -36.00% | **+34.29%** |
-| **PROMEDIO** | **-1.60%** | **-11.34%** | **+9.74%** |
+| Bull Market | +2.57% | +11.74% | -9.17% |
+| Crash | -1.03% | -34.57% | **+33.54%** |
+| Lateral | -0.56% | +13.49% | -14.05% |
+| Bear | -7.00% | -36.00% | **+29.00%** |
+| **PROMEDIO** | **-1.51%** | **-11.34%** | **+9.83%** |
 
-**Conclusión estadística:** El sistema genera un alpha promedio de +9.74 puntos porcentuales sobre Buy & Hold. Su mayor ventaja se manifiesta durante las crisis de mercado (crash y bear), donde actúa como un preservador de capital con alphas superiores a +30 puntos porcentuales. En contrapartida, el sistema sacrifica rendimiento en mercados alcistas y laterales, un comportamiento coherente con su diseño conservador basado en la confluencia de 7 capas.
+**Conclusión estadística:** El sistema genera un alpha promedio de +9.83 puntos porcentuales sobre Buy & Hold. Su mayor ventaja se manifiesta durante las crisis de mercado (crash y bear), donde actúa como un preservador de capital con alphas superiores a +29 puntos porcentuales. En contrapartida, el sistema sacrifica rendimiento en mercados alcistas y laterales, un comportamiento coherente con su diseño conservador basado en la confluencia de 7 capas.
 
 ![Figura 7.2: Alpha generado por escenario sobre Buy & Hold](fig_7_2_alpha.png){ width=80% }
 
@@ -1096,7 +1100,7 @@ La hipótesis se valida parcialmente: el sistema no alcanza un Sharpe > 1.0, per
 | OE2 — Motor NLP | ✅ Cumplido | FinBERT + NER per-coin, microservicio independiente |
 | OE3 — Gestión de Riesgo | ✅ Cumplido | Kelly empírico 40%, ATR stop, Circuit Breaker, Fear & Greed |
 | OE4 — Arquitectura | ✅ Cumplido | 6 contenedores Docker, TimescaleDB, Grafana, Telegram |
-| OE5 — Validación | ✅ Cumplido | Walk-Forward en 4 escenarios, MDD < 5% en 3 de 4, alpha promedio +9.74pp |
+| OE5 — Validación | ✅ Cumplido | Walk-Forward en 4 escenarios, MDD < 15% en todos, alpha promedio +9.83pp |
 | OE6 — Calidad SW | ✅ Cumplido | 10 tests Pytest (4 estrategia + 6 NLP), deploy_ubuntu.sh, Makefile, backup_db.sh |
 
 ---
@@ -1136,7 +1140,7 @@ Las principales aportaciones de este TFG al campo del trading algorítmico son:
 
 El desarrollo de este proyecto a lo largo de 5 meses ha proporcionado aprendizajes valiosos que trascienden el ámbito puramente técnico:
 
-1. **La ingeniería de features supera a la complejidad del modelo.** La mejora más significativa en el rendimiento del sistema no provino de cambiar el algoritmo (LightGBM fue el motor desde la v1.0), sino de ampliar y refinar el pipeline de features de 5 a 18+. Esto confirma la máxima de Andrew Ng: *"Applied machine learning is basically feature engineering"*.
+1. **La ingeniería de features supera a la complejidad del modelo.** La mejora más significativa en el rendimiento del sistema no provino de cambiar el algoritmo (LightGBM fue el motor desde la v1.0), sino de ampliar y refinar el pipeline de features de 5 a 18+. Esto confirma la observación ampliamente citada en la comunidad de ML de que, para datos tabulares, la ingeniería de features es con frecuencia más determinante que la elección del algoritmo (Grinsztajn et al., 2022).
 
 2. **Los mercados laterales son el enemigo natural de todo sistema tendencial.** El filtro ADX (Capa 2, añadido en la v2.1) fue la solución más efectiva para un problema que había generado las mayores pérdidas en versiones anteriores. La lección es que un buen filtro de *cuándo no operar* es más valioso que un buen generador de señales.
 
