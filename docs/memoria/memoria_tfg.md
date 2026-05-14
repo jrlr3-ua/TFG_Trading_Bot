@@ -906,7 +906,7 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 | Lateral (Whipsaw) | Enero – Marzo 2025 | Movimiento errático sin dirección (+13.49% con muchos retrocesos) |
 | Crash | Octubre – Diciembre 2025 | Caída extrema (-34.57%) |
 
-*Nota metodológica sobre el benchmark:* Los valores de Buy & Hold reportados corresponden al rendimiento promedio equiponderado de los 11 pares de criptomonedas del universo monitorizado (Tabla 3.3) durante cada periodo de evaluación, calculado asumiendo una posición LONG abierta al inicio del periodo y cerrada al final sin gestión activa. Los datos de precio se obtuvieron de la API de Binance Futures mediante el mismo pipeline de descarga OHLCV utilizado por el sistema.
+*Nota metodológica sobre el benchmark:* Los valores de Buy & Hold reportados corresponden al rendimiento promedio equiponderado de los 11 pares de criptomonedas del universo monitorizado (Tabla 3.3) durante cada periodo de evaluación, calculado asumiendo una posición LONG abierta al inicio del periodo y cerrada al final sin gestión activa. Los datos de precio se obtuvieron de la API de Binance Futures mediante el mismo pipeline de descarga OHLCV utilizado por el sistema. Los escenarios Bear Market y Crash son periodos contiguos sin solapamiento de datos; las fechas exactas de inicio y fin de cada escenario están definidas en la configuración de backtesting del repositorio.
 
 ## 7.3 Resultados por Escenario
 
@@ -962,7 +962,7 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 | Benchmark (Buy & Hold) | +13.49% |
 | Alpha generado | -14.05% |
 
-**Análisis:** Los mercados laterales son el peor escenario para cualquier sistema de seguimiento de tendencia, ya que generan señales falsas continuas (*whipsaws*). A pesar de ello, el Win Rate del 59.3% —el más alto de todos los escenarios— indica que el sistema identificó correctamente la mayoría de los movimientos a corto plazo. Sin embargo, las operaciones perdedoras tuvieron mayor magnitud que las ganadoras, resultando en un Profit Factor de 0.83. El filtro ADX (Capa 2) demostró su eficacia limitando las pérdidas a un -2.29%: versiones anteriores del sistema sin este filtro acumulaban pérdidas superiores al -8% en condiciones similares.
+**Análisis:** A pesar de que el rendimiento acumulado del benchmark en este período fue de +13.49%, el mercado mostró características propias de un régimen lateral: elevada volatilidad intradiaria, múltiples cruces de media móvil en ambas direcciones y un ADX promedio frecuentemente por debajo de 20 durante gran parte del período. Es precisamente este tipo de mercado —con tendencia acumulada positiva pero con movimientos erráticos intradía— el que más perjudica a los sistemas de seguimiento de tendencia, generando señales falsas continuas (*whipsaws*). A pesar de ello, el Win Rate del 59.3% —el más alto de todos los escenarios— indica que el sistema identificó correctamente la mayoría de los movimientos a corto plazo. Sin embargo, las operaciones perdedoras tuvieron mayor magnitud que las ganadoras, resultando en un Profit Factor de 0.83. El filtro ADX (Capa 2) demostró su eficacia: el sistema obtuvo un rendimiento neto de -0.56% con un Max Drawdown del 4.25%, mientras que versiones anteriores del sistema sin este filtro acumulaban pérdidas superiores al -8% en condiciones similares.
 
 ### 7.3.4 Escenario 4: Bear Market (Julio – Octubre 2025)
 
@@ -991,13 +991,15 @@ El mercado fue dividido rigurosamente en 4 regímenes para evaluar la robustez d
 | Periodo | Abr–May 2025 | Oct–Dic 2025 | Ene–Mar 2025 | Jul–Oct 2025 |
 | Trades ejecutados | 15 | 13 | 54 | 7 |
 | Rendimiento neto | +2.57% | -1.03% | -0.56% | -7.00% |
-| Win Rate | 53.3% | 15.4% | 59.3% | 14.3% |
-| Sharpe Ratio | 0.06 | -1.78 | -1.29 | -0.75 |
-| Sortino Ratio | 0.13 | -3.24 | -1.89 | -2.97 |
+| Win Rate | 53.3% | 15.4% | 59.3% | 14.3%* |
+| Sharpe Ratio | 0.06 | -1.78 | -1.29 | -0.75* |
+| Sortino Ratio | 0.13 | -3.24 | -1.89 | -2.97* |
 | Max Drawdown | 2.97% | 1.03% | 4.25% | 7.00% |
-| Profit Factor | 1.03 | 0.33 | 0.83 | 0.47 |
+| Profit Factor | 1.03 | 0.33 | 0.83 | 0.47* |
 | Benchmark (B&H) | +11.74% | -34.57% | +13.49% | -36.00% |
 | **Alpha sobre B&H** | -9.17pp | **+33.54pp** | -14.05pp | **+29.00pp** |
+
+*(*) Bear Market: N=7 operaciones. Muestra estadísticamente insuficiente para estas métricas. Ver sección 7.3.4.*
 
 **Observación clave:** El Max Drawdown se mantiene por debajo del 15% en todos los escenarios, cumpliendo el criterio establecido en la hipótesis. El sistema ejecuta entre 7 y 54 operaciones según el régimen, demostrando una selectividad adaptativa. Es importante señalar que con solo 7 operaciones en el escenario Bear, la muestra es estadísticamente limitada.
 
@@ -1090,6 +1092,8 @@ Los resultados confirman parcialmente la hipótesis:
 
 La hipótesis se valida parcialmente: el sistema no alcanza un Sharpe > 1.0, pero cumple con creces el objetivo de Max Drawdown y genera un alpha significativo sobre la estrategia pasiva. El valor diferencial del sistema reside en su capacidad de preservación de capital durante crisis, no en la maximización de retornos en mercados alcistas. Este resultado es académicamente significativo porque demuestra que las capas de protección (Circuit Breaker, filtro Fear & Greed y gestión de riesgo ATR/Kelly) funcionan como está diseñado, aunque debe considerarse que los resultados del backtesting se obtuvieron con la capa NLP en modo fallback (véase nota metodológica en la sección 7.1).
 
+Cabe reflexionar sobre si el objetivo Sharpe > 1.0 era compatible con el diseño del sistema desde el principio. Un Sharpe Ratio elevado requiere bien retornos altos bien una volatilidad de retornos muy baja. Con el diseño de 7 capas de confluencia, el sistema ejecuta entre 7 y 54 operaciones en periodos de 2-4 meses, con rendimientos por operación modestos. En este contexto, la varianza de la serie de retornos es necesariamente alta en relación con la media, produciendo Sharpe Ratios bajos independientemente de la calidad de las señales individuales. Un objetivo más apropiado para este tipo de sistema conservador habría sido el Max Drawdown máximo (cumplido: <15% en todos los escenarios) y el alpha sobre Buy & Hold (cumplido: +9.83pp promedio). Esta es una lección aprendida para el planteamiento de hipótesis en sistemas con gestión de riesgo activa.
+
 ## 8.4 Fortalezas del Sistema
 
 1. **Robustez multi-régimen:** A diferencia de los sistemas sobreoptimizados para un único escenario, el bot mantiene un rendimiento aceptable en las 4 condiciones de mercado evaluadas.
@@ -1136,7 +1140,7 @@ La hipótesis inicial — que un sistema multi-capa puede generar rendimientos p
 
 4. **OE4 (Arquitectura):** La arquitectura de 6 microservicios Docker demuestra que un sistema de trading de grado profesional puede construirse con herramientas de código abierto y desplegarse con un único comando.
 
-5. **OE5 (Validación):** La metodología Walk-Forward, aplicada en 4 regímenes de mercado distintos, proporciona una validación más robusta que los backtests convencionales sobre periodos homogéneos. Los resultados del escenario Bear Market deben interpretarse con la cautela propia de una muestra reducida (N=7 operaciones); véase la nota metodológica en la sección 7.3.4.
+5. **OE5 (Validación):** La metodología Walk-Forward, aplicada en 4 regímenes de mercado distintos, proporciona una validación más robusta que los backtests convencionales sobre periodos homogéneos. Los resultados del escenario Bear Market deben interpretarse con la cautela propia de una muestra reducida (N=7 operaciones); véase la nota metodológica en la sección 7.3.4. Nota metodológica: los parámetros fijos de la estrategia (umbrales de confianza IA, parámetros ADX, Kelly empírico) fueron optimizados mediante Hyperopt con exposición a los mismos períodos históricos evaluados. Aunque la metodología Walk-Forward garantiza que el modelo LightGBM no ve datos futuros, esta condición puede introducir un sesgo de optimismo en los resultados reportados. Los resultados del Forward-Testing actualmente en curso proporcionarán una validación verdaderamente out-of-sample.
 
 6. **OE6 (Calidad):** La suite de 10 tests unitarios (4 de estrategia + 6 de NLP), el Makefile operativo, el script de despliegue automatizado y el script de backup con retención de 7 días demuestran un nivel de ingeniería de software que trasciende el prototipo académico.
 
@@ -1144,8 +1148,8 @@ La hipótesis inicial — que un sistema multi-capa puede generar rendimientos p
 
 Las principales aportaciones de este TFG al campo del trading algorítmico son:
 
-1. **Arquitectura de confluencia de 7 capas:** A diferencia de los sistemas que utilizan 1-2 señales, este TFG demuestra que la exigencia de confluencia multi-capa reduce drásticamente los falsos positivos.
-2. **NLP como filtro, no como generador:** Se demuestra empíricamente que el sentimiento NLP aporta más valor como mecanismo de protección (filtrar operaciones malas) que como generador de señales (encontrar operaciones buenas).
+1. **Arquitectura de confluencia de 7 capas:** A diferencia de los sistemas que utilizan 1-2 señales, este TFG demuestra que la exigencia de confluencia multi-capa reduce drásticamente los falsos positivos. Nota: la contribución marginal de cada capa de forma individual no ha sido cuantificada mediante análisis ablativo, lo que constituye una limitación metodológica identificada en la sección 8.5 y propuesta como trabajo futuro prioritario en la sección 9.5.5.
+2. **NLP como filtro, no como generador:** Los resultados sugieren —aunque no demuestran empíricamente, dado que el backtest se ejecutó con la capa NLP en modo fallback— que el sentimiento NLP aportaría más valor como mecanismo de protección (filtrar operaciones malas) que como generador de señales (encontrar operaciones buenas). Esta hipótesis queda pendiente de validación en el período de Forward-Testing actualmente en curso.
 3. **Validación multi-régimen:** La evaluación en 4 escenarios de mercado distintos es poco habitual en trabajos académicos y proporciona una visión más realista del rendimiento esperado.
 4. **Sistema desplegable en producción:** El proyecto no es un prototipo académico sino un producto funcional, actualmente en fase de Forward-Testing con datos reales de mercado.
 
