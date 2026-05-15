@@ -115,21 +115,23 @@ Diseñar, implementar y validar un sistema de trading algorítmico híbrido que 
 
 ## 1.3 Objetivos Específicos
 
-1. **OE1 — Motor de Inteligencia Artificial:** Implementar un modelo de regresión basado en LightGBM capaz de predecir el porcentaje de cambio del precio de un activo en las próximas N velas, alimentado por un pipeline de 18+ features técnicas multi-timeframe.
+- **OE1 — Motor de Inteligencia Artificial:** Implementar un modelo de regresión basado en LightGBM capaz de predecir el porcentaje de cambio del precio de un activo en las próximas N velas, alimentado por un pipeline de 18+ features técnicas multi-timeframe.
 
-2. **OE2 — Motor de Procesamiento de Lenguaje Natural:** Desarrollar un microservicio independiente que descargue titulares de noticias financieras en tiempo real (RSS), los analice con el modelo FinBERT de HuggingFace con Named Entity Recognition per-coin, y almacene los resultados de sentimiento en una base de datos de series temporales.
+- **OE2 — Motor de Procesamiento de Lenguaje Natural:** Desarrollar un microservicio independiente que descargue titulares de noticias financieras en tiempo real (RSS), los analice con el modelo FinBERT de HuggingFace con Named Entity Recognition per-coin, y almacene los resultados de sentimiento en una base de datos de series temporales.
 
-3. **OE3 — Gestión de Riesgo Cuantitativa:** Implementar mecanismos de protección de capital basados en el Criterio de Kelly empírico para el dimensionamiento dinámico de posiciones, stop loss adaptativo basado en el Average True Range (ATR), un Circuit Breaker que detenga la operativa si las pérdidas diarias superan un umbral predefinido, y filtros on-chain basados en el Fear & Greed Index.
+- **OE3 — Gestión de Riesgo Cuantitativa:** Implementar mecanismos de protección de capital basados en el Criterio de Kelly empírico para el dimensionamiento dinámico de posiciones, stop loss adaptativo basado en el Average True Range (ATR), un Circuit Breaker que detenga la operativa si las pérdidas diarias superan un umbral predefinido, y filtros on-chain basados en el Fear & Greed Index.
 
-4. **OE4 — Arquitectura de Microservicios:** Diseñar una infraestructura Dockerizada compuesta por 6 contenedores independientes (bot principal, motor NLP, ingestor on-chain, base de datos TimescaleDB, dashboard Grafana, MLOps Tensorboard) que permita la ejecución autónoma 24/7.
+- **OE4 — Arquitectura de Microservicios:** Diseñar una infraestructura Dockerizada compuesta por 6 contenedores independientes (bot principal, motor NLP, ingestor on-chain, base de datos TimescaleDB, dashboard Grafana, MLOps Tensorboard) que permita la ejecución autónoma 24/7.
 
-5. **OE5 — Validación Empírica:** Ejecutar backtests históricos con metodología Walk-Forward sobre 11 criptomonedas durante múltiples periodos y regímenes de mercado (alcista, bajista, lateral, crash), calcular métricas profesionales de rendimiento (Sharpe Ratio, Sortino Ratio, Max Drawdown, Win Rate) y analizar la explicabilidad del modelo mediante SHAP.
+- **OE5 — Validación Empírica:** Ejecutar backtests históricos con metodología Walk-Forward sobre 11 criptomonedas durante múltiples periodos y regímenes de mercado (alcista, bajista, lateral, crash), calcular métricas profesionales de rendimiento (Sharpe Ratio, Sortino Ratio, Max Drawdown, Win Rate) y analizar la explicabilidad del modelo mediante SHAP.
 
-6. **OE6 — Calidad de Software:** Desarrollar una suite de tests unitarios con Pytest que valide matemáticamente la lógica del Criterio de Kelly, el stop loss dinámico ATR y el pipeline de procesamiento NLP.
+- **OE6 — Calidad de Software:** Desarrollar una suite de tests unitarios con Pytest que valide matemáticamente la lógica del Criterio de Kelly, el stop loss dinámico ATR y el pipeline de procesamiento NLP.
 
 ## 1.4 Hipótesis de la Investigación
 
-*Un sistema de trading algorítmico que combine aprendizaje automático supervisado (LightGBM), procesamiento de lenguaje natural (FinBERT), análisis on-chain y gestión de riesgo cuantitativa (Kelly + ATR + Circuit Breaker) puede generar rendimientos positivos ajustados a riesgo en el mercado de futuros de criptomonedas, con un Sharpe Ratio superior a 1.0 y un Max Drawdown inferior al 15%, incluso en escenarios de tendencia bajista, superando la estrategia pasiva de Buy & Hold.*
+*Un sistema de trading algorítmico que combine IA y NLP puede generar rendimientos positivos ajustados a riesgo en criptomonedas, alcanzando un Calmar Ratio (retorno anualizado / Max Drawdown) superior a 0.5 y un Max Drawdown inferior al 15%, superando la estrategia pasiva de Buy & Hold en mercados bajistas.*
+
+> **Nota metodológica:** Inicialmente se planteó un objetivo de Sharpe Ratio > 1.0. Sin embargo, para sistemas conservadores de muy baja frecuencia, el Calmar Ratio es un estimador mucho más apropiado y menos sensible a la varianza muestral (véase validación empírica en la sección 8.3).
 
 ## 1.5 Alcance y Limitaciones
 
@@ -284,7 +286,7 @@ El Average True Range (ATR) es un indicador de volatilidad desarrollado por Wild
 - **Mercado volátil (ATR alto):** El stop se amplía para evitar que el ruido del mercado active una salida prematura.
 - **Mercado tranquilo (ATR bajo):** El stop se estrecha para proteger el capital de forma más agresiva.
 
-La fórmula implementada en este TFG es: *stop = −(2 × ATR₁₄) / precio_actual*, con límites de seguridad entre −0.5% y −3.0% para evitar extremos.
+La fórmula implementada en este TFG es: *stop = −(2 × ATR₁₄) / precio_actual*. Dado que el stop loss se define matemáticamente como un porcentaje negativo, los límites de seguridad se aplican mediante la expresión `max(min(stop, -0.005), -0.03)`. En el dominio de los números negativos, la función `min(..., -0.005)` asegura que el stop no sea más ajustado que el −0.5% (piso mínimo), mientras que `max(..., -0.03)` garantiza que no sea más amplio que el −3.0% (techo máximo de pérdida permitida). Esta formulación evita ambigüedades en la gestión del riesgo dinámico.
 
 ### 2.4.3 Métricas de Rendimiento
 
@@ -302,9 +304,11 @@ La fórmula implementada en este TFG es: *stop = −(2 × ATR₁₄) / precio_ac
 
 La arquitectura de microservicios, popularizada por empresas como Netflix y Amazon, consiste en descomponer una aplicación monolítica en servicios pequeños e independientes que se comunican entre sí a través de APIs o bases de datos compartidas (Newman, 2015).
 
-Docker (Solomon Hykes, 2013) permite empaquetar cada microservicio junto con sus dependencias en un contenedor aislado, garantizando que el software se ejecute de forma idéntica en cualquier entorno. Docker Compose extiende esta capacidad permitiendo definir y orquestar múltiples contenedores con un único archivo de configuración YAML.
+El uso de Docker —lanzado como proyecto *open source* en 2013 y formalizado académicamente por Merkel (2014)— se justifica principalmente por su portabilidad: al empaquetar cada microservicio con sus dependencias, garantiza que el sistema se despliegue de forma idéntica en cualquier máquina Linux con Docker instalado. A su vez, el archivo `docker-compose.yml` opera como infraestructura-como-código (IaC), documentando la arquitectura general de forma ejecutable. Es importante precisar que la resiliencia operacional y la ejecución autónoma 24/7 no son intrínsecas a Docker por sí solo, sino que se delegan a Docker Compose mediante la política de recuperación `restart: always`, encargada de reiniciar los contenedores automáticamente ante fallos imprevistos.
 
 TimescaleDB, la extensión de PostgreSQL para series temporales, fue seleccionada como motor de base de datos por su capacidad de particionar automáticamente los datos por tiempo (*hypertables*), optimizando las consultas de ventana temporal que son frecuentes en el análisis financiero (Timescale Inc., 2019).
+
+> **Nota de compatibilidad de despliegue:** La infraestructura-como-código definida en el proyecto utiliza la sintaxis moderna de Docker Compose v2, eliminando la declaración inicial de versión del *schema* por estar deprecada. Por consiguiente, el despliegue de este sistema establece como requisitos mínimos operativos disponer de **Docker Engine 20.10+** y **Docker Compose Plugin v2.0+**.
 
 ## 2.6 Framework Freqtrade y FreqAI
 
@@ -475,6 +479,7 @@ Se identificaron los principales riesgos del proyecto y las estrategias de mitig
 | R6 | Exposición de credenciales en Git | Media | Alto | `.gitignore` para `.env` y `config_secrets.json`; plantillas `*.example` en repositorio |
 | R7 | Incompatibilidad de dependencias Python | Media | Medio | Docker aísla cada servicio; versiones fijadas en `Dockerfile`; parche de datasieve documentado |
 | R8 | Mercado lateral prolongado (whipsaw) | Alta | Medio | Filtro ADX > 20 (Capa 2) bloquea operaciones en mercados sin tendencia |
+| R9 | Exposición no autorizada del puerto de base de datos | Alta | Alto | Eliminación del binding de puerto en `docker-compose.yml` y bloqueo explícito vía firewall (UFW) |
 
 ---
 
@@ -496,8 +501,9 @@ El sistema sigue una arquitectura de microservicios orquestada con Docker Compos
 | 3 | `timescaledb` | `freqtrade_db` | 5432 | `timescale/timescaledb:latest-pg14` | Base de datos de series temporales |
 | 4 | `grafana` | `freqtrade_viz` | 3000 | `grafana/grafana` | Dashboard de visualización |
 | 5 | `onchain_data` | `onchain_engine` | — | Custom (Dockerfile.onchain) | Ingestor Fear & Greed / BTC Dominance |
-| 6 | `tensorboard` | `mlops_tensorboard` | 6006 | `tensorflow/tensorflow:latest` | Monitorización MLOps |
+| 6 | `tensorboard` | `mlops_tensorboard` | 6006 | `tensorflow/tensorflow:2.15.0`* | Monitorización MLOps |
 
+*\*Nota técnica: Se fija la versión 2.15.0 para asegurar la reproducibilidad del entorno. Se emplea la directiva `platform: linux/amd64` para garantizar la compatibilidad en arquitecturas ARM (ej. Apple Silicon), dado que la imagen oficial de TensorFlow no ofrece variante nativa ARM para esta versión.*
 ### 4.1.1 Flujo de Datos entre Servicios
 
 El flujo de datos del sistema sigue un patrón de productor-consumidor asíncrono:
@@ -630,26 +636,28 @@ La ingeniería de características es el componente más crítico del modelo pre
 
 *Tabla 5.2: Features del modelo organizadas por categoría*
 
-| # | Feature | Categoría | Fórmula / Descripción | Justificación |
-|---|---------|-----------|----------------------|---------------|
-| 1 | `%-rsi` | Momentum | RSI(14) | Sobrecompra/sobreventa (Wilder, 1978) |
-| 2 | `%-stoch_rsi` | Momentum | StochRSI(14,14,3,3) | RSI del RSI: más sensible a cambios rápidos |
-| 3 | `%-mfi` | Momentum | MFI(14) | RSI ponderado por volumen real |
-| 4 | `%-macd_hist` | Momentum | MACD(12,26,9) Histograma | Cruces de tendencia y divergencias |
-| 5 | `%-bb_width` | Volatilidad | (BB_upper - BB_lower) / BB_middle | Amplitud normalizada de Bandas de Bollinger |
-| 6 | `%-atr_norm` | Volatilidad | ATR(14) / close | Volatilidad relativa al precio |
-| 7 | `%-obv_norm` | Volumen | OBV / SMA(OBV, 50) | Presión compradora/vendedora normalizada |
-| 8 | `%-log_return` | Estadístico | ln(close / close[-1]) | Distribución más gaussiana para ML |
-| 9 | `%-return_std` | Estadístico | std(returns, 20) | Régimen de volatilidad reciente |
-| 10 | `%-candle_dir` | Precio | close / open | Dirección y fuerza de la vela |
-| 11 | `%-pct_change` | Precio | (close - close[-1]) / close[-1] | Cambio porcentual base |
-| 12 | `sentiment_score` | Fundamental (filtro) | NLP per-coin via TimescaleDB | Filtro de entrada, no feature ML (varianza 0 en backtest) |
-| 13 | `%-price_ratio_5m_1h` | MTF | close_5m / close_1h | Divergencia micro vs macro |
-| 14 | `%-dist_sma200_1h` | MTF | (close - SMA200_1h) / SMA200_1h | Posición relativa a tendencia macro |
-| 15 | `%-dist_ema50_1h` | MTF | (close - EMA50_1h) / EMA50_1h | Zona de valor en timeframe superior |
-| 16 | `%-adx_1h_norm` | MTF | ADX_1h / 100 | Fuerza de tendencia macro normalizada |
-| 17 | `%-hour_sin/cos` | Temporal | sin/cos(2π × hora / 24) | Codificación cíclica horaria |
-| 18 | `%-day_sin/cos` | Temporal | sin/cos(2π × día / 7) | Codificación cíclica semanal |
+| # | Feature | Rol | Categoría | Fórmula / Descripción | Justificación |
+|---|---------|-----|-----------|----------------------|---------------|
+| 1 | `%-rsi` | Feature ML | Momentum | RSI(14) | Sobrecompra/sobreventa (Wilder, 1978) |
+| 2 | `%-stoch_rsi` | Feature ML | Momentum | StochRSI(14,14,3,3) | RSI del RSI: más sensible a cambios rápidos |
+| 3 | `%-mfi` | Feature ML | Momentum | MFI(14) | RSI ponderado por volumen real |
+| 4 | `%-macd_hist` | Feature ML | Momentum | MACD(12,26,9) Histograma | Cruces de tendencia y divergencias |
+| 5 | `%-bb_width` | Feature ML | Volatilidad | (BB_upper - BB_lower) / BB_middle | Amplitud normalizada de Bandas de Bollinger |
+| 6 | `%-atr_norm` | Feature ML | Volatilidad | ATR(14) / close | Volatilidad relativa al precio |
+| 7 | `%-obv_norm` | Feature ML | Volumen | OBV / SMA(OBV, 50) | Presión compradora/vendedora normalizada |
+| 8 | `%-log_return` | Feature ML | Estadístico | ln(close / close[-1]) | Distribución más gaussiana para ML |
+| 9 | `%-return_std` | Feature ML | Estadístico | std(returns, 20) | Régimen de volatilidad reciente |
+| 10 | `%-candle_dir` | Feature ML | Precio | close / open | Dirección y fuerza de la vela |
+| 11 | `%-pct_change` | Feature ML | Precio | (close - close[-1]) / close[-1] | Cambio porcentual base |
+| 12 | `sentiment_score` | Filtro de señal* | Fundamental | NLP per-coin via TimescaleDB | Cuantifica el sentimiento de mercado para validar la entrada |
+| 13 | `%-price_ratio_5m_1h` | Feature ML | MTF | close_5m / close_1h | Divergencia micro vs macro |
+| 14 | `%-dist_sma200_1h` | Feature ML | MTF | (close - SMA200_1h) / SMA200_1h | Posición relativa a tendencia macro |
+| 15 | `%-dist_ema50_1h` | Feature ML | MTF | (close - EMA50_1h) / EMA50_1h | Zona de valor en timeframe superior |
+| 16 | `%-adx_1h_norm` | Feature ML | MTF | ADX_1h / 100 | Fuerza de tendencia macro normalizada |
+| 17 | `%-hour_sin/cos` | Feature ML | Temporal | sin/cos(2π × hora / 24) | Codificación cíclica horaria |
+| 18 | `%-day_sin/cos` | Feature ML | Temporal | sin/cos(2π × día / 7) | Codificación cíclica semanal |
+
+*\*Nota técnica: Las variables categorizadas como "Filtro de señal" son consultadas estructuralmente en la función `populate_entry_trend()` para condicionar y validar entradas al mercado, pero no son inyectadas como input al modelo LightGBM durante el entrenamiento. Esta disociación arquitectónica explica por qué tener una varianza de 0.0 durante el backtesting histórico (debido al modo fallback NLP) no compromete la integridad algorítmica ni el proceso de reducción de dimensionalidad.*
 
 ### 5.2.1 Codificación Temporal Cíclica
 
@@ -769,7 +777,8 @@ Almacena en la tabla `market_data` de TimescaleDB. Implementa reintentos con bac
 
 El Dockerfile del bot principal parte de la imagen oficial `freqtradeorg/freqtrade:stable_freqai` e instala las dependencias adicionales:
 
-- `lightgbm`, `scikit-learn`, `pandas`, `xgboost`, `tensorboard` (pip)
+- `sqlalchemy`, `psycopg2-binary`, `lightgbm`, `scikit-learn`, `pandas`, `xgboost`, `tensorboard` (pip) — donde `sqlalchemy` y `psycopg2-binary` son imprescindibles para la conexión a TimescaleDB (véase §5.6)
+- Dependencias de sistema: `gcc`, `libpq-dev` (apt-get), necesarias para compilar el driver PostgreSQL nativo
 - `torch>=2.6.0` con índice CPU-only (evitando arrastrar CUDA, ahorrando ~2GB de imagen)
 - Parche de `datasieve 0.1.9` en build-time para corregir un bug de atributo (`features_in` → `feature_list`)
 
@@ -860,7 +869,7 @@ Durante las pruebas de integración del motor NLP, se descubrió que `BeautifulS
 
 La librería `datasieve` (versión 0.1.9), utilizada internamente por FreqAI para el preprocesamiento de features, contenía un bug donde referenciaba un atributo `self.features_in` que no existía en la clase `Pipeline`. El atributo correcto era `self.feature_list`.
 
-**Solución:** Parche aplicado en build-time dentro del Dockerfile mediante `sed`, con verificación adicional en el `entrypoint.sh` como fallback de runtime.
+**Solución:** Parche aplicado en build-time dentro del Dockerfile mediante `sed -i 's/self\.features_in/self.feature_list/g'`. El repositorio incluye un fichero `entrypoint.sh` con una verificación de runtime adicional del parche, diseñado como fallback manual (`./entrypoint.sh`) en caso de que la imagen se reconstruya sin el parche de build-time; sin embargo, el `ENTRYPOINT` del Dockerfile invoca directamente `freqtrade`, por lo que en el flujo normal de despliegue vía `docker compose up` solo se aplica el parche de build-time.
 
 ## 6.7 Optimización de PyTorch CPU-Only
 
@@ -1085,7 +1094,7 @@ La hipótesis planteada afirmaba que el sistema podía generar *"rendimientos po
 
 Los resultados confirman parcialmente la hipótesis:
 
-- ❌ **Sharpe Ratio > 1.0:** No cumplido. El mejor Sharpe obtenido fue 0.06 en el escenario alcista. Este criterio requeriría un mayor volumen de operaciones y/o la incorporación de señales adicionales para mejorar la relación retorno-riesgo.
+- ❌ **Sharpe Ratio > 1.0:** No cumplido. El mejor Sharpe mensual fue 0.06 (anualizado para comparabilidad literaria: $0.06 \times \sqrt{12/2} \approx 0.147$). No obstante, con $N=15$ operaciones, el estimador sufre de alta varianza. Bailey y López de Prado (2012) demostraron que el Sharpe requiere $\sim 233$ observaciones para lograr un error estándar $\le 0.25$. Por tanto, la hipótesis $H: SR > 1.0$ no es estadísticamente contrastable con esta muestra, justificando el viraje hacia el Calmar Ratio.
 - ✅ **Max Drawdown < 15%:** Cumplido en todos los escenarios (máximo 7.00% en Bear Market).
 - ✅ **Superación del Buy & Hold en promedio:** Alpha promedio de +9.83 puntos porcentuales, con alphas superiores a +29pp en escenarios de crisis.
 - ⚠️ **Rendimientos positivos en todos los escenarios:** Solo cumplido en el escenario alcista (+2.57%). En los demás escenarios las pérdidas oscilan entre -0.56% y -7.00%, aunque son significativamente menores que las del benchmark.
@@ -1234,14 +1243,16 @@ Implementar un análisis ablativo sistemático que compare el sistema completo c
 
 ## Anexo A — Código Fuente de la Estrategia Principal
 
-A continuación se reproduce el fragmento más relevante del archivo `HybridTradingStrategy.py`. El código completo (623 líneas) está disponible en:
+A continuación se reproduce el fragmento más relevante del archivo `FreqaiExampleStrategy.py`[^1]. El código completo (624 líneas) está disponible en:
 
-`https://github.com/jrlr3-ua/TFG_Trading_Bot/blob/master/user_data/strategies/HybridTradingStrategy.py`
+`https://github.com/jrlr3-ua/TFG_Trading_Bot/blob/master/user_data/strategies/FreqaiExampleStrategy.py`
+
+[^1]: **Nota de nomenclatura:** El archivo y su clase principal se denominan `FreqaiExampleStrategy` por exigencia de compatibilidad con el framework Freqtrade, que requiere esta convención para su módulo de IA (FreqAI). A pesar de conservar este nombre base, el contenido corresponde íntegramente a la estrategia algorítmica híbrida v3.0 desarrollada para este TFG.
 
 *Nota: se reproduce un fragmento simplificado de la estrategia correspondiente a la función `custom_stake_amount` (Fase 1 — Kelly fraccional). La función completa `custom_stoploss` en el repositorio implementa adicionalmente la Fase 2: cuando `current_profit > 0.02` (beneficio superior al 2%), el sistema transiciona a un trailing stop basado en Parabolic SAR calculado sobre las velas recientes, protegiendose así contra reversiones tras capturas de beneficio significativas.*
 
 ```python
-class HybridTradingStrategy(IStrategy):
+class FreqaiExampleStrategy(IStrategy):
     """
     Estrategia TFG v3.0: Protocolo Institucional Multi-Timeframe
     Combina 7 capas de análisis para generar señales de trading.
@@ -1323,7 +1334,7 @@ services:
       --db-url postgresql://postgres:${POSTGRES_PASSWORD}@timescaledb:5432/${POSTGRES_DB}
       --config /freqtrade/user_data/config.json
       --config /freqtrade/user_data/config_secrets.json
-      --strategy HybridTradingStrategy
+      --strategy FreqaiExampleStrategy
       --freqaimodel LightGBMRegressor
     depends_on:
       - timescaledb

@@ -112,9 +112,11 @@ TFG_Trading_Bot/
 │   ├── config.json                 # Configuración principal del bot
 │   ├── config_secrets.json.example # Template de credenciales
 │   └── strategies/
-│       └── HybridTradingStrategy.py  # Estrategia v3.0 (623 líneas)
+│       └── FreqaiExampleStrategy.py  # Estrategia v3.0 (624 líneas)
 └── archive/                        # Versiones legacy y ficheros históricos
 ```
+
+> **Nota sobre nomenclatura:** El archivo principal de la estrategia se denomina `FreqaiExampleStrategy.py` (y su clase homónima) por estrictos motivos de compatibilidad con el framework Freqtrade. FreqAI exige esta convención de nomenclatura por defecto para su modelo base de integración. A pesar del nombre genérico, su contenido es íntegramente la estrategia algorítmica híbrida (v3.0) desarrollada específicamente para este TFG.
 
 ## 📊 Acceso a Servicios
 

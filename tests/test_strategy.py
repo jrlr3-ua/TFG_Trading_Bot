@@ -110,6 +110,8 @@ def test_dynamic_atr_stoploss():
     )
     # -(2*50/1000) = -0.10 → capped a -0.03
     assert sl == -0.03
+    # Verificación explícita de que el resultado cae en el intervalo de seguridad
+    assert -0.03 <= sl <= -0.005
 
 
 def test_atr_stoploss_low_volatility():

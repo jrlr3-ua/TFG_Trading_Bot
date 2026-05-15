@@ -23,6 +23,7 @@ echo "🛡️ Configurando Firewall (UFW)..."
 sudo ufw allow 22/tcp  # SSH
 sudo ufw allow 3000/tcp # Grafana Web UI
 sudo ufw allow 8081/tcp # Freqtrade Web UI (TFG)
+sudo ufw deny 5432/tcp  # Bloquear acceso externo a PostgreSQL
 sudo ufw --force enable
 
 # 3. Instalación de Docker y Docker Compose

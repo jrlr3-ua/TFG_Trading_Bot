@@ -1,5 +1,5 @@
-# Docker Compose — compatible con Docker Engine 20.10+ (sin campo version requerido)
-# Referencia: https://docs.docker.com/compose/compose-file/
+# La directiva 'version' está deprecada. Docker Compose v2+ no requiere declaración de versión del schema.
+# Requisitos mínimos: Docker Engine 20.10+ y Docker Compose Plugin v2.0+
 services:
   # 1. BOT PRINCIPAL (Freqtrade - FreqAI / LightGBM)
   freqtrade:
@@ -17,7 +17,7 @@ services:
       --db-url postgresql://postgres:${POSTGRES_PASSWORD}@timescaledb:5432/${POSTGRES_DB}
       --config /freqtrade/user_data/config.json
       --config /freqtrade/user_data/config_secrets.json
-      --strategy HybridTradingStrategy
+      --strategy FreqaiExampleStrategy
       --freqaimodel LightGBMRegressor
     depends_on:
       - timescaledb
@@ -44,8 +44,6 @@ services:
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-    ports:
-      - "5432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 20s
