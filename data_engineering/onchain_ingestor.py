@@ -13,14 +13,6 @@ Métricas monitorizadas:
 4. DXY Proxy (via Gold/USD) — Correlación inversa con crypto
 
 Ciclo: cada 15 minutos (APIs públicas tienen rate limits estrictos).
-
-NOTA PARA LA MEMORIA DEL TFG:
-Este módulo demuestra la arquitectura extensible del sistema. En producción
-con APIs premium (Glassnode, CryptoQuant), se añadirían métricas como:
-- Exchange NetFlow (flujos de BTC a/desde exchanges)
-- Realized Cap, MVRV Ratio
-- Hash Rate, Mining Difficulty
-- Open Interest, Funding Rate de Futuros
 """
 
 import os

@@ -69,4 +69,10 @@ __pycache__/
 *.db
 *.pkl
 *.joblib
+*.fthypt
+*.feather
+*.zip
+*.html
+
+
 

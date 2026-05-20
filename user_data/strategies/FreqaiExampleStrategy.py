@@ -21,9 +21,6 @@
 #   - MLOps logging: Tracking interno del rendimiento de la IA
 #   - On-chain awareness: Arquitectura preparada para datos on-chain
 #
-# Versiones anteriores disponibles en:
-#   → FreqaiExampleStrategy_legacy.py
-#   → docs/strategy_evolution.md
 # ==========================================
 
 import os
