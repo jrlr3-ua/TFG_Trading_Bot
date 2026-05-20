@@ -68,7 +68,7 @@ Una vez tenga acceso SSH al servidor virgen:
 
 ## 4. Control Integral (El Archivo Makefile)
 
-He dispuesto un `Makefile` en la raíz para permitirle operar el servidor como un Hacker/SysAdmin:
+El `Makefile` en la raíz del proyecto permite operar el servidor con los siguientes comandos:
 
 - Comando para arrancar el ecosistema en segundo plano:
   ```bash

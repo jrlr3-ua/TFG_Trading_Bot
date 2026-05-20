@@ -1,4 +1,4 @@
-# 🚀 Guía Completa de Despliegue y Explicación del Proyecto
+#  Guía Completa de Despliegue y Explicación del Proyecto
 
 ## Sistema de Trading Algorítmico Híbrido — TFG Joan Romà Llorca
 
@@ -272,10 +272,10 @@ chmod +x deploy_ubuntu.sh
 ```
 
 El script `deploy_ubuntu.sh` automatiza:
-1. ✅ Actualización del sistema operativo
-2. ✅ Configuración del firewall (UFW) — solo puertos 22, 3000, 8081
-3. ✅ Instalación de Docker y Docker Compose
-4. ✅ Construcción e inicio de los 6 contenedores
+1.  Actualización del sistema operativo
+2.  Configuración del firewall (UFW) — solo puertos 22, 3000, 8081
+3.  Instalación de Docker y Docker Compose
+4.  Construcción e inicio de los 6 contenedores
 
 ### 5.4 Verificación Post-Despliegue
 
@@ -438,10 +438,10 @@ Monitorización MLOps de los modelos LightGBM:
 ### 8.4 Telegram
 
 Notificaciones automáticas de:
-- 🟢 Apertura de operaciones (par, dirección, tamaño)
-- 🔴 Cierre de operaciones (profit/loss)
-- ⚠️ Activación del Circuit Breaker
-- 📊 Resumen diario de rendimiento
+-  Apertura de operaciones (par, dirección, tamaño)
+-  Cierre de operaciones (profit/loss)
+-  Activación del Circuit Breaker
+-  Resumen diario de rendimiento
 
 ---
 
@@ -553,7 +553,7 @@ docker compose logs sentiment_analysis | tail -50
 ```bash
 docker compose logs timescaledb
 # Solución: resetear el volumen
-docker compose down -v  # ⚠️ BORRA TODOS LOS DATOS
+docker compose down -v  #  BORRA TODOS LOS DATOS
 docker compose up -d
 ```
 
